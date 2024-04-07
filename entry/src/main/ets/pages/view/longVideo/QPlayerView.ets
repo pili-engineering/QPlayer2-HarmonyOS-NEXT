@@ -3,7 +3,7 @@ import { QIPlayerSetting } from '../../interface/longVideo/QPlayerSettingInterfa
 import { QPlayerSettingViewModel } from '../../viewModel/longVideo/QPlayerSettingViewModel'
 import { QMaskView } from './QMaskView'
 import { window } from '@kit.ArkUI'
-
+import {QSurfaceRenderView} from '@QN/QPlayer2-core'
 @Component
 export struct QPlayerView{
   private mQPlayerTimerCount : Number = 0
@@ -20,9 +20,11 @@ export struct QPlayerView{
   build(){
     Row() {
       Stack(){
-        XComponent({ id: '', type: 'surface' })
+
+        QSurfaceRenderView()
           .width('100%')
           .height('100%')
+
         Column(){
         }
         .width('100%')
@@ -31,6 +33,7 @@ export struct QPlayerView{
         .onClick(() => {
           this.startTimer()
         })
+
         QMaskView({PlayerSettingViewModel:this.PlayerSettingViewModel,mDeviceOrientation:this.mDeviceOrientation})
           .width('100%')
           .height('100%')

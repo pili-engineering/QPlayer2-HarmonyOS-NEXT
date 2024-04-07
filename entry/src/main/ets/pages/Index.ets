@@ -8,6 +8,7 @@ struct Index {
   mQPlayerSettingViewModel:QPlayerSettingViewModel = new QPlayerSettingViewModel()
   build() {
     Row() {
+
       Column({space:20}) {
         Button("长视频")
           .width('70%')

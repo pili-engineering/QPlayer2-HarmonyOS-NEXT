@@ -5,5 +5,7 @@
   "main": "",
   "author": "",
   "license": "",
-  "dependencies": {}
+  "dependencies": {
+    "@QN/QPlayer2-core" : '../qplayer2_core'
+  }
 }
