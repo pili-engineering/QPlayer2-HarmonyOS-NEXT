@@ -3,12 +3,21 @@ import { QIPlayerSetting } from '../../interface/longVideo/QPlayerSettingInterfa
 import { QPlayerSettingViewModel } from '../../viewModel/longVideo/QPlayerSettingViewModel'
 import { QMaskView } from './QMaskView'
 import { window } from '@kit.ArkUI'
-import {QSurfaceRenderView} from '@QN/QPlayer2-core'
+import {QSurfaceRenderView,QMediaModel,QIPlayerContext,QIPlayerControlHandler,
+  PlayerContextFactory,
+  QLogLevel,
+  QMediaModelBuilder,
+  QURLType
+} from '@QN/QPlayer2-core'
+import { featureAbility } from '@kit.AbilityKit'
+import EntryAbility from '../../../entryability/EntryAbility'
+
 @Component
 export struct QPlayerView{
   private mQPlayerTimerCount : Number = 0
   private mQPlayerTimerId : Number = 0
   private mQPlayerIsTimerStart : Boolean = false
+  private mPlayerContext : QIPlayerContext = PlayerContextFactory.createPlayerContext(QLogLevel.LOG_DEBUG,"s","s","1.4.0")
   @Link PlayerSettingViewModel: QPlayerSettingViewModel
   @State mMaskHide : Visibility = Visibility.Visible
   @Link mDeviceOrientation : window.Orientation
@@ -50,6 +59,12 @@ export struct QPlayerView{
   aboutToAppear(): void {
     let ss = this.mMaskHide.toString()
     this.startTimer()
+    let build : QMediaModelBuilder = new QMediaModelBuilder()
+    build.addStreamElement("",QURLType.QAUDIO_AND_VIDEO,1080,"ss",true,"","")
+    let model : QMediaModel = build.build(false)
+    let mContext : Context = AppStorage.get('context') as Context
+    this.mPlayerContext.init(mContext)
+    this.mPlayerContext.get_control_handler().playMediaModel(model,0)
     // addQPlayerSetting 提示undefined ，crush，待解决
     // this.PlayerSettingViewModel.addQPlayerSetting(this.mSettingCallBacks)
     // this.settingDefault()
