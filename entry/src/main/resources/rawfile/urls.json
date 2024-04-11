@@ -1,6 +1,6 @@
 [
     {
-        
+        "name" : "1.点播-qiniu-2023.mp4",
         "isLive": 0,
         "streamElements": [
             {
@@ -10,7 +10,7 @@
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             },
             {
@@ -20,7 +20,7 @@
                 "quality": 720,
                 "isSelected": 0,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             },
             {
@@ -30,7 +30,7 @@
                 "quality": 480,
                 "isSelected": 0,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             },
             {
@@ -40,7 +40,7 @@
                 "quality": 360,
                 "isSelected": 0,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             },
             {
@@ -50,7 +50,7 @@
                 "quality": 240,
                 "isSelected": 0,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ],
@@ -58,19 +58,19 @@
             {
                 "name": "中文",
                 "url": "http://demo-videos.qnsdk.com/qiniu-2023-chinese.srt",
-                "isSelected": 1,
+                "isSelected": 1
                 
             },
             {
                 "name": "英文",
                 "url": "http://demo-videos.qnsdk.com/qiniu-2023-english.srt",
-                "isSelected": 0,
+                "isSelected": 0
                 
             }
         ]
     },
     {
-        
+        "name" : "2.点播-音视频分离-only-video-1080p-60fps.m4s",
         "isLive": 0,
         "streamElements": [
             {
@@ -80,7 +80,7 @@
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             },
             {
@@ -90,13 +90,13 @@
                 "quality": 0,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "3.点播-short-video-nike.mp4",
         "isLive": 0,
         "streamElements": [
             {
@@ -106,13 +106,13 @@
                 "quality": 960,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "4.点播-http-mp3-纯音频",
         "isLive": 0,
         "streamElements": [
             {
@@ -122,13 +122,13 @@
                 "quality": 0,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "5.点播-纯音频-音频卡顿-wav",
         "isLive": 0,
         "streamElements": [
             {
@@ -138,13 +138,13 @@
                 "quality": 0,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "6.点播-纯视频-only-video-1080p-60fps.m4s",
         "isLive": 0,
         "streamElements": [
             {
@@ -154,13 +154,13 @@
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "7.点播-http-bbk-mp4-50fps",
         "isLive": 0,
         "streamElements": [
             {
@@ -170,13 +170,13 @@
                 "quality": 1280,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "8.点播-http-mp4-60fps-音画同步测试",
         "isLive": 0,
         "streamElements": [
             {
@@ -186,13 +186,13 @@
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "9.点播-https-mp4-25fps-端口443",
         "isLive": 0,
         "streamElements": [
             {
@@ -202,13 +202,13 @@
                 "quality": 360,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "10.直播-多码率-hugo-rtmp-zengtext",
         "isLive": 1,
         "streamElements": [
             {
@@ -218,7 +218,7 @@
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             },
             {
@@ -228,7 +228,7 @@
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             },
             {
@@ -238,7 +238,7 @@
                 "quality": 480,
                 "isSelected": 0,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             },
             {
@@ -248,13 +248,13 @@
                 "quality": 240,
                 "isSelected": 0,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "11.直播-多码率-hugo-rtmp-test6666",
         "isLive": 1,
         "streamElements": [
             {
@@ -264,7 +264,7 @@
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             },
             {
@@ -274,7 +274,7 @@
                 "quality": 720,
                 "isSelected": 0,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             },
             {
@@ -284,7 +284,7 @@
                 "quality": 480,
                 "isSelected": 0,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             },
             {
@@ -294,13 +294,13 @@
                 "quality": 240,
                 "isSelected": 0,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "12.直播-rtmp-zhiniao-sstg1",
         "isLive": 1,
         "streamElements": [
             {
@@ -310,12 +310,13 @@
                 "quality": 360,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
+        "name" : "13.直播-zn-多码率-rtmp-test6666",
         "isLive": 1,
         "streamElements": [
             {
@@ -325,7 +326,7 @@
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             },
             {
@@ -335,7 +336,7 @@
                 "quality": 720,
                 "isSelected": 0,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             },
             {
@@ -345,7 +346,7 @@
                 "quality": 480,
                 "isSelected": 0,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             },
             {
@@ -355,13 +356,13 @@
                 "quality": 240,
                 "isSelected": 0,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "14.直播-多码率-sdk-live-6666",
         "isLive": 1,
         "streamElements": [
             {
@@ -371,7 +372,7 @@
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             },
             {
@@ -381,7 +382,7 @@
                 "quality": 720,
                 "isSelected": 0,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             },
             {
@@ -391,7 +392,7 @@
                 "quality": 480,
                 "isSelected": 0,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             },
             {
@@ -401,13 +402,13 @@
                 "quality": 240,
                 "isSelected": 0,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "15.直播-http-6666",
         "isLive": 1,
         "streamElements": [
             {
@@ -417,13 +418,13 @@
                 "quality": 360,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "16.点播-ppt-直播回放-zhiniao",
         "isLive": 0,
         "streamElements": [
             {
@@ -433,7 +434,7 @@
                 "quality": 360,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
@@ -441,7 +442,7 @@
     
     
     {
-        
+        "name" : "17.直播-http-flv-6666",
         "isLive": 1,
         "streamElements": [
             {
@@ -451,13 +452,13 @@
                 "quality": 360,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "18.点播-http-m3u8-30fps",
         "isLive": 0,
         "streamElements": [
             {
@@ -467,13 +468,13 @@
                 "quality": 760,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "19.点播-https-flv-30fps-H264",
         "isLive": 0,
         "streamElements": [
             {
@@ -483,13 +484,13 @@
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "20.点播-https-mp4-30fps-竖屏",
         "isLive": 0,
         "streamElements": [
             {
@@ -499,13 +500,13 @@
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "21.点播-https-mp3-纯音频",
         "isLive": 0,
         "streamElements": [
             {
@@ -515,13 +516,13 @@
                 "quality": 0,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "22.点播-https-mp4-30fps-旋转180度",
         "isLive": 0,
         "streamElements": [
             {
@@ -531,13 +532,13 @@
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "23.点播-https-mp4-30fps-非正常比例",
         "isLive": 0,
         "streamElements": [
             {
@@ -547,13 +548,13 @@
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "24.点播-https-wma-30fps-不支持的封装格式",
         "isLive": 0,
         "streamElements": [
             {
@@ -563,13 +564,13 @@
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "25.点播-https-flv-FLV1-不支持的编码格式",
         "isLive": 0,
         "streamElements": [
             {
@@ -579,13 +580,13 @@
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "26.点播-https-mp4-不支持的像素格式-yuvj420p",
         "isLive": 0,
         "streamElements": [
             {
@@ -595,13 +596,13 @@
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "27.点播-http-vr-mp4",
         "isLive": 0,
         "streamElements": [
             {
@@ -612,13 +613,13 @@
                 "isSelected": 1,
                 "backupUrl": "",
                 "referer": "",
-                "renderType": 1,
+                "renderType": 1
                 
             }
         ]
     },
     {
-        
+        "name" : "28.点播-http-pili-直播回放-m3u8",
         "isLive": 0,
         "streamElements": [
             {
@@ -628,13 +629,13 @@
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "29.点播-电影-http-mp4",
         "isLive": 0,
         "streamElements": [
             {
@@ -644,13 +645,13 @@
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "30.点播-https-mp4-60fps-2K-6333kb",
         "isLive": 0,
         "streamElements": [
             {
@@ -660,13 +661,13 @@
                 "quality": 1440,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "31.点播-https-mp4-25fps-2K-12053kb",
         "isLive": 0,
         "streamElements": [
             {
@@ -676,13 +677,13 @@
                 "quality": 1440,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "32.点播-https-mp4-60fps-1080-5656kb",
         "isLive": 0,
         "streamElements": [
             {
@@ -692,13 +693,13 @@
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "33.点播-https-m4s-30fps-4K-8534kb",
         "isLive": 0,
         "streamElements": [
             {
@@ -708,13 +709,13 @@
                 "quality": 1920,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "34.点播-https-mp4-30fps-480-6秒视频",
         "isLive": 0,
         "streamElements": [
             {
@@ -724,13 +725,13 @@
                 "quality": 480,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "35.直播-纯音频-rtmp-audio-only",
         "isLive": 1,
         "streamElements": [
             {
@@ -740,13 +741,13 @@
                 "quality": 0,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "36.直播-纯音频-http-m3u8-audio-only",
         "isLive": 1,
         "streamElements": [
             {
@@ -756,13 +757,14 @@
                 "quality": 0,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+
+        "name" : "37.直播-纯音频-http-flv-audio-only",
         "isLive": 1,
         "streamElements": [
             {
@@ -772,13 +774,13 @@
                 "quality": 0,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "8.直播-纯视频-rtmp-video-only",
         "isLive": 1,
         "streamElements": [
             {
@@ -788,13 +790,13 @@
                 "quality": 360,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "39.直播-纯视频-http-m3u8-video-only",
         "isLive": 1,
         "streamElements": [
             {
@@ -804,13 +806,13 @@
                 "quality": 360,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "40.直播-纯视频-http-flv-video-only",
         "isLive": 1,
         "streamElements": [
             {
@@ -820,13 +822,13 @@
                 "quality": 360,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "41.点播-纯音频-http-wav-only-audio",
         "isLive": 0,
         "streamElements": [
             {
@@ -836,13 +838,13 @@
                 "quality": 0,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "42.点播-纯音频-http-flac-audio-only-flac",
         "isLive": 0,
         "streamElements": [
             {
@@ -852,13 +854,13 @@
                 "quality": 0,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "43.直播-srt-180.101.136.81:1935",
         "isLive": 1,
         "streamElements": [
             {
@@ -868,13 +870,13 @@
                 "quality": 360,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "44.直播-5.1声道-cici声-rtmp-Hera",
         "isLive": 1,
         "streamElements": [
             {
@@ -884,13 +886,13 @@
                 "quality": 360,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "45.直播-硬解崩溃-http-cc441e8f1669371377",
         "isLive": 1,
         "streamElements": [
             {
@@ -900,13 +902,13 @@
                 "quality": 360,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ]
     },
     {
-        
+        "name" : "46.点播-HLS-DRM-http",
         "isLive": 0,
         "streamElements": [
             {
@@ -924,7 +926,7 @@
     },
     
     {
-        
+        "name" : "47.点播-subtitle-http-mp4-EnglishVideo",
         "isLive": 0,
         "streamElements": [
             {
@@ -934,7 +936,7 @@
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ],
@@ -942,13 +944,13 @@
             {
                 "name": "英文",
                 "url": "http://demo-videos.qnsdk.com/EnglishVideo.srt",
-                "isSelected": 1,
+                "isSelected": 1
                 
             }
         ]
     },
     {
-        
+        "name" : "48.点播-subtitle-http-MOV-EnglishVideo",
         "isLive": 0,
         "streamElements": [
             {
@@ -958,7 +960,7 @@
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
+                "referer": ""
                 
             }
         ],
@@ -966,12 +968,13 @@
             {
                 "name": "英文",
                 "url": "http://demo-videos.qnsdk.com/EnglishVideo.srt",
-                "isSelected": 1,
+                "isSelected": 1
                 
             }
         ]
     },
     {
+        "name" : "49.点播-mp4-公有算法DRM-http-mp4-CENC-AES-CTR",
         "isLive": 0,
         "streamElements": [
             {
@@ -987,7 +990,7 @@
         ]
     },
     {
-        
+        "name" : "50.点播-七牛私有DRM算法-http-mp4-new",
         "isLive": 0,
         "streamElements": [
             {
@@ -999,9 +1002,9 @@
                 "backupUrl": "",
                 "referer": "",
                 "mp4QNDrmComKey" : "comnew",
-                "mp4QNDrmFileKey" : "filenew",
+                "mp4QNDrmFileKey" : "filenew"
             }
         ]
     }
-    
+
 ]
