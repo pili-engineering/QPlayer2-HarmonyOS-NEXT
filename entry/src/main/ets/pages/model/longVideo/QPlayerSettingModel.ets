@@ -1,13 +1,8 @@
-import { QPlayerDecodeType } from '../../common/enum/QPlayerDecodeType'
+import { QPlayerSeek } from '@QN/QPlayer2-core/Index'
 
+@Observed
 export class QPlayerSettingModel{
-  private mDecoderType :QPlayerDecodeType = QPlayerDecodeType.AUTO
+  public mSeekMode :QPlayerSeek = QPlayerSeek.QPLAYER_SEEK_SETTING_NORMAL
   constructor() {
-  }
-  setDecoderType(decoder_type:QPlayerDecodeType){
-    this.mDecoderType = decoder_type
-  }
-  getDecoderType():QPlayerDecodeType{
-    return this.mDecoderType
   }
 }

@@ -46,7 +46,11 @@
     },
     {
       "name": "url_list_item_view_height",
-      "value": "20vp"
+      "value": "25vp"
+    },
+    {
+      "name": "title_font_size",
+      "value": "20"
     }
   ]
 }

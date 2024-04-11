@@ -1,5 +1,6 @@
 import { fileIo, fileIO } from '@kit.CoreFileKit'
 import { FaultLogger } from '@kit.PerformanceAnalysisKit'
+import { QPlayerDemoMediaModel, QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QPlayerDemoStreamElement } from '../../model/longVideo/QPlayerDemoStreamElement'
 
 
@@ -29,29 +30,7 @@ class InnerUrlClass{
 
 @Component
 export struct QPlayerUrlListView{
-  private urls : Array<InnerUrlClass> = [
-    new InnerUrlClass(0,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[
-      new QPlayerDemoStreamElement("",0,"",0,true,"","")
-    ],[]),
-    new InnerUrlClass(1,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[]),
-    new InnerUrlClass(2,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[]),
-    new InnerUrlClass(3,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[]),
-    new InnerUrlClass(4,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[]),
-    new InnerUrlClass(5,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[]),
-    new InnerUrlClass(6,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[]),
-    new InnerUrlClass(7,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[]),
-    new InnerUrlClass(8,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[]),
-    new InnerUrlClass(9,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[]),
-    new InnerUrlClass(10,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[]),
-    new InnerUrlClass(11,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[]),
-    new InnerUrlClass(12,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[]),
-    new InnerUrlClass(13,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[]),
-    new InnerUrlClass(14,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[]),
-    new InnerUrlClass(15,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[]),
-    new InnerUrlClass(16,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[]),
-    new InnerUrlClass(17,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[]),
-    new InnerUrlClass(18,"http://demo-videos.qnsdk.com/qiniu-2023-1080p.mp4",[],[])
-  ]
+  @ObjectLink mMediaModel : QPlayerDemoMediaModels
   build() {
     Column(){
       RelativeContainer(){
@@ -66,16 +45,16 @@ export struct QPlayerUrlListView{
 
         List(){
 
-          ForEach(this.urls,(item:InnerUrlClass)=> {
+          ForEach(this.mMediaModel.mMediaModels,(item:QPlayerDemoMediaModel)=> {
             ListItem() {
-              UrlListItem({mId : item.mId,mUrl : item.mName})
+              UrlListItem({mName : item.mName, mUrl : item.mMediaModel.streamElements[0].url})
                 .height($r('app.float.url_list_item_view_height'))
                 .width('100%')
                 .backgroundColor($r('app.color.hyaline_background_color'))
                 .margin({
                   bottom: 5
                 })
-                .id("item_view_" + item.mId.toString())
+                .id("item_view_" + item.mName.toString())
             }
           })
 
@@ -98,12 +77,12 @@ export struct QPlayerUrlListView{
 }
 @Component
 struct UrlListItem{
-  mId:Number = 0
+  mName :String = ""
   mUrl : String = ""
   build() {
     Row(){
       RelativeContainer(){
-          Button(this.mId.toString() + "." + this.mUrl.toString())
+          Button(this.mName.toString())
             .backgroundColor($r('app.color.hyaline_background_color'))
             .fontColor($r('app.color.default_font_color'))
             .fontSize(($r('app.float.default_font_size')))
@@ -112,16 +91,19 @@ struct UrlListItem{
               top : {anchor : "__container__" , align : VerticalAlign.Top}
             })
             .onClick(()=>{
-              console.log(`id: ${this.mId}`)
+              console.log(`id: ${this.mName}`)
             })
             .width('100%')
             .height('100%')
-            .id("url_button_" + this.mId.toString())
+            .id(this.mName.toString())
+            .align(Alignment.Start)
+
       }
     }
     .width('100%')
     .height('100%')
     .backgroundColor($r('app.color.hyaline_background_color'))
+
   }
 }
 @Component

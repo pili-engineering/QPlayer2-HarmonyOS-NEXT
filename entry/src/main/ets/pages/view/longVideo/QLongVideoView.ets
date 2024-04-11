@@ -1,20 +1,22 @@
 import { QTitleView } from "../../common/component/QTitleView"
 import { QPlayerView } from './QPlayerView'
-import { mediaquery, router, window } from '@kit.ArkUI'
-import { QPlayerSettingViewModel } from '../../viewModel/longVideo/QPlayerSettingViewModel'
-import { QPlayerDecodeType } from '../../common/enum/QPlayerDecodeType'
+import { mediaquery, window } from '@kit.ArkUI'
 import  { QPlayerStatusView } from  "./QPlayerStatusView"
 import { QPlayerUrlListView } from './QPlayerUrlListView'
-import { DisplayRotation } from '@kit.TestKit'
 import { QPlayerToastView } from './QPlayerToastView'
+import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
+import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
+import { QSettingPersistentStorageHelper } from '../../common/Helper/QSettingPersistentStorageHelper'
+import { Context } from '@kit.AbilityKit'
+import { QPlayerSeek } from '@QN/QPlayer2-core/Index'
+import { QUrlJsonReadWriteHelper } from '../../common/Helper/QUrlJsonReadWriteHelper'
 
 
-const param : QPlayerSettingViewModel = router.getParams() as QPlayerSettingViewModel
 @Entry
 @Component
 struct QLongVideoView {
-  // private  par: QPlayerSettingViewModel= router.getParams()['vm']
-  @State mQPlayerSettingViewModel : QPlayerSettingViewModel = param
+  @State @Watch('QPlayerSettingModelChange') mQPlayerSetting : QPlayerSettingModel = new QPlayerSettingModel()
+  @State mMediaModel : QPlayerDemoMediaModels = new QPlayerDemoMediaModels(AppStorage.get('context') as Context)
   @State mQPlayerViewWidth : Length = '100%'
   @State mQPlayerViewHeight : Length = '30%'
   @State mQPlayerViewFrameBottom : String = "qplayer_status_view"
@@ -48,7 +50,6 @@ struct QLongVideoView {
 
         //播放器视图
         QPlayerView({
-          PlayerSettingViewModel: this.mQPlayerSettingViewModel,
           mDeviceOrientation: this.mDeviceOrientation
         })
           .alignRules({
@@ -71,7 +72,9 @@ struct QLongVideoView {
           .id("qplayer_status_view")
           .visibility(this.mPortraitShow)
 
-          QPlayerUrlListView()
+          QPlayerUrlListView({
+            mMediaModel : this.mMediaModel
+          })
             .backgroundColor($r('app.color.long_video_url_list_view_background_color'))
             .width('100%')
             .height('40%')
@@ -111,10 +114,14 @@ struct QLongVideoView {
   aboutToAppear(): void {
     this.listener.on('change', (mediaQueryResult:mediaquery.MediaQueryResult) => { this.onPortrait(mediaQueryResult) });
     // this.rotateScreen('mDeviceOrientation')
-    let inner_param : QPlayerSettingViewModel = router.getParams() as QPlayerSettingViewModel
     // let pa = JSON.parse(str)
     // inner_param.setDecoderType(QPlayerDecodeType.SOFTWARE)
     // this.rotateScreen(this.mDeviceOrientation)
+    let context : Context = AppStorage.get('context') as Context
+    this.mQPlayerSetting.mSeekMode = QPlayerSeek.QPLAYER_SEEK_SETTING_ACCURATE
+    QSettingPersistentStorageHelper.read(context)
+    // QUrlJsonReadWriteHelper.read(context,(value)=>{})
+    // QSettingPersistentStorageHelper.save(context,this.mQPlayerSetting)
   }
   rotateScreen(name:String){
     console.info(`mDeviceOrientation: ${this.mDeviceOrientation}`)
@@ -138,6 +145,10 @@ struct QLongVideoView {
       this.mQPlayerViewFrameTop = "title_view_row"
       this.mQPlayerViewFrameTopAlign = VerticalAlign.Bottom
     }
+  }
+
+  QPlayerSettingModelChange(name: String){
+
   }
   //弹出toast，文本为text
   addToastView(text:String){

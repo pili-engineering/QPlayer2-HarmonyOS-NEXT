@@ -1,5 +1,4 @@
 import { QProgressViewModel } from '../../ViewModel/QProgressViewModel'
-import { QPlayerSettingViewModel } from '../../viewModel/longVideo/QPlayerSettingViewModel'
 import { QIPlayerSetting } from '../../interface/longVideo/QPlayerSettingInterface'
 import { QPlayerDecodeType } from '../../common/enum/QPlayerDecodeType'
 import { QTimestampHelper } from '../../common/Helper/QTimestampHelper'
@@ -8,7 +7,7 @@ import { common } from '@kit.AbilityKit'
 
 @Component
 export struct QMaskView{
-  @Link PlayerSettingViewModel: QPlayerSettingViewModel
+  // @Link PlayerSettingViewModel: QPlayerSettingViewModel
   @Link mDeviceOrientation : window.Orientation
   private mSettingCallBacks : QIPlayerSetting = {
   decoderUpdating : (decoder_type:QPlayerDecodeType)=>{
@@ -73,7 +72,7 @@ export struct QMaskView{
     let i = 0
   }
   settingDefault(){
-    this.PlayerSettingViewModel.addQPlayerSetting(this.mSettingCallBacks)
+    // this.PlayerSettingViewModel.addQPlayerSetting(this.mSettingCallBacks)
   }
 
 
@@ -89,8 +88,8 @@ struct QMaskSettingView{
 struct QMaskBottom{
   @State mPlayControlButtonImage:Resource = $r('app.media.qn_play')
   @State mMuteControlButtonImage:Resource = $r('app.media.qn_not_mute')
-  @State mIsPlaying : boolean = false
-  @State mIsMute : boolean = false
+  @State mIsPlaying : Boolean = false
+  @State mIsMute : Boolean = false
   @State mProgressViewModel : QProgressViewModel = new QProgressViewModel(10,0,100)
   @State mProgressTextString : String = "00:00"
   @State mDurationTextString : String = "00:00"

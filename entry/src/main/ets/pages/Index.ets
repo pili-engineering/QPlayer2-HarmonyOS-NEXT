@@ -1,11 +1,12 @@
 import router from '@ohos.router'
+import { QSettingPersistentStorageHelper } from './common/Helper/QSettingPersistentStorageHelper'
+import { QPlayerSettingModel } from './model/longVideo/QPlayerSettingModel'
 import {} from './view/longVideo/QLongVideoView'
-import { QPlayerSettingViewModel } from './viewModel/longVideo/QPlayerSettingViewModel'
+import { Context } from '@ohos.abilityAccessCtrl'
 
 @Entry
 @Component
 struct Index {
-  mQPlayerSettingViewModel:QPlayerSettingViewModel = new QPlayerSettingViewModel()
   build() {
     Row() {
 
@@ -15,10 +16,7 @@ struct Index {
           .height($r('app.float.index_button_height'))
           .onClick(()=>{
             router.pushUrl({
-              url: 'pages/view/longVideo/QLongVideoView',
-              params:{
-                vm : this.mQPlayerSettingViewModel
-              }
+              url: 'pages/view/longVideo/QLongVideoView'
             },router.RouterMode.Standard,(error)=>{
               if (error) {
                 console.error(`Invoke pushUrl failed, code is ${error.code}, message is ${error.message}`);
