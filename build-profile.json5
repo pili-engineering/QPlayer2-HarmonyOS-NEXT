@@ -1,6 +1,20 @@
 {
   "app": {
-    "signingConfigs": [],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/laoganbu/.ohos/config/default_harmony-next_PSWYktjoGTELSGkVIEACb9gxCBAULFXApaGc7oMvnC8=.cer",
+          "storePassword": "0000001A42244A6A318ED7DA75B745C2241F5FB5092BB334AAE0E20833686EEB9EB0FBF160CC5FEDDF5F",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001A675A20F92957032A13C0FB124608F86C800C88B12846B1B938F60ACFD77D8C6F23B32F0AD28D",
+          "profile": "/Users/laoganbu/.ohos/config/default_harmony-next_PSWYktjoGTELSGkVIEACb9gxCBAULFXApaGc7oMvnC8=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/laoganbu/.ohos/config/default_harmony-next_PSWYktjoGTELSGkVIEACb9gxCBAULFXApaGc7oMvnC8=.p12"
+        }
+      }
+    ],
     "products": [
       {
         "name": "default",
@@ -34,15 +48,7 @@
     },
     {
       "name": "qplayer2_core",
-      "srcPath": "./qplayer2_core",
-      "targets": [
-        {
-          "name": "default",
-          "applyToProducts": [
-            "default"
-          ]
-        }
-      ]
+      "srcPath": "./qplayer2_core"
     }
   ]
 }
