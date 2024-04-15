@@ -18,6 +18,7 @@ interface  UrlJsonElementModel{
   mp4QNDrmFileKey : String
 }
 interface  UrlJsonModel{
+  name : String
   isLive : Boolean
   streamElements : Array<UrlJsonElementModel>
 }
@@ -41,7 +42,7 @@ export class QUrlJsonReadWriteHelper{
           stream_element.referer)
         elements.add(inner_stream)
       })
-      model.add(new QPlayerDemoMediaModel("hjghj",QPlayerCreateMediaModelHelper.create(element.isLive,elements.convertToArray())))
+      model.add(new QPlayerDemoMediaModel(element.name,QPlayerCreateMediaModelHelper.create(element.isLive,elements.convertToArray())))
     })
     url_model_call_back(model.convertToArray())
   }
