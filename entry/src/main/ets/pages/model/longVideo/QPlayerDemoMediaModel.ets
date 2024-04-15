@@ -1,5 +1,5 @@
 import { QMediaModel, QPlayerUrlType, QStreamElement } from '@QN/QPlayer2-core/Index'
-import { QUrlJsonReadWriteHelper } from '../../common/Helper/QUrlJsonReadWriteHelper'
+import { QUrlJsonReadWriteHelper } from '../../common/helper/QUrlJsonReadWriteHelper'
 
 @Observed
 export class QPlayerDemoMediaModels{
