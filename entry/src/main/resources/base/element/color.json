@@ -21,6 +21,10 @@
       "value": "#000"
     },
     {
+      "name": "long_video_mask_font_color",
+      "value": "#FFFFFFFF"
+    },
+    {
       "name": "long_video_progress_slider_background_color",
       "value": "#02000000"
     },
@@ -47,6 +51,10 @@
     {
       "name": "toast_view_font_color",
       "value": "#FFFFFFFF"
+    },
+    {
+      "name": "default_line_color",
+      "value": "#000"
     }
   ]
 }
