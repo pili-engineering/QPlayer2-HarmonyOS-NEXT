@@ -1,15 +1,11 @@
 import router from '@ohos.router'
-import { QSettingPersistentStorageHelper } from './common/Helper/QSettingPersistentStorageHelper'
-import { QPlayerSettingModel } from './model/longVideo/QPlayerSettingModel'
 import {} from './view/longVideo/QLongVideoView'
-import { Context } from '@ohos.abilityAccessCtrl'
 
 @Entry
 @Component
 struct Index {
   build() {
     Row() {
-
       Column({space:20}) {
         Button("长视频")
           .width('70%')
@@ -20,9 +16,9 @@ struct Index {
             },router.RouterMode.Standard,(error)=>{
               if (error) {
                 console.error(`Invoke pushUrl failed, code is ${error.code}, message is ${error.message}`);
-                return;
+                return
               }
-              console.info('Invoke pushUrl succeeded.');
+              console.info('Invoke pushUrl succeeded.')
             })
           })
 
@@ -30,6 +26,15 @@ struct Index {
           .width('70%')
           .height($r('app.float.index_button_height'))
           .onClick(()=>{
+            router.pushUrl({
+              url : 'pages/view/playerDefaultSetting/QPlayerDefaultSettingView'
+            },router.RouterMode.Standard,(error)=>{
+              if (error) {
+                console.error(`Invoke pushUrl failed, code is ${error.code}, message is ${error.message}`);
+                return
+              }
+              console.info('Invoke pushUrl succeeded.')
+            })
           })
       }
       .width('100%')
