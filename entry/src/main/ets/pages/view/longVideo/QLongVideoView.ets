@@ -6,16 +6,15 @@ import { QPlayerUrlListView } from './QPlayerUrlListView'
 import { QPlayerToastView } from './QPlayerToastView'
 import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
-import { QSettingPersistentStorageHelper } from '../../common/Helper/QSettingPersistentStorageHelper'
-import { Context } from '@kit.AbilityKit'
-import { QPlayerSeek } from '@QN/QPlayer2-core/Index'
-import { QUrlJsonReadWriteHelper } from '../../common/Helper/QUrlJsonReadWriteHelper'
-
+import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
+import { common, Context } from '@kit.AbilityKit'
+import { ifaa } from '@kit.OnlineAuthenticationKit'
+import { PlayerContextFactory, QIPlayerContext, QLogLevel } from '@QN/QPlayer2-core/Index'
 
 @Entry
 @Component
 struct QLongVideoView {
-  @State @Watch('QPlayerSettingModelChange') mQPlayerSetting : QPlayerSettingModel = new QPlayerSettingModel()
+  @State @Watch('QPlayerSettingModelChange') mQPlayerSetting : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get('context') as Context)
   @State mMediaModel : QPlayerDemoMediaModels = new QPlayerDemoMediaModels(AppStorage.get('context') as Context)
   @State mQPlayerViewWidth : Length = '100%'
   @State mQPlayerViewHeight : Length = '30%'
@@ -26,6 +25,7 @@ struct QLongVideoView {
   @State mPortraitShow : Visibility = Visibility.Visible
   @State @Watch('rotateScreen') mDeviceOrientation :window.Orientation = window.Orientation.PORTRAIT
   @State mToastText : String = ''
+  @State mPlayerContext : QIPlayerContext = PlayerContextFactory.createPlayerContext(QLogLevel.LOG_DEBUG,"s","s","1.4.0")
   build() {
     Column() {
       RelativeContainer() {
@@ -50,7 +50,9 @@ struct QLongVideoView {
 
         //播放器视图
         QPlayerView({
-          mDeviceOrientation: this.mDeviceOrientation
+          mDeviceOrientation: this.mDeviceOrientation,
+          mMediaModel : this.mMediaModel,
+          mPlayerContext : this.mPlayerContext
         })
           .alignRules({
             left: { anchor: "__container__", align: HorizontalAlign.Start },
@@ -73,7 +75,8 @@ struct QLongVideoView {
           .visibility(this.mPortraitShow)
 
           QPlayerUrlListView({
-            mMediaModel : this.mMediaModel
+            mMediaModel : this.mMediaModel,
+            mPlayerContext : this.mPlayerContext
           })
             .backgroundColor($r('app.color.long_video_url_list_view_background_color'))
             .width('100%')
@@ -117,14 +120,27 @@ struct QLongVideoView {
     // let pa = JSON.parse(str)
     // inner_param.setDecoderType(QPlayerDecodeType.SOFTWARE)
     // this.rotateScreen(this.mDeviceOrientation)
-    let context : Context = AppStorage.get('context') as Context
-    this.mQPlayerSetting.mSeekMode = QPlayerSeek.QPLAYER_SEEK_SETTING_ACCURATE
-    QSettingPersistentStorageHelper.read(context)
     // QUrlJsonReadWriteHelper.read(context,(value)=>{})
     // QSettingPersistentStorageHelper.save(context,this.mQPlayerSetting)
   }
+  aboutToDisappear(): void {
+    if (this.mDeviceOrientation == window.Orientation.PORTRAIT){
+      return
+    }
+    window.getLastWindow(getContext(this) as common.UIAbilityContext).then(res => {
+      res.setPreferredOrientation(window.Orientation.PORTRAIT, (err) => {
+        if (err.code) {
+          console.error('Failed to set window orientation. Cause: ' + JSON.stringify(err));
+          return;
+        }
+        this.mDeviceOrientation = window.Orientation.PORTRAIT
+        console.info('Succeeded in setting window orientation.');
+      })
+    })
+  }
   rotateScreen(name:String){
     console.info(`mDeviceOrientation: ${this.mDeviceOrientation}`)
+    let windowStage : window.WindowStage = AppStorage.get("windowStage") as window.WindowStage
     //横屏
     if (this.mDeviceOrientation == window.Orientation.LANDSCAPE) {
       this.mQPlayerViewWidth = '100%'
@@ -134,6 +150,8 @@ struct QLongVideoView {
       this.mQPlayerViewFrameBottomAlign = VerticalAlign.Bottom
       this.mQPlayerViewFrameTop = "__container__"
       this.mQPlayerViewFrameTopAlign = VerticalAlign.Top
+      windowStage.getMainWindowSync().setWindowBackgroundColor("#ff000000")
+
     }
     //竖屏
     else if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {
@@ -144,6 +162,7 @@ struct QLongVideoView {
       this.mQPlayerViewFrameBottomAlign = VerticalAlign.Top
       this.mQPlayerViewFrameTop = "title_view_row"
       this.mQPlayerViewFrameTopAlign = VerticalAlign.Bottom
+      windowStage.getMainWindowSync().setWindowBackgroundColor("#ffffffff")
     }
   }
 

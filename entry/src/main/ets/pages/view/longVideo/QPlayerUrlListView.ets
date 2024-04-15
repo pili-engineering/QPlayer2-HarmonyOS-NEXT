@@ -1,5 +1,4 @@
-import { fileIo, fileIO } from '@kit.CoreFileKit'
-import { FaultLogger } from '@kit.PerformanceAnalysisKit'
+import { QIPlayerContext, QMediaModel } from '@QN/QPlayer2-core/Index'
 import { QPlayerDemoMediaModel, QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QPlayerDemoStreamElement } from '../../model/longVideo/QPlayerDemoStreamElement'
 
@@ -31,6 +30,8 @@ class InnerUrlClass{
 @Component
 export struct QPlayerUrlListView{
   @ObjectLink mMediaModel : QPlayerDemoMediaModels
+  @Link mPlayerContext : QIPlayerContext
+  @State @Watch('currentMediaModelIdChange') mCurrentPlayerMediaModelId : Number  = 0
   build() {
     Column(){
       RelativeContainer(){
@@ -44,16 +45,12 @@ export struct QPlayerUrlListView{
           .id("title_view")
 
         List(){
-
-          ForEach(this.mMediaModel.mMediaModels,(item:QPlayerDemoMediaModel)=> {
+          ForEach(this.mMediaModel.mMediaModels,(item:QPlayerDemoMediaModel,index : Number)=> {
             ListItem() {
-              UrlListItem({mName : item.mName, mUrl : item.mMediaModel.streamElements[0].url})
+              UrlListItem({mName : item.mName, mUrl : item.mMediaModel.streamElements[0].url,mId: index , mCurrentPlayerMediaModelId: this.mCurrentPlayerMediaModelId})
                 .height($r('app.float.url_list_item_view_height'))
                 .width('100%')
                 .backgroundColor($r('app.color.hyaline_background_color'))
-                .margin({
-                  bottom: 5
-                })
                 .id("item_view_" + item.mName.toString())
             }
           })
@@ -74,11 +71,16 @@ export struct QPlayerUrlListView{
     .width('100%')
     .height('100%')
   }
+  currentMediaModelIdChange () {
+    this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel,0)
+  }
 }
 @Component
 struct UrlListItem{
   mName :String = ""
   mUrl : String = ""
+  mId: Number = 0
+  @Link mCurrentPlayerMediaModelId : Number
   build() {
     Row(){
       RelativeContainer(){
@@ -91,7 +93,7 @@ struct UrlListItem{
               top : {anchor : "__container__" , align : VerticalAlign.Top}
             })
             .onClick(()=>{
-              console.log(`id: ${this.mName}`)
+              this.mCurrentPlayerMediaModelId = this.mId
             })
             .width('100%')
             .height('100%')

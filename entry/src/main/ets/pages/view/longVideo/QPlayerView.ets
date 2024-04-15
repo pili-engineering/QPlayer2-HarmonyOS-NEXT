@@ -2,20 +2,22 @@ import { QPlayerDecodeType } from '../../common/enum/QPlayerDecodeType'
 import { QIPlayerSetting } from '../../interface/longVideo/QPlayerSettingInterface'
 import { QMaskView } from './QMaskView'
 import { window } from '@kit.ArkUI'
-import {QSurfaceRenderView,QMediaModel,QIPlayerContext,QIPlayerControlHandler,
+import {QSurfaceRenderView,QIPlayerContext,
   PlayerContextFactory,
   QLogLevel
 } from '@QN/QPlayer2-core'
+import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 
 @Component
 export struct QPlayerView{
   private mQPlayerTimerCount : Number = 0
   private mQPlayerTimerId : Number = 0
   private mQPlayerIsTimerStart : Boolean = false
-  private mPlayerContext : QIPlayerContext = PlayerContextFactory.createPlayerContext(QLogLevel.LOG_DEBUG,"s","s","1.4.0")
   // @Link PlayerSettingViewModel: QPlayerSettingViewModel
   @State mMaskHide : Visibility = Visibility.Visible
   @Link mDeviceOrientation : window.Orientation
+  @Link mMediaModel : QPlayerDemoMediaModels
+  @Link mPlayerContext : QIPlayerContext
   private mSettingCallBacks : QIPlayerSetting = {
     decoderUpdating : (decoder_type:QPlayerDecodeType)=>{
       console.info("----------decoderUpdating log--------")
@@ -61,6 +63,7 @@ export struct QPlayerView{
     // this.mPlayerContext.init(mContext)
     // this.mPlayerContext.get_control_handler().playMediaModel(model,0)
     // this.mPlayerContext.get_control_handler().seek(100)
+    this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel,0)
   }
   settingDefault(){
   }

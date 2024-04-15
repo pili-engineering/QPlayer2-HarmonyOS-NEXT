@@ -1,14 +1,16 @@
 import { QProgressViewModel } from '../../ViewModel/QProgressViewModel'
 import { QIPlayerSetting } from '../../interface/longVideo/QPlayerSettingInterface'
 import { QPlayerDecodeType } from '../../common/enum/QPlayerDecodeType'
-import { QTimestampHelper } from '../../common/Helper/QTimestampHelper'
+import { QTimestampHelper } from '../../common/helper/QTimestampHelper'
 import { router, window } from '@kit.ArkUI'
 import { common } from '@kit.AbilityKit'
+import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 
 @Component
 export struct QMaskView{
   // @Link PlayerSettingViewModel: QPlayerSettingViewModel
-  @Link mDeviceOrientation : window.Orientation
+  @Link @Watch("orientationChange") mDeviceOrientation : window.Orientation
+  @State mPortraitShow : Visibility = Visibility.Hidden
   private mSettingCallBacks : QIPlayerSetting = {
   decoderUpdating : (decoder_type:QPlayerDecodeType)=>{
     console.info("----------decoderUpdating log--------")
@@ -29,7 +31,20 @@ export struct QMaskView{
           top : { anchor : "__container__" , align : VerticalAlign.Top}
         })
         .onClick(()=>{
-          router.back()
+          if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {
+            router.back()
+          }else {
+            window.getLastWindow(getContext(this) as common.UIAbilityContext).then(res => {
+              res.setPreferredOrientation(this.mDeviceOrientation, (err) => {
+                if (err.code) {
+                  console.error('Failed to set window orientation. Cause: ' + JSON.stringify(err));
+                  return;
+                }
+                this.mDeviceOrientation = window.Orientation.PORTRAIT
+                console.info('Succeeded in setting window orientation.');
+              })
+            })
+          }
         })
         .backgroundColor('#00000000')
         .id('mask_back_button')
@@ -46,6 +61,7 @@ export struct QMaskView{
           top : { anchor : "__container__" , align : VerticalAlign.Top}
         })
         .margin({right : 30,top : 20})
+        .visibility(this.mPortraitShow)
         .onClick(()=>{
           router.back()
         })
@@ -73,6 +89,14 @@ export struct QMaskView{
   }
   settingDefault(){
     // this.PlayerSettingViewModel.addQPlayerSetting(this.mSettingCallBacks)
+  }
+  orientationChange(){
+    if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {
+      this.mPortraitShow = Visibility.Hidden
+    }
+    else {
+      this.mPortraitShow = Visibility.Visible
+    }
   }
 
 
@@ -138,7 +162,7 @@ struct QMaskBottom{
         Text(this.mProgressTextString.valueOf())
           .width($r('app.float.long_video_bottom_view_progress_text_width'))
           .fontSize(10)
-          .fontColor($r('app.color.default_font_color'))
+          .fontColor($r('app.color.long_video_mask_font_color'))
           .alignRules({
             left: { anchor: "stop_button", align: HorizontalAlign.End },
             top: { anchor: "__container__", align: VerticalAlign.Top },
@@ -157,7 +181,8 @@ struct QMaskBottom{
           .backgroundColor($r("app.color.long_video_progress_slider_background_color"))
           .onChange((value) => {
             this.mProgressViewModel.setProgress(100)
-            this.mProgressTextString = QTimestampHelper.millisecondToHMSString(10000)
+            this.mProgressTextString = QTimestampHelper.millisecondToHMSString(100000/100*value)
+            this.mDurationTextString = QTimestampHelper.millisecondToHMSString(100000)
           })
           .id('progress_slider')
 
@@ -169,7 +194,7 @@ struct QMaskBottom{
           })
           .width($r('app.float.long_video_bottom_view_progress_text_width'))
           .fontSize(10)
-          .fontColor($r('app.color.default_font_color'))
+          .fontColor($r('app.color.long_video_mask_font_color'))
           .id('duration_text')
 
         Button() {
