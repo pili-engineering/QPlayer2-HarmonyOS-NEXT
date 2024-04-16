@@ -59,8 +59,8 @@ export struct QPlayerView{
     // let build : QMediaModelBuilder = new QMediaModelBuilder()
     // build.addStreamElement("",QPlayerUrlType.QAUDIO_AND_VIDEO,1080,"ss",true,"","")
     // let model : QMediaModel = build.build(false)
-    // let mContext : Context = AppStorage.get('context') as Context
-    // this.mPlayerContext.init(mContext)
+    let mContext : Context = AppStorage.get('context') as Context
+    this.mPlayerContext.init(mContext)
     // this.mPlayerContext.get_control_handler().playMediaModel(model,0)
     // this.mPlayerContext.get_control_handler().seek(100)
     this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel,0)
