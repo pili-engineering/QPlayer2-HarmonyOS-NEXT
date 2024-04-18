@@ -1,6 +1,8 @@
 import router from '@ohos.router'
 import {} from './view/longVideo/QLongVideoView'
 
+import connection from '@ohos.net.connection';
+import { BusinessError } from '@ohos.base';
 @Entry
 @Component
 struct Index {
@@ -14,6 +16,9 @@ struct Index {
             router.pushUrl({
               url: 'pages/view/longVideo/QLongVideoView'
             },router.RouterMode.Standard,(error)=>{
+
+              // 使用默认网络解析主机名以获取所有IP地址
+              let ss = connection.hasDefaultNetSync();
               if (error) {
                 console.error(`Invoke pushUrl failed, code is ${error.code}, message is ${error.message}`);
                 return

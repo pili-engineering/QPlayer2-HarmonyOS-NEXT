@@ -7,19 +7,19 @@ import { QPlayerDemoStreamElement } from '../../model/longVideo/QPlayerDemoStrea
 import map from '@hms.core.map.map';
 
 interface  UrlJsonElementModel{
-  userType: String
-  urlType : Number
-  url: String
-  quality: Number,
-  isSelected: Boolean
-  backupUrl: String
-  referer: String
-  mp4QNDrmComKey : String
-  mp4QNDrmFileKey : String
+  userType: string
+  urlType : number
+  url: string
+  quality: number,
+  isSelected: boolean
+  backupUrl: string
+  referer: string
+  mp4QNDrmComKey : string
+  mp4QNDrmFileKey : string
 }
 interface  UrlJsonModel{
-  name : String
-  isLive : Boolean
+  name : string
+  isLive : boolean
   streamElements : Array<UrlJsonElementModel>
 }
 
