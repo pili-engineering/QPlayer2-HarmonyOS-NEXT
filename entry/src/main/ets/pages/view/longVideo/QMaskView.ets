@@ -5,17 +5,36 @@ import { QTimestampHelper } from '../../common/helper/QTimestampHelper'
 import { router, window } from '@kit.ArkUI'
 import { common } from '@kit.AbilityKit'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
+import { QIPlayerContext, QIPlayerControlHandler } from '@QN/QPlayer2-core/Index'
+import {
+  QIPlayerStateChangeListener
+} from '@QN/QPlayer2-core/src/main/ets/public/listeners/QIPlayerStateChangeListener'
+import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/component/player/QPlayerState'
 
 @Component
 export struct QMaskView{
   // @Link PlayerSettingViewModel: QPlayerSettingViewModel
   @Link @Watch("orientationChange") mDeviceOrientation : window.Orientation
   @State mPortraitShow : Visibility = Visibility.Hidden
+  @Link mPlayerContext : QIPlayerContext
+  @Link mIsPlaying : Boolean
+  @State mIsBack : Boolean = false
   private mSettingCallBacks : QIPlayerSetting = {
   decoderUpdating : (decoder_type:QPlayerDecodeType)=>{
     console.info("----------decoderUpdating log--------")
   }
-}
+  }
+  private mStateCallBack : QIPlayerStateChangeListener = {
+    onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
+      if (state == QPlayerState.STOPPED && this.mIsBack) {
+        // this.mPlayerContext.get_control_handler().release()
+        // router.back()
+      }
+      if (state == QPlayerState.RELEASE) {
+        console.log(`qplayerstate : release`);
+      }
+    }
+  }
   build(){
     Column() {
       RelativeContainer(){
@@ -32,10 +51,15 @@ export struct QMaskView{
         })
         .onClick(()=>{
           if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {
-            router.back()
+            if (this.mIsPlaying == true) {
+
+              this.mPlayerContext.get_control_handler().release()
+              // this.mPlayerContext.get_control_handler().stop()
+            }
+            this.mIsBack = true
           }else {
             window.getLastWindow(getContext(this) as common.UIAbilityContext).then(res => {
-              res.setPreferredOrientation(this.mDeviceOrientation, (err) => {
+              res.setPreferredOrientation(window.Orientation.PORTRAIT, (err) => {
                 if (err.code) {
                   console.error('Failed to set window orientation. Cause: ' + JSON.stringify(err));
                   return;
@@ -68,7 +92,9 @@ export struct QMaskView{
         .backgroundColor('#00000000')
         .id('setting_view_button')
 
-        QMaskBottom({mDeviceOrientation : this.mDeviceOrientation})
+        QMaskBottom({mDeviceOrientation : this.mDeviceOrientation,
+                     mPlayerContext : this.mPlayerContext ,
+                     mIsPlaying : this.mIsPlaying})
           .height($r('app.float.long_video_bottom_view_height'))
           .alignRules({
             bottom : {anchor : "__container__" , align : VerticalAlign.Bottom},
@@ -85,7 +111,7 @@ export struct QMaskView{
 
   aboutToAppear(): void {
     // this.settingDefault()
-    let i = 0
+    this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateCallBack)
   }
   settingDefault(){
     // this.PlayerSettingViewModel.addQPlayerSetting(this.mSettingCallBacks)
@@ -112,12 +138,21 @@ struct QMaskSettingView{
 struct QMaskBottom{
   @State mPlayControlButtonImage:Resource = $r('app.media.qn_play')
   @State mMuteControlButtonImage:Resource = $r('app.media.qn_not_mute')
-  @State mIsPlaying : Boolean = false
+  @Link @Watch('mIsPlayingChange') mIsPlaying : Boolean
   @State mIsMute : Boolean = false
   @State mProgressViewModel : QProgressViewModel = new QProgressViewModel(10,0,100)
   @State mProgressTextString : String = "00:00"
   @State mDurationTextString : String = "00:00"
   @Link mDeviceOrientation : window.Orientation
+  @Link mPlayerContext : QIPlayerContext
+  private mQPlayerStateChangeListenrCallBack : QIPlayerStateChangeListener = {
+    onStateChange :(context: QIPlayerContext, state: QPlayerState) =>{
+      if (state == QPlayerState.PLAYING) {
+        this.mIsPlaying = true
+      }
+    }
+  }
+
   build(){
     Row({space: 5}) {
       RelativeContainer() {
@@ -133,12 +168,12 @@ struct QMaskBottom{
         .margin({ left: 2 })
         .onClick(() => {
           if (this.mIsPlaying) {
-            this.mPlayControlButtonImage = $r('app.media.qn_pause')
             this.mIsPlaying = false
+            this.mPlayerContext.get_control_handler().pauseRender()
           }
           else {
-            this.mPlayControlButtonImage = $r('app.media.qn_play')
             this.mIsPlaying = true
+            this.mPlayerContext.get_control_handler().resumeRender()
           }
         })
         .horizontalMaskButtonStyle()
@@ -154,7 +189,7 @@ struct QMaskBottom{
           bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
         })
         .onClick(()=>{
-          console.log(`stop click`)
+          this.mPlayerContext.get_control_handler().stop()
         })
         .horizontalMaskButtonStyle()
         .id("stop_button")
@@ -243,7 +278,18 @@ struct QMaskBottom{
     .height('100%')
     .justifyContent(FlexAlign.Start)
   }
+  aboutToAppear(): void {
+    this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mQPlayerStateChangeListenrCallBack)
 
+  }
+  mIsPlayingChange(){
+    if (this.mIsPlaying) {
+      this.mPlayControlButtonImage = $r('app.media.qn_pause')
+    }
+    else {
+      this.mPlayControlButtonImage = $r('app.media.qn_play')
+    }
+  }
   rotateScreen(){
     if (this.mDeviceOrientation == window.Orientation.LANDSCAPE) {
       this.mDeviceOrientation = window.Orientation.PORTRAIT

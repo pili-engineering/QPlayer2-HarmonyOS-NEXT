@@ -4,7 +4,7 @@ import { Context } from '@ohos.abilityAccessCtrl'
 
 @Observed
 export class QPlayerSettingModel{
-  public mSeekMode :QPlayerSeek = QPlayerSeek.QPLAYER_SEEK_SETTING_NORMAL
+  public mSeekMode :QPlayerSeek = QPlayerSeek.NORMAL
   constructor() {
   }
 }

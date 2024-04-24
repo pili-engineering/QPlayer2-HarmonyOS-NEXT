@@ -8,7 +8,6 @@ import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
 import { common, Context } from '@kit.AbilityKit'
-import { ifaa } from '@kit.OnlineAuthenticationKit'
 import { PlayerContextFactory, QIPlayerContext, QLogLevel } from '@QN/QPlayer2-core/Index'
 
 @Entry
@@ -25,6 +24,7 @@ struct QLongVideoView {
   @State mPortraitShow : Visibility = Visibility.Visible
   @State @Watch('rotateScreen') mDeviceOrientation :window.Orientation = window.Orientation.PORTRAIT
   @State mToastText : String = ''
+  @State mIsPlaying : Boolean = false
   @State mPlayerContext : QIPlayerContext = PlayerContextFactory.createPlayerContext(QLogLevel.LOG_DEBUG,"s","s","1.4.0")
   build() {
     Column() {
@@ -52,7 +52,8 @@ struct QLongVideoView {
         QPlayerView({
           mDeviceOrientation: this.mDeviceOrientation,
           mMediaModel : this.mMediaModel,
-          mPlayerContext : this.mPlayerContext
+          mPlayerContext : this.mPlayerContext,
+          mIsPlaying : this.mIsPlaying
         })
           .alignRules({
             left: { anchor: "__container__", align: HorizontalAlign.Start },
@@ -76,7 +77,8 @@ struct QLongVideoView {
 
           QPlayerUrlListView({
             mMediaModel : this.mMediaModel,
-            mPlayerContext : this.mPlayerContext
+            mPlayerContext : this.mPlayerContext,
+            mIsPlaying : this.mIsPlaying
           })
             .backgroundColor($r('app.color.long_video_url_list_view_background_color'))
             .width('100%')

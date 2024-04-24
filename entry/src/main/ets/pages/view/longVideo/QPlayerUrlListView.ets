@@ -31,6 +31,7 @@ class InnerUrlClass{
 export struct QPlayerUrlListView{
   @ObjectLink mMediaModel : QPlayerDemoMediaModels
   @Link mPlayerContext : QIPlayerContext
+  @Link mIsPlaying : Boolean
   @State @Watch('currentMediaModelIdChange') mCurrentPlayerMediaModelId : Number  = 0
   build() {
     Column(){
@@ -47,7 +48,10 @@ export struct QPlayerUrlListView{
         List(){
           ForEach(this.mMediaModel.mMediaModels,(item:QPlayerDemoMediaModel,index : Number)=> {
             ListItem() {
-              UrlListItem({mName : item.mName, mUrl : item.mMediaModel.streamElements[0].url,mId: index , mCurrentPlayerMediaModelId: this.mCurrentPlayerMediaModelId})
+              UrlListItem({mName : item.mName,
+                mUrl : item.mMediaModel.streamElements[0].url,mId: index ,
+                mCurrentPlayerMediaModelId: this.mCurrentPlayerMediaModelId,
+                mIsPlaying : this.mIsPlaying})
                 .height($r('app.float.url_list_item_view_height'))
                 .width('100%')
                 .backgroundColor($r('app.color.hyaline_background_color'))
@@ -81,6 +85,7 @@ struct UrlListItem{
   mUrl : String = ""
   mId: Number = 0
   @Link mCurrentPlayerMediaModelId : Number
+  @Link mIsPlaying : Boolean
   build() {
     Row(){
       RelativeContainer(){
@@ -93,6 +98,7 @@ struct UrlListItem{
               top : {anchor : "__container__" , align : VerticalAlign.Top}
             })
             .onClick(()=>{
+              this.mIsPlaying = false
               this.mCurrentPlayerMediaModelId = this.mId
             })
             .width('100%')

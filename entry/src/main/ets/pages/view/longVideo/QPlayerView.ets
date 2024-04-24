@@ -18,6 +18,7 @@ export struct QPlayerView{
   @Link mDeviceOrientation : window.Orientation
   @Link mMediaModel : QPlayerDemoMediaModels
   @Link mPlayerContext : QIPlayerContext
+  @Link mIsPlaying : Boolean
   private mSettingCallBacks : QIPlayerSetting = {
     decoderUpdating : (decoder_type:QPlayerDecodeType)=>{
       console.info("----------decoderUpdating log--------")
@@ -40,7 +41,9 @@ export struct QPlayerView{
           this.startTimer()
         })
 
-        QMaskView({mDeviceOrientation:this.mDeviceOrientation})
+        QMaskView({mDeviceOrientation:this.mDeviceOrientation,
+                   mPlayerContext : this.mPlayerContext,
+                   mIsPlaying: this.mIsPlaying})
           .width('100%')
           .height('100%')
           .backgroundColor('#801d1d1d')
