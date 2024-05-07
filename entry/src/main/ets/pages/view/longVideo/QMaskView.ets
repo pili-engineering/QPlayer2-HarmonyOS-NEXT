@@ -5,11 +5,8 @@ import { QTimestampHelper } from '../../common/helper/QTimestampHelper'
 import { router, window } from '@kit.ArkUI'
 import { common } from '@kit.AbilityKit'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
-import { QIPlayerContext, QIPlayerControlHandler } from '@QN/QPlayer2-core/Index'
-import {
-  QIPlayerStateChangeListener
-} from '@QN/QPlayer2-core/src/main/ets/public/listeners/QIPlayerStateChangeListener'
-import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/component/player/QPlayerState'
+import { QIPlayerContext, QIPlayerStateChangeListener } from '@QN/QPlayer2-core/qplayer2-core'
+import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
 
 @Component
 export struct QMaskView{

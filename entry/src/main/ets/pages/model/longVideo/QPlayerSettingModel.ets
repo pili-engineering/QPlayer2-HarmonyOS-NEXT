@@ -1,4 +1,4 @@
-import { QPlayerSeek } from '@QN/QPlayer2-core/Index'
+import { QPlayerSeek } from '@QN/QPlayer2-core/qplayer2-core'
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
 import { Context } from '@ohos.abilityAccessCtrl'
 

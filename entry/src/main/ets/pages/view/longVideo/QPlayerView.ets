@@ -3,9 +3,9 @@ import { QIPlayerSetting } from '../../interface/longVideo/QPlayerSettingInterfa
 import { QMaskView } from './QMaskView'
 import { window } from '@kit.ArkUI'
 import {QSurfaceRenderView,QIPlayerContext,
-  PlayerContextFactory,
+  QPlayerContextFactory,
   QLogLevel
-} from '@QN/QPlayer2-core'
+} from '@QN/QPlayer2-core/qplayer2-core'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 
 @Component

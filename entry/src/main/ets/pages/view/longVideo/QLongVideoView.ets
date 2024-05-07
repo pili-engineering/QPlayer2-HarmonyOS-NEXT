@@ -8,7 +8,7 @@ import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
 import { common, Context } from '@kit.AbilityKit'
-import { PlayerContextFactory, QIPlayerContext, QLogLevel } from '@QN/QPlayer2-core/Index'
+import { QPlayerContextFactory, QIPlayerContext, QLogLevel } from '@QN/QPlayer2-core/qplayer2-core'
 
 @Entry
 @Component
@@ -25,7 +25,7 @@ struct QLongVideoView {
   @State @Watch('rotateScreen') mDeviceOrientation :window.Orientation = window.Orientation.PORTRAIT
   @State mToastText : String = ''
   @State mIsPlaying : Boolean = false
-  @State mPlayerContext : QIPlayerContext = PlayerContextFactory.createPlayerContext(QLogLevel.LOG_DEBUG,"s","s","1.4.0")
+  @State mPlayerContext : QIPlayerContext = QPlayerContextFactory.createPlayerContext(QLogLevel.LOG_INFO,"s","s","1.4.0")
   build() {
     Column() {
       RelativeContainer() {
