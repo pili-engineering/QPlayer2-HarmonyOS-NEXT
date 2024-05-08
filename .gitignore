@@ -8,6 +8,7 @@
 /.clangd
 /.clang-format
 /.clang-tidy
+/.hvigor
 **/.test
 oh-package-lock.json5
 /qplayer2_core/
