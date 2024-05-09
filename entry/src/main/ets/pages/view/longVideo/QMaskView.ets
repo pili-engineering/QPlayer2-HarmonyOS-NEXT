@@ -5,7 +5,7 @@ import { QTimestampHelper } from '../../common/helper/QTimestampHelper'
 import { router, window } from '@kit.ArkUI'
 import { common } from '@kit.AbilityKit'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
-import { QIPlayerContext, QIPlayerStateChangeListener } from '@QN/QPlayer2-core/qplayer2-core'
+import { QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener } from '@QN/QPlayer2-core/qplayer2-core'
 import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
 
 @Component
@@ -140,8 +140,19 @@ struct QMaskBottom{
   @State mProgressViewModel : QProgressViewModel = new QProgressViewModel(10,0,100)
   @State mProgressTextString : String = "00:00"
   @State mDurationTextString : String = "00:00"
+  @State mProgress : number = 0
+  @State mDuration : number = 0
   @Link mDeviceOrientation : window.Orientation
   @Link mPlayerContext : QIPlayerContext
+
+  private mProgressListener : QIPlayerProgressListener = {
+    onProgressChanged:(context:QIPlayerContext,  progress:number, duration:number) => {
+      this.mProgress = progress
+      this.mDuration = duration
+      this.mProgressTextString = QTimestampHelper.millisecondToHMSString(progress)
+      this.mDurationTextString = QTimestampHelper.millisecondToHMSString(duration)
+    }
+  }
   private mQPlayerStateChangeListenrCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext, state: QPlayerState) =>{
       if (state == QPlayerState.PLAYING) {
@@ -149,7 +160,6 @@ struct QMaskBottom{
       }
     }
   }
-
   build(){
     Row({space: 5}) {
       RelativeContainer() {
@@ -202,7 +212,7 @@ struct QMaskBottom{
           })
           .id('progress_text')
 
-        Slider({ max: 100, min: 0, value: 0, step: 0.1 })
+        Slider({ max: this.mDuration/1000, min: 0, value: this.mProgress/1000})
           .height('100%')
           .alignRules({
             left: { anchor: "progress_text", align: HorizontalAlign.End },
@@ -212,9 +222,7 @@ struct QMaskBottom{
           })
           .backgroundColor($r("app.color.long_video_progress_slider_background_color"))
           .onChange((value) => {
-            this.mProgressViewModel.setProgress(100)
-            this.mProgressTextString = QTimestampHelper.millisecondToHMSString(100000/100*value)
-            this.mDurationTextString = QTimestampHelper.millisecondToHMSString(100000)
+            this.mProgressViewModel.setProgress(value)
           })
           .id('progress_slider')
 
@@ -277,7 +285,7 @@ struct QMaskBottom{
   }
   aboutToAppear(): void {
     this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mQPlayerStateChangeListenrCallBack)
-
+    this.mPlayerContext.get_control_handler().addPlayerProgressChangeListener(this.mProgressListener)
   }
   mIsPlayingChange(){
     if (this.mIsPlaying) {

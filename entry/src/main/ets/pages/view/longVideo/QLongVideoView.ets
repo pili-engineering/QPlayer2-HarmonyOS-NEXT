@@ -8,7 +8,40 @@ import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
 import { common, Context } from '@kit.AbilityKit'
-import { QPlayerContextFactory, QIPlayerContext, QLogLevel } from '@QN/QPlayer2-core/qplayer2-core'
+import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
+  QIPlayerAudioDataListener,
+  QSampleFormat,
+  QChannelLayout,
+  QIPlayerAudioListener,
+  QIPlayerAuthenticationListener,
+  QPlayerAuthenticationErrorType,
+  QIPlayerBiteRateListener,
+  QIPlayerBufferingListener,
+  QIPlayerCommandNotAllowListener,
+  QPlayerStart,
+  QIPlayerDownloadListener,
+  QIPlayerFormatListener,
+  QIPlayerFPSListener,
+  QIPlayerMediaNetworkListener,
+  QPlayerOpenError,
+  QPlayerUrlType,
+  QIPlayerProgressListener,
+  QIPlayerQualityListener,
+  QIPlayerRenderListener,
+  QIPlayerSeekListener,
+  QIPlayerSEIDataListener,
+  QPlayerShootVideoType,
+  QIPlayerSpeedListener,
+  QIPlayerShootVideoListener,
+  QIPlayerStateChangeListener,
+  QIPlayerSubtitleListener,
+  QIPlayerVideoDataListener,
+  QIPlayerVideoDecodeListener,
+  QIPlayerVideoFrameSizeChangeListener} from '@QN/QPlayer2-core/qplayer2-core'
+import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
+import { QVideoType } from '@QN/QPlayer2-core/src/main/ets/public/listeners/QIPlayerVideoDataListener'
+import { QPlayerDecoderType } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerDecoderType'
+
 
 @Entry
 @Component
@@ -26,6 +59,105 @@ struct QLongVideoView {
   @State mToastText : String = ''
   @State mIsPlaying : Boolean = false
   @State mPlayerContext : QIPlayerContext = QPlayerContextFactory.createPlayerContext(QLogLevel.LOG_INFO,"s","s","1.4.0")
+  private mAudioDataListener : QIPlayerAudioDataListener = {
+    onAudioData:(context : QIPlayerContext, sampleRate: number, format:QSampleFormat, channelNum: number, channelLayout: QChannelLayout, data:Uint8Array)=>{}
+  }
+  private mAudioListener : QIPlayerAudioListener = {
+    onMuteChanged:(context :QIPlayerContext , isMute:boolean)=>{}
+  }
+  private mAuthenticationListener : QIPlayerAuthenticationListener = {
+    onAuthenticationFailed:(context: QIPlayerContext, error:QPlayerAuthenticationErrorType)=>{},
+
+    onAuthenticationSuccess:(context: QIPlayerContext)=>{}
+  }
+  private mBiteRateListener : QIPlayerBiteRateListener = {
+    onBiteRateChanged:(context:QIPlayerContext, bitrate:number)=>{}
+  }
+  private mBufferingListener : QIPlayerBufferingListener = {
+    onBufferingStart:(context:QIPlayerContext)=>{},
+
+    onBufferingEnd:(context: QIPlayerContext)=>{}
+  }
+  private mCommandNotAllowListener : QIPlayerCommandNotAllowListener = {
+    onCommandNotAllow:(context:QIPlayerContext, commandName:string, state:QPlayerState)=>{}
+  }
+  private mDownloadListener : QIPlayerDownloadListener = {
+    onDownloadChanged:(context:QIPlayerContext, speed:number, bufferPos:number)=>{}
+  }
+  private mFormatListener : QIPlayerFormatListener = {
+    onFormatNotSupport:(context:QIPlayerContext)=>{}
+  }
+  private mFPSListener : QIPlayerFPSListener = {
+    onFPSChanged:(context:QIPlayerContext, FPS:number)=>{}
+  }
+  private mMediaNetworkListener : QIPlayerMediaNetworkListener = {
+    onReconnectStart:(context : QIPlayerContext , userType: string , urlType: QPlayerUrlType , url: string , retryTime: number ) => {},
+
+    onReconnectEnd:(context : QIPlayerContext , userType: string , urlType: QPlayerUrlType , url: string , retryTime: number , error: QPlayerOpenError ) => {},
+
+    onOpenFailed:(context : QIPlayerContext , userType: string , urlType: QPlayerUrlType , url: string , error: QPlayerOpenError ) => {}
+
+  }
+  private mQualityListener : QIPlayerQualityListener = {
+    onQualitySwitchStart:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {},
+
+    onQualitySwitchComplete:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {},
+
+    onQualitySwitchCanceled:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {},
+
+    onQualitySwitchFailed:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {},
+
+    onQualitySwitchRetryLater:(context : QIPlayerContext ,  usertype: string , urlType: QPlayerUrlType ) => {}
+
+  }
+  private mRenderListener : QIPlayerRenderListener = {
+    onFirstFrameRendered:(context : QIPlayerContext, elapsedTime:number) => {}
+  }
+  private mSeekListener : QIPlayerSeekListener = {
+    onSeekSuccess:(context : QIPlayerContext) => {},
+
+    onSeekFailed:(context : QIPlayerContext) => {}
+  }
+  private mSEIDataListener : QIPlayerSEIDataListener = {
+    onSEIData:(context:QIPlayerContext, data:Uint8Array)=>{}
+  }
+  private mShootVideoListener : QIPlayerShootVideoListener = {
+    onShootSuccessful:(context : QIPlayerContext, imageData:Uint8Array, width:number, height:number, type: QPlayerShootVideoType) => {},
+    onShootFailed:(context : QIPlayerContext) => {}
+  }
+  private mSpeedListener : QIPlayerSpeedListener = {
+    onSpeedChanged:(context : QIPlayerContext, speed:number ) => {}
+  }
+  private mStateChangeListener : QIPlayerStateChangeListener ={
+    onStateChange:(context : QIPlayerContext ,state: QPlayerState)=>{}
+  }
+  private mSubtitleListener : QIPlayerSubtitleListener = {
+    onSubtitleTextChange:(context : QIPlayerContext , text: string ) => {},
+
+    onSubtitleNameChange:(context : QIPlayerContext , name: string ) => {},
+
+    onSubtitleEnable:(context : QIPlayerContext , enable: boolean ) => {},
+
+    onSubtitleLoaded:(context : QIPlayerContext , name: string , result: boolean ) => {},
+
+    onSubtitleDecoded:(context : QIPlayerContext , name: string , result: boolean ) => {}
+
+  }
+  private mVideoDataListener : QIPlayerVideoDataListener = {
+    onVideoData:(context : QIPlayerContext, width: number, height: number, videoType: QVideoType, buffer: Uint8Array) => {}
+  }
+  private mVideoDecodeListener : QIPlayerVideoDecodeListener = {
+    onVideoDecodeByType:(context : QIPlayerContext , Type: QPlayerDecoderType) => {},
+
+    onDecodeFailed:(context : QIPlayerContext , retry: boolean) => {},
+
+    onNotSupportCodecFormat:(context : QIPlayerContext , codec: number) => {}
+
+  }
+  private mVideoFrameSizeChangeListener : QIPlayerVideoFrameSizeChangeListener = {
+    onVideoFrameSizeChanged:(context : QIPlayerContext, width: number, height:number ) => {}
+  }
+
   build() {
     Column() {
       RelativeContainer() {
@@ -118,12 +250,7 @@ struct QLongVideoView {
 
   aboutToAppear(): void {
     this.listener.on('change', (mediaQueryResult:mediaquery.MediaQueryResult) => { this.onPortrait(mediaQueryResult) });
-    // this.rotateScreen('mDeviceOrientation')
-    // let pa = JSON.parse(str)
-    // inner_param.setDecoderType(QPlayerDecodeType.SOFTWARE)
-    // this.rotateScreen(this.mDeviceOrientation)
-    // QUrlJsonReadWriteHelper.read(context,(value)=>{})
-    // QSettingPersistentStorageHelper.save(context,this.mQPlayerSetting)
+    this.addAllQPlayerListeners()
   }
   aboutToDisappear(): void {
     if (this.mDeviceOrientation == window.Orientation.PORTRAIT){
@@ -170,6 +297,30 @@ struct QLongVideoView {
 
   QPlayerSettingModelChange(name: String){
 
+  }
+
+  addAllQPlayerListeners(){
+    this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateChangeListener)
+    this.mPlayerContext.get_control_handler().addPlayerVideoDecodeTypeListener(this.mVideoDecodeListener)
+    this.mPlayerContext.get_control_handler().addPlayerMediaNetworkListener(this.mMediaNetworkListener)
+    this.mPlayerContext.get_control_handler().addPlayerProgressChangeListener(this.mProgressListener)
+    this.mPlayerContext.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingListener)
+    this.mPlayerContext.get_control_handler().addPlayerFPSChangeListener(this.mFPSListener)
+    this.mPlayerContext.get_control_handler().addPlayerBiteRateChangeListener(this.mBiteRateListener)
+    this.mPlayerContext.get_control_handler().addPlayerDownloadChangeListener(this.mDownloadListener)
+    this.mPlayerContext.get_control_handler().addPlayerCommandNotAllowListener(this.mCommandNotAllowListener)
+    this.mPlayerContext.get_control_handler().addPlayerQualityListener(this.mQualityListener)
+    this.mPlayerContext.get_control_handler().addPlayerSpeedChangeListener(this.mSpeedListener)
+    this.mPlayerContext.get_control_handler().addPlayerAuthenticationListener(this.mAuthenticationListener)
+    this.mPlayerContext.get_control_handler().addPlayerFormatListener(this.mFormatListener)
+    this.mPlayerContext.get_control_handler().addPlayerSEIDataListener(this.mSEIDataListener)
+    this.mPlayerContext.get_control_handler().addPlayerShootVideoListener(this.mShootVideoListener)
+    this.mPlayerContext.get_control_handler().addPlayerAudioListener(this.mAudioListener)
+    this.mPlayerContext.get_control_handler().addPlayerVideoFrameSizeChangeListener(this.mVideoFrameSizeChangeListener)
+    this.mPlayerContext.get_control_handler().addPlayerSeekListener(this.mSeekListener)
+    this.mPlayerContext.get_control_handler().addPlayerSubtitleListener(this.mSubtitleListener)
+    this.mPlayerContext.get_control_handler().addPlayerAudioDataListener(this.mAudioDataListener)
+    this.mPlayerContext.get_control_handler().addPlayerVideoDataListener(this.mVideoDataListener)
   }
   //弹出toast，文本为text
   addToastView(text:String){

@@ -28,7 +28,7 @@ export struct QPlayerView{
     Row() {
       Stack(){
 
-        QSurfaceRenderView()
+        QSurfaceRenderView({mQPlayerContext : this.mPlayerContext})
           .width('100%')
           .height('100%')
 
