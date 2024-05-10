@@ -63,12 +63,23 @@ struct QLongVideoView {
     onAudioData:(context : QIPlayerContext, sampleRate: number, format:QSampleFormat, channelNum: number, channelLayout: QChannelLayout, data:Uint8Array)=>{}
   }
   private mAudioListener : QIPlayerAudioListener = {
-    onMuteChanged:(context :QIPlayerContext , isMute:boolean)=>{}
+    onMuteChanged:(context :QIPlayerContext , isMute:boolean)=>{
+      if (isMute) {
+        this.addToastView("开启静音")
+      }
+      else {
+        this.addToastView("关闭静音")
+      }
+    }
   }
   private mAuthenticationListener : QIPlayerAuthenticationListener = {
-    onAuthenticationFailed:(context: QIPlayerContext, error:QPlayerAuthenticationErrorType)=>{},
+    onAuthenticationFailed:(context: QIPlayerContext, error:QPlayerAuthenticationErrorType)=>{
+      this.addToastView(`鉴权失败：${error.valueOf()}`)
+    },
 
-    onAuthenticationSuccess:(context: QIPlayerContext)=>{}
+    onAuthenticationSuccess:(context: QIPlayerContext)=>{
+      this.addToastView("鉴权成功")
+    }
   }
   private mBiteRateListener : QIPlayerBiteRateListener = {
     onBiteRateChanged:(context:QIPlayerContext, bitrate:number)=>{}
@@ -85,17 +96,25 @@ struct QLongVideoView {
     onDownloadChanged:(context:QIPlayerContext, speed:number, bufferPos:number)=>{}
   }
   private mFormatListener : QIPlayerFormatListener = {
-    onFormatNotSupport:(context:QIPlayerContext)=>{}
+    onFormatNotSupport:(context:QIPlayerContext)=>{
+      this.addToastView("onFormatNotSupport")
+    }
   }
   private mFPSListener : QIPlayerFPSListener = {
     onFPSChanged:(context:QIPlayerContext, FPS:number)=>{}
   }
   private mMediaNetworkListener : QIPlayerMediaNetworkListener = {
-    onReconnectStart:(context : QIPlayerContext , userType: string , urlType: QPlayerUrlType , url: string , retryTime: number ) => {},
+    onReconnectStart:(context : QIPlayerContext , userType: string , urlType: QPlayerUrlType , url: string , retryTime: number ) => {
+      this.addToastView(`开始重连 : ${retryTime}`)
+    },
 
-    onReconnectEnd:(context : QIPlayerContext , userType: string , urlType: QPlayerUrlType , url: string , retryTime: number , error: QPlayerOpenError ) => {},
+    onReconnectEnd:(context : QIPlayerContext , userType: string , urlType: QPlayerUrlType , url: string , retryTime: number , error: QPlayerOpenError ) => {
+      this.addToastView(`重连结束 : ${retryTime}`)
+    },
 
-    onOpenFailed:(context : QIPlayerContext , userType: string , urlType: QPlayerUrlType , url: string , error: QPlayerOpenError ) => {}
+    onOpenFailed:(context : QIPlayerContext , userType: string , urlType: QPlayerUrlType , url: string , error: QPlayerOpenError ) => {
+      this.addToastView(`openFailed`)
+    }
 
   }
   private mQualityListener : QIPlayerQualityListener = {
@@ -111,15 +130,23 @@ struct QLongVideoView {
 
   }
   private mRenderListener : QIPlayerRenderListener = {
-    onFirstFrameRendered:(context : QIPlayerContext, elapsedTime:number) => {}
+    onFirstFrameRendered:(context : QIPlayerContext, elapsedTime:number) => {
+
+    }
   }
   private mSeekListener : QIPlayerSeekListener = {
-    onSeekSuccess:(context : QIPlayerContext) => {},
+    onSeekSuccess:(context : QIPlayerContext) => {
+      this.addToastView(`seek 成功`)
+    },
 
-    onSeekFailed:(context : QIPlayerContext) => {}
+    onSeekFailed:(context : QIPlayerContext) => {
+      this.addToastView(`seek 失败`)
+    }
   }
   private mSEIDataListener : QIPlayerSEIDataListener = {
-    onSEIData:(context:QIPlayerContext, data:Uint8Array)=>{}
+    onSEIData:(context:QIPlayerContext, data:Uint8Array)=>{
+      this.addToastView(`sei`)
+    }
   }
   private mShootVideoListener : QIPlayerShootVideoListener = {
     onShootSuccessful:(context : QIPlayerContext, imageData:Uint8Array, width:number, height:number, type: QPlayerShootVideoType) => {},
@@ -129,7 +156,45 @@ struct QLongVideoView {
     onSpeedChanged:(context : QIPlayerContext, speed:number ) => {}
   }
   private mStateChangeListener : QIPlayerStateChangeListener ={
-    onStateChange:(context : QIPlayerContext ,state: QPlayerState)=>{}
+    onStateChange:(context : QIPlayerContext ,state: QPlayerState)=>{
+      let stateString : string
+      switch (state){
+        case QPlayerState.NONE:
+        stateString = "NONE"
+        break
+        case QPlayerState.INIT:
+          stateString = "INIT"
+          break
+        case QPlayerState.PREPARE:
+          stateString = "PREPARE"
+          break
+        case QPlayerState.PLAYING:
+          stateString = "PLAYING"
+          break
+        case QPlayerState.PAUSED_RENDER:
+          stateString = "PAUSED_RENDER"
+          break
+        case QPlayerState.COMPLETED:
+          stateString = "COMPLETED"
+          break
+        case QPlayerState.SEEKING:
+          stateString = "SEEKING"
+          break
+        case QPlayerState.STOPPED:
+          stateString = "STOPPED"
+          break
+        case QPlayerState.MISTAKE:
+          stateString = "MISTAKE"
+          break
+        case QPlayerState.END:
+          stateString = "END"
+          break
+        default :
+          stateString = "default"
+          break
+      }
+      this.addToastView(`state ： ${stateString}`)
+    }
   }
   private mSubtitleListener : QIPlayerSubtitleListener = {
     onSubtitleTextChange:(context : QIPlayerContext , text: string ) => {},

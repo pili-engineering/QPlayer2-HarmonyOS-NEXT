@@ -1,4 +1,4 @@
-import { QProgressViewModel } from '../../ViewModel/QProgressViewModel'
+
 import { QIPlayerSetting } from '../../interface/longVideo/QPlayerSettingInterface'
 import { QPlayerDecodeType } from '../../common/enum/QPlayerDecodeType'
 import { QTimestampHelper } from '../../common/helper/QTimestampHelper'
@@ -25,7 +25,6 @@ export struct QMaskView{
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
       if (state == QPlayerState.RELEASE) {
         console.log(`qplayerstate : release`);
-        router.back()
       }
     }
   }
@@ -45,7 +44,7 @@ export struct QMaskView{
         })
         .onClick(()=>{
           if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {
-            this.mPlayerContext.get_control_handler().release()
+            router.back()
           }else {
             window.getLastWindow(getContext(this) as common.UIAbilityContext).then(res => {
               res.setPreferredOrientation(window.Orientation.PORTRAIT, (err) => {
@@ -102,6 +101,10 @@ export struct QMaskView{
     // this.settingDefault()
     this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateCallBack)
   }
+  aboutToDisappear(): void {
+    this.mPlayerContext.get_control_handler().release()
+  }
+
   settingDefault(){
     // this.PlayerSettingViewModel.addQPlayerSetting(this.mSettingCallBacks)
   }
@@ -129,7 +132,7 @@ struct QMaskBottom{
   @State mMuteControlButtonImage:Resource = $r('app.media.qn_not_mute')
   @Link @Watch('mIsPlayingChange') mIsPlaying : Boolean
   @State mIsMute : Boolean = false
-  @State mProgressViewModel : QProgressViewModel = new QProgressViewModel(10,0,100)
+  // @State mProgressViewModel : QProgressViewModel = new QProgressViewModel(10,0,100)
   @State mProgressTextString : String = "00:00"
   @State mDurationTextString : String = "00:00"
   @State mProgress : number = 0
@@ -214,7 +217,7 @@ struct QMaskBottom{
           })
           .backgroundColor($r("app.color.long_video_progress_slider_background_color"))
           .onChange((value) => {
-            this.mProgressViewModel.setProgress(value)
+            // this.mProgressViewModel.setProgress(value)
           })
           .id('progress_slider')
 

@@ -63,6 +63,8 @@ export struct QPlayerToastView{
               bottom: 3
             })
             .visibility(item.mViewShow)
+            
+
         })
       }
       .responseRegion({x : 0 , y : 0 , width : 0 , height : 0})
@@ -77,11 +79,11 @@ export struct QPlayerToastView{
     }
     let new_toast_model : InnerToastModel
     if(this.mDeviceOrientation == window.Orientation.PORTRAIT){
-      new_toast_model = new InnerToastModel(this.mTextCount.valueOf(),'100%','5%',this.mToastText.toString() + this.mTextCount.toString(),"__container__",()=>{
+      new_toast_model = new InnerToastModel(this.mTextCount.valueOf(),'100%','5%',this.mToastText.toString(),"__container__",()=>{
         this.mInnerToastModelArray.shift()
       })
     }else {
-      new_toast_model = new InnerToastModel(this.mTextCount.valueOf(),'100%','10%',this.mToastText.toString() + this.mTextCount.toString(),"__container__",()=>{
+      new_toast_model = new InnerToastModel(this.mTextCount.valueOf(),'100%','10%',this.mToastText.toString(),"__container__",()=>{
         this.mInnerToastModelArray.shift()
       })
     }

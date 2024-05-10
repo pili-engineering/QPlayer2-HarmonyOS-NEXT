@@ -19,6 +19,7 @@ export struct QPlayerView{
   @Link mMediaModel : QPlayerDemoMediaModels
   @Link mPlayerContext : QIPlayerContext
   @Link mIsPlaying : Boolean
+  @State mXComponentId : string = 'qplayer2-core-renderview'
   private mSettingCallBacks : QIPlayerSetting = {
     decoderUpdating : (decoder_type:QPlayerDecodeType)=>{
       console.info("----------decoderUpdating log--------")
@@ -28,10 +29,9 @@ export struct QPlayerView{
     Row() {
       Stack(){
 
-        QSurfaceRenderView({mQPlayerContext : this.mPlayerContext})
+        QSurfaceRenderView({mQPlayerContext : this.mPlayerContext, mXComponentId: this.mXComponentId})
           .width('100%')
           .height('100%')
-
         Column(){
         }
         .width('100%')
