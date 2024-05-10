@@ -303,7 +303,7 @@ struct QLongVideoView {
     this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateChangeListener)
     this.mPlayerContext.get_control_handler().addPlayerVideoDecodeTypeListener(this.mVideoDecodeListener)
     this.mPlayerContext.get_control_handler().addPlayerMediaNetworkListener(this.mMediaNetworkListener)
-    this.mPlayerContext.get_control_handler().addPlayerProgressChangeListener(this.mProgressListener)
+    // this.mPlayerContext.get_control_handler().addPlayerProgressChangeListener(this.mProgressListener)
     this.mPlayerContext.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingListener)
     this.mPlayerContext.get_control_handler().addPlayerFPSChangeListener(this.mFPSListener)
     this.mPlayerContext.get_control_handler().addPlayerBiteRateChangeListener(this.mBiteRateListener)

@@ -23,12 +23,9 @@ export struct QMaskView{
   }
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
-      if (state == QPlayerState.STOPPED && this.mIsBack) {
-        // this.mPlayerContext.get_control_handler().release()
-        // router.back()
-      }
       if (state == QPlayerState.RELEASE) {
         console.log(`qplayerstate : release`);
+        router.back()
       }
     }
   }
@@ -48,12 +45,7 @@ export struct QMaskView{
         })
         .onClick(()=>{
           if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {
-            if (this.mIsPlaying == true) {
-
-              this.mPlayerContext.get_control_handler().release()
-              // this.mPlayerContext.get_control_handler().stop()
-            }
-            this.mIsBack = true
+            this.mPlayerContext.get_control_handler().release()
           }else {
             window.getLastWindow(getContext(this) as common.UIAbilityContext).then(res => {
               res.setPreferredOrientation(window.Orientation.PORTRAIT, (err) => {
