@@ -1,5 +1,4 @@
 
-import { QIPlayerSetting } from '../../interface/longVideo/QPlayerSettingInterface'
 import { QPlayerDecodeType } from '../../common/enum/QPlayerDecodeType'
 import { QTimestampHelper } from '../../common/helper/QTimestampHelper'
 import { router, window } from '@kit.ArkUI'
@@ -16,11 +15,6 @@ export struct QMaskView{
   @Link mPlayerContext : QIPlayerContext
   @Link mIsPlaying : Boolean
   @State mIsBack : Boolean = false
-  private mSettingCallBacks : QIPlayerSetting = {
-  decoderUpdating : (decoder_type:QPlayerDecodeType)=>{
-    console.info("----------decoderUpdating log--------")
-  }
-  }
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
       if (state == QPlayerState.RELEASE) {

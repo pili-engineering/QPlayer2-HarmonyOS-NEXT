@@ -1,5 +1,4 @@
 import { QPlayerDecodeType } from '../../common/enum/QPlayerDecodeType'
-import { QIPlayerSetting } from '../../interface/longVideo/QPlayerSettingInterface'
 import { QMaskView } from './QMaskView'
 import { window } from '@kit.ArkUI'
 import {QSurfaceRenderView,QIPlayerContext,
@@ -22,11 +21,6 @@ export struct QPlayerView{
   @Link mIsPlaying : Boolean
   @State mXComponentId : string = 'qplayer2-core-renderview'
   @State mSurfaceSize : SurfaceRect = { offsetX: 0, offsetY: 0, surfaceWidth: 500, surfaceHeight: 500 }
-  private mSettingCallBacks : QIPlayerSetting = {
-    decoderUpdating : (decoder_type:QPlayerDecodeType)=>{
-      console.info("----------decoderUpdating log--------")
-    }
-  }
   build(){
     Row() {
       Stack(){
