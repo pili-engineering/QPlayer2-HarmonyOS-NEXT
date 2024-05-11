@@ -1,11 +1,77 @@
+import { QIPlayerContext,
+   QIPlayerDownloadListener,
+   QIPlayerFPSListener,
+   QIPlayerRenderListener,
+   QIPlayerStateChangeListener } from '@QN/QPlayer2-core/qplayer2-core'
+import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
 
 @Component
 export  struct  QPlayerStatusView{
    @State mPlayerStatus : String = "Playing"
-   @State mPlayerFirstVideoTime : String = "1000ms"
-   @State mPlayerFPS : String = "60fps"
-   @State mPlayerDownloadSpeed : String = "1222kb/s"
-   @State mPlayerBufferPostion : String = "11861ms"
+   @State mPlayerFirstVideoTime : String = "0ms"
+   @State mPlayerFPS : String = "0fps"
+   @State mPlayerDownloadSpeed : String = "0kb/s"
+   @State mPlayerBufferPostion : String = "0ms"
+   @Link mPlayerContext : QIPlayerContext
+   private mStateChangeListener : QIPlayerStateChangeListener ={
+      onStateChange:(context : QIPlayerContext ,state: QPlayerState)=>{
+         let stateString : string
+         switch (state){
+            case QPlayerState.NONE:
+               stateString = "NONE"
+               break
+            case QPlayerState.INIT:
+               stateString = "INIT"
+               break
+            case QPlayerState.PREPARE:
+               stateString = "PREPARE"
+               break
+            case QPlayerState.PLAYING:
+               stateString = "PLAYING"
+               break
+            case QPlayerState.PAUSED_RENDER:
+               stateString = "PAUSED_RENDER"
+               break
+            case QPlayerState.COMPLETED:
+               stateString = "COMPLETED"
+               break
+            case QPlayerState.SEEKING:
+               stateString = "SEEKING"
+               break
+            case QPlayerState.STOPPED:
+               stateString = "STOPPED"
+               break
+            case QPlayerState.MISTAKE:
+               stateString = "MISTAKE"
+               break
+            case QPlayerState.END:
+               stateString = "END"
+               break
+            default :
+               stateString = "default"
+               break
+         }
+         this.mPlayerStatus = stateString
+      }
+   }
+   private mFPSListener : QIPlayerFPSListener = {
+      onFPSChanged:(context:QIPlayerContext, FPS:number)=>{
+         this.mPlayerFPS = FPS.toString() + " fps"
+      }
+   }
+
+   private mDownloadListener : QIPlayerDownloadListener = {
+      onDownloadChanged:(context:QIPlayerContext, speed:number, bufferPos:number)=>{
+         this.mPlayerDownloadSpeed = (speed/1000).toString() + " kb/s"
+         this.mPlayerBufferPostion = bufferPos.toString() + " ms"
+      }
+   }
+
+   private mRenderListener : QIPlayerRenderListener = {
+      onFirstFrameRendered:(context : QIPlayerContext, elapsedTime:number) => {
+         this.mPlayerFirstVideoTime = elapsedTime.toString() + " ms"
+      }
+   }
    build() {
       Column(){
          RelativeContainer(){
@@ -63,6 +129,14 @@ export  struct  QPlayerStatusView{
       .height("100%")
       .backgroundColor($r("app.color.default_background_color"))
    }
+   aboutToAppear(): void {
+      this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateChangeListener)
+
+      this.mPlayerContext.get_control_handler().addPlayerFPSChangeListener(this.mFPSListener)
+      this.mPlayerContext.get_control_handler().addPlayerDownloadChangeListener(this.mDownloadListener)
+      this.mPlayerContext.get_render_handler().addPlayerRenderListener(this.mRenderListener)
+   }
+
 }
 
 @Extend(Text) function statusTextStyle(){

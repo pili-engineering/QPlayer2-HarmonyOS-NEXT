@@ -18,22 +18,16 @@ import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
   QIPlayerBiteRateListener,
   QIPlayerBufferingListener,
   QIPlayerCommandNotAllowListener,
-  QPlayerStart,
-  QIPlayerDownloadListener,
   QIPlayerFormatListener,
-  QIPlayerFPSListener,
   QIPlayerMediaNetworkListener,
   QPlayerOpenError,
   QPlayerUrlType,
-  QIPlayerProgressListener,
   QIPlayerQualityListener,
-  QIPlayerRenderListener,
   QIPlayerSeekListener,
   QIPlayerSEIDataListener,
   QPlayerShootVideoType,
   QIPlayerSpeedListener,
   QIPlayerShootVideoListener,
-  QIPlayerStateChangeListener,
   QIPlayerSubtitleListener,
   QIPlayerVideoDataListener,
   QIPlayerVideoDecodeListener,
@@ -92,17 +86,12 @@ struct QLongVideoView {
   private mCommandNotAllowListener : QIPlayerCommandNotAllowListener = {
     onCommandNotAllow:(context:QIPlayerContext, commandName:string, state:QPlayerState)=>{}
   }
-  private mDownloadListener : QIPlayerDownloadListener = {
-    onDownloadChanged:(context:QIPlayerContext, speed:number, bufferPos:number)=>{}
-  }
   private mFormatListener : QIPlayerFormatListener = {
     onFormatNotSupport:(context:QIPlayerContext)=>{
       this.addToastView("onFormatNotSupport")
     }
   }
-  private mFPSListener : QIPlayerFPSListener = {
-    onFPSChanged:(context:QIPlayerContext, FPS:number)=>{}
-  }
+
   private mMediaNetworkListener : QIPlayerMediaNetworkListener = {
     onReconnectStart:(context : QIPlayerContext , userType: string , urlType: QPlayerUrlType , url: string , retryTime: number ) => {
       this.addToastView(`开始重连 : ${retryTime}`)
@@ -129,11 +118,6 @@ struct QLongVideoView {
     onQualitySwitchRetryLater:(context : QIPlayerContext ,  usertype: string , urlType: QPlayerUrlType ) => {}
 
   }
-  private mRenderListener : QIPlayerRenderListener = {
-    onFirstFrameRendered:(context : QIPlayerContext, elapsedTime:number) => {
-
-    }
-  }
   private mSeekListener : QIPlayerSeekListener = {
     onSeekSuccess:(context : QIPlayerContext) => {
       this.addToastView(`seek 成功`)
@@ -155,47 +139,7 @@ struct QLongVideoView {
   private mSpeedListener : QIPlayerSpeedListener = {
     onSpeedChanged:(context : QIPlayerContext, speed:number ) => {}
   }
-  private mStateChangeListener : QIPlayerStateChangeListener ={
-    onStateChange:(context : QIPlayerContext ,state: QPlayerState)=>{
-      let stateString : string
-      switch (state){
-        case QPlayerState.NONE:
-        stateString = "NONE"
-        break
-        case QPlayerState.INIT:
-          stateString = "INIT"
-          break
-        case QPlayerState.PREPARE:
-          stateString = "PREPARE"
-          break
-        case QPlayerState.PLAYING:
-          stateString = "PLAYING"
-          break
-        case QPlayerState.PAUSED_RENDER:
-          stateString = "PAUSED_RENDER"
-          break
-        case QPlayerState.COMPLETED:
-          stateString = "COMPLETED"
-          break
-        case QPlayerState.SEEKING:
-          stateString = "SEEKING"
-          break
-        case QPlayerState.STOPPED:
-          stateString = "STOPPED"
-          break
-        case QPlayerState.MISTAKE:
-          stateString = "MISTAKE"
-          break
-        case QPlayerState.END:
-          stateString = "END"
-          break
-        default :
-          stateString = "default"
-          break
-      }
-      this.addToastView(`state ： ${stateString}`)
-    }
-  }
+
   private mSubtitleListener : QIPlayerSubtitleListener = {
     onSubtitleTextChange:(context : QIPlayerContext , text: string ) => {},
 
@@ -261,7 +205,7 @@ struct QLongVideoView {
           .width(this.mQPlayerViewWidth)// .height(this.mQPlayerViewHeight)
           .id("qplayer_view")
 
-        QPlayerStatusView()
+        QPlayerStatusView({mPlayerContext : this.mPlayerContext})
           .backgroundColor($r('app.color.long_video_status_view_background_color'))
           .width('100%')
           .height('20%')
@@ -365,14 +309,10 @@ struct QLongVideoView {
   }
 
   addAllQPlayerListeners(){
-    this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateChangeListener)
     this.mPlayerContext.get_control_handler().addPlayerVideoDecodeTypeListener(this.mVideoDecodeListener)
     this.mPlayerContext.get_control_handler().addPlayerMediaNetworkListener(this.mMediaNetworkListener)
-    // this.mPlayerContext.get_control_handler().addPlayerProgressChangeListener(this.mProgressListener)
     this.mPlayerContext.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingListener)
-    this.mPlayerContext.get_control_handler().addPlayerFPSChangeListener(this.mFPSListener)
     this.mPlayerContext.get_control_handler().addPlayerBiteRateChangeListener(this.mBiteRateListener)
-    this.mPlayerContext.get_control_handler().addPlayerDownloadChangeListener(this.mDownloadListener)
     this.mPlayerContext.get_control_handler().addPlayerCommandNotAllowListener(this.mCommandNotAllowListener)
     this.mPlayerContext.get_control_handler().addPlayerQualityListener(this.mQualityListener)
     this.mPlayerContext.get_control_handler().addPlayerSpeedChangeListener(this.mSpeedListener)
