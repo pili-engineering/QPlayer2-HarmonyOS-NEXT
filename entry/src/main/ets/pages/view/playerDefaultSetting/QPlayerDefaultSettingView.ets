@@ -3,21 +3,15 @@ import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { ArrayList } from '@kit.ArkTS'
 import { QTitleView } from '../../common/component/QTitleView'
 import { ifaa } from '@kit.OnlineAuthenticationKit'
+import { QPlayerSeek } from '@QN/QPlayer2-core/qplayer2-core'
 
 @Entry
 @Component
 struct QPlayerDefaultSettingView{
-  // @State @Watch('QPlayerSettingModelChange') mQPlayerSetting : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get('context') as Context)
-  @State @Watch('QPlayerSettingModelChange') mQPlayerSetting : QPlayerSettingModel = new QPlayerSettingModel()
-  mSettingModel : Array<innerSettingModel> = [
-    new innerSettingModel("title1", 0,["titleButton1","titleButton2"]),
-    new innerSettingModel("title2", 0,["titleButton1","titleButton2","titleButton2"]),
-    new innerSettingModel("title3", 0,["titleButton1","titleButton2","titleButton2","titleButton2"]),
-    new innerSettingModel("title3", 0,["titleButton1","titleButton2","titleButton2","titleButton2"]),
-    new innerSettingModel("title3", 0,["titleButton1","titleButton2","titleButton2","titleButton2"]),
-    new innerSettingModel("title3", 0,["titleButton1","titleButton2","titleButton2","titleButton2"])
+  @State mQPlayerSetting : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get('context') as Context)
+  @State mSettingModel : Array<innerSettingModel> = [
+    new innerSettingModel("seekMode", this.mQPlayerSetting.mSeekMode.valueOf(),["关键帧","精准"])
   ]
-
   mUnitHeight : Number = 150
     build() {
       Column() {
@@ -36,7 +30,7 @@ struct QPlayerDefaultSettingView{
         Scroll() {
           Column() {
             ForEach(this.mSettingModel, (element: innerSettingModel, index: Number) => {
-              settingViewUnit({ mSettingModel: element })
+              settingViewUnit({ mSettingModel: element, mQPlayerSetting : this.mQPlayerSetting })
                 .width('100%')
                 .height(this.mUnitHeight.valueOf())
                 .id('unit_' + element.mTitleString.toString())
@@ -51,14 +45,16 @@ struct QPlayerDefaultSettingView{
       .width('100%')
       .height('100%')
     }
-  QPlayerSettingModelChange(){
-
+  aboutToDisappear(): void {
+    QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context, this.mQPlayerSetting)
   }
 }
 
 @Component
 struct settingViewUnit{
-  mSettingModel : innerSettingModel = new innerSettingModel("",0,[])
+  @ObjectLink mSettingModel : innerSettingModel
+  @Link mQPlayerSetting : QPlayerSettingModel
+  @State mSelected : boolean = false
   build() {
     Column(){
       RelativeContainer(){
@@ -82,16 +78,47 @@ struct settingViewUnit{
                 })
                 .settingRadioStyle()
                 .id(this.mSettingModel.mTitleString.toString() + "radio_" + index.valueOf())
+                .onClick(()=>{
+                  this.radioClick(this.mSettingModel.mTitleString.toString(), index.valueOf())
+                })
+              Text(element.toString())
+                .alignRules({
+                  left : {anchor: this.mSettingModel.mTitleString.toString() + "radio_" + index.valueOf(),align: HorizontalAlign.End},
+                  top : {anchor : 'title_' + this.mSettingModel.mTitleString , align : VerticalAlign.Bottom}
+                })
+                .settingRadioTextStyle()
+                .id(this.mSettingModel.mTitleString.toString() + "text_" + index.valueOf())
+                .onClick(()=>{
+                  this.radioClick(this.mSettingModel.mTitleString.toString(), index.valueOf())
+                })
+
             }
             else{
               Radio({group:this.mSettingModel.mTitleString.toString(), value:element.toString()})
                 .checked(index == this.mSettingModel.mSelectedNumber)
                 .alignRules({
-                  left : {anchor: this.mSettingModel.mTitleString.toString() + "radio_" + (index.valueOf() - 1),align: HorizontalAlign.End},
+                  left : {anchor: this.mSettingModel.mTitleString.toString() + "text_" + (index.valueOf() - 1),align: HorizontalAlign.End},
                   top : {anchor : 'title_' + this.mSettingModel.mTitleString , align : VerticalAlign.Bottom}
                 })
                 .settingRadioStyle()
                 .id(this.mSettingModel.mTitleString.toString() + "radio_" + index.valueOf())
+                .onClick(()=>{
+                  this.radioClick(this.mSettingModel.mTitleString.toString(), index.valueOf())
+                })
+
+              Text(element.toString())
+                .alignRules({
+                  left : {anchor: this.mSettingModel.mTitleString.toString() + "radio_" + index.valueOf(),align: HorizontalAlign.End},
+                  top : {anchor : 'title_' + this.mSettingModel.mTitleString , align : VerticalAlign.Bottom}
+                })
+                .onClick(()=>{
+                  this.radioClick(this.mSettingModel.mTitleString.toString(), index.valueOf())
+                })
+                .onClick(()=>{
+                  this.radioClick(this.mSettingModel.mTitleString.toString(), index.valueOf())
+                })
+                .settingRadioTextStyle()
+                .id(this.mSettingModel.mTitleString.toString() + "text_" + index.valueOf())
             }
           }
           else {
@@ -102,18 +129,46 @@ struct settingViewUnit{
                   left : {anchor: "__container__",align: HorizontalAlign.Start},
                   top : {anchor : this.mSettingModel.mTitleString.toString() +  "radio_" + (index.valueOf() - 3) , align : VerticalAlign.Bottom}
                 })
+                .onClick(()=>{
+                  this.radioClick(this.mSettingModel.mTitleString.toString(), index.valueOf())
+                })
                 .settingRadioStyle()
                 .id(this.mSettingModel.mTitleString.toString() + "radio_" + index.valueOf())
+
+              Text(element.toString())
+                .alignRules({
+                  left : {anchor: this.mSettingModel.mTitleString.toString() + "radio_" + index.valueOf(),align: HorizontalAlign.End},
+                  top : {anchor : this.mSettingModel.mTitleString.toString() +  "radio_" + (index.valueOf() - 3) , align : VerticalAlign.Bottom}
+                })
+                .onClick(()=>{
+                  this.radioClick(this.mSettingModel.mTitleString.toString(), index.valueOf())
+                })
+                .settingRadioTextStyle()
+                .id(this.mSettingModel.mTitleString.toString() + "text_" + index.valueOf())
             }
             else{
               Radio({group:this.mSettingModel.mTitleString.toString(), value:element.toString()})
                 .checked(index == this.mSettingModel.mSelectedNumber)
                 .alignRules({
-                  left : {anchor: this.mSettingModel.mTitleString.toString() + "radio_" + (index.valueOf() - 1),align: HorizontalAlign.End},
+                  left : {anchor: this.mSettingModel.mTitleString.toString() + "text_" + (index.valueOf() - 1),align: HorizontalAlign.End},
                   top : {anchor : this.mSettingModel.mTitleString.toString() + "radio_" + (index.valueOf() - 3) , align : VerticalAlign.Bottom}
+                })
+                .onClick(()=>{
+                  this.radioClick(this.mSettingModel.mTitleString.toString(), index.valueOf())
                 })
                 .settingRadioStyle()
                 .id(this.mSettingModel.mTitleString.toString() + "radio_" + index.valueOf())
+
+              Text(element.toString())
+                .alignRules({
+                  left : {anchor: this.mSettingModel.mTitleString.toString() + "radio_" + index.valueOf(),align: HorizontalAlign.End},
+                  top : {anchor : this.mSettingModel.mTitleString.toString() + "radio_" + (index.valueOf() - 3) , align : VerticalAlign.Bottom}
+                })
+                .onClick(()=>{
+                  this.radioClick(this.mSettingModel.mTitleString.toString(), index.valueOf())
+                })
+                .settingRadioTextStyle()
+                .id(this.mSettingModel.mTitleString.toString() + "text_" + index.valueOf())
             }
           }
         })
@@ -124,7 +179,8 @@ struct settingViewUnit{
             top : {anchor : this.mSettingModel.mTitleString.toString() + "radio_" + (this.mSettingModel.mButtonTitleStringArray.length.valueOf() - 1), align: VerticalAlign.Bottom}
           })
           .width('100%')
-          .height(5)
+          .height(2)
+          .margin({top : 3})
           .backgroundColor($r('app.color.default_line_color'))
           .id(this.mSettingModel.mTitleString.toString() + "line")
       }
@@ -136,15 +192,38 @@ struct settingViewUnit{
     .height("100%")
     .id("settingViewUnit_view")
   }
+
+  radioClick(title:string, index : number)
+  {
+    this.mSettingModel.mSelectedNumber = index
+    if (title == "seekMode") {
+      if (index == 0) {
+        this.mQPlayerSetting.mSeekMode = QPlayerSeek.NORMAL
+      }else {
+        this.mQPlayerSetting.mSeekMode = QPlayerSeek.ACCURATE
+      }
+    }
+  }
 }
 
 @Extend(Radio) function  settingRadioStyle(){
+  .width('10%')
+  .height(30)
+  .backgroundColor($r("app.color.white"))
+}
+@Extend(Text) function  settingRadioTextStyle(){
+  .width('22%')
+  .height(30)
+  .backgroundColor($r("app.color.white"))
+  .fontSize($r("app.float.default_font_size"))
+}
+@Extend(Row) function  settingRadioRowStyle(){
   .width('32%')
   .height(30)
-  .backgroundColor("#ffcb2b2b")
+  .backgroundColor($r("app.color.default_background_color"))
 }
 
-
+@Observed
 class innerSettingModel{
   public mButtonTitleStringArray : Array<String>
   public mTitleString : String
