@@ -139,9 +139,12 @@ struct QMaskBottom{
   @State mDuration : number = 0
   @Link mDeviceOrientation : window.Orientation
   @Link mPlayerContext : QIPlayerContext
-
+  private mIsSeeking : boolean = false
   private mProgressListener : QIPlayerProgressListener = {
     onProgressChanged:(context:QIPlayerContext,  progress:number, duration:number) => {
+      if (this.mIsSeeking) {
+        return
+      }
       this.mProgress = progress
       this.mDuration = duration
       this.mProgressTextString = QTimestampHelper.millisecondToHMSString(progress)
@@ -152,6 +155,7 @@ struct QMaskBottom{
     onStateChange :(context: QIPlayerContext, state: QPlayerState) =>{
       if (state == QPlayerState.PLAYING) {
         this.mIsPlaying = true
+        this.mIsSeeking = false
       }
     }
   }
@@ -216,9 +220,17 @@ struct QMaskBottom{
             bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
           })
           .backgroundColor($r("app.color.long_video_progress_slider_background_color"))
-          .onChange((value) => {
+          .onChange((value,mode) => {
             // this.mProgressViewModel.setProgress(value)
+            if (mode == SliderChangeMode.Begin) {
+              this.mIsSeeking = true
+            }
+            else if (mode == SliderChangeMode.End || mode == SliderChangeMode.Click){
+              this.mPlayerContext.get_control_handler().seek(value * 1000)
+
+            }
           })
+
           .id('progress_slider')
 
         Text(this.mDurationTextString.valueOf())

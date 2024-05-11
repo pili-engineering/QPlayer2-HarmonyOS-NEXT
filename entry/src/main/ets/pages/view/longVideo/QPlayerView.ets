@@ -4,7 +4,8 @@ import { QMaskView } from './QMaskView'
 import { window } from '@kit.ArkUI'
 import {QSurfaceRenderView,QIPlayerContext,
   QPlayerContextFactory,
-  QLogLevel
+  QLogLevel,
+  QPlayerSeek
 } from '@QN/QPlayer2-core/qplayer2-core'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 
@@ -20,6 +21,7 @@ export struct QPlayerView{
   @Link mPlayerContext : QIPlayerContext
   @Link mIsPlaying : Boolean
   @State mXComponentId : string = 'qplayer2-core-renderview'
+  @State mSurfaceSize : SurfaceRect = { offsetX: 0, offsetY: 0, surfaceWidth: 500, surfaceHeight: 500 }
   private mSettingCallBacks : QIPlayerSetting = {
     decoderUpdating : (decoder_type:QPlayerDecodeType)=>{
       console.info("----------decoderUpdating log--------")
@@ -59,13 +61,9 @@ export struct QPlayerView{
   aboutToAppear(): void {
     let ss = this.mMaskHide.toString()
     this.startTimer()
-    // let build : QMediaModelBuilder = new QMediaModelBuilder()
-    // build.addStreamElement("",QPlayerUrlType.QAUDIO_AND_VIDEO,1080,"ss",true,"","")
-    // let model : QMediaModel = build.build(false)
     let mContext : Context = AppStorage.get('context') as Context
     this.mPlayerContext.init(mContext)
-    // this.mPlayerContext.get_control_handler().playMediaModel(model,0)
-    // this.mPlayerContext.get_control_handler().seek(100)
+    this.mPlayerContext.get_control_handler().setSeekMode(QPlayerSeek.NORMAL)
     this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel,0)
   }
   settingDefault(){
