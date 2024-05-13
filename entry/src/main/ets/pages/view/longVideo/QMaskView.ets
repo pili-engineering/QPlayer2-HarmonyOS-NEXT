@@ -1,9 +1,6 @@
 
-import { QPlayerDecodeType } from '../../common/enum/QPlayerDecodeType'
-import { QTimestampHelper } from '../../common/helper/QTimestampHelper'
 import { router, window } from '@kit.ArkUI'
 import { common } from '@kit.AbilityKit'
-import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener } from '@QN/QPlayer2-core/qplayer2-core'
 import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QMaskBottom } from './QMaskBottom'
@@ -16,6 +13,7 @@ export struct QMaskView{
   @Link mPlayerContext : QIPlayerContext
   @Link mIsPlaying : Boolean
   @State mIsBack : Boolean = false
+  @Link mSettingViewVisible : Visibility
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
       if (state == QPlayerState.RELEASE) {
@@ -67,10 +65,10 @@ export struct QMaskView{
           right:{anchor: "__container__" , align : HorizontalAlign.End},
           top : { anchor : "__container__" , align : VerticalAlign.Top}
         })
-        .margin({right : 30,top : 20})
+        .margin({right : 30,top : 0})
         .visibility(this.mPortraitShow)
         .onClick(()=>{
-
+          this.mSettingViewVisible = Visibility.Visible
         })
         .backgroundColor('#00000000')
         .id('setting_view_button')
@@ -88,6 +86,7 @@ export struct QMaskView{
           })
           .backgroundColor('#00000000')
           .id('mask_bottom_view')
+
       }
     }
     .width('100%')
@@ -115,12 +114,7 @@ export struct QMaskView{
 
 
 }
-@Component
-struct QMaskSettingView{
 
-  build() {
-  }
-}
 
 @Extend(Image) function maskNormalImageStyle(){
   .fillColor($r('app.color.start_window_background'))

@@ -55,6 +55,14 @@
     {
       "name": "default_line_color",
       "value": "#000"
+    },
+    {
+      "name": "white",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "setting_view_background_color",
+      "value": "#C3000000"
     }
   ]
 }
