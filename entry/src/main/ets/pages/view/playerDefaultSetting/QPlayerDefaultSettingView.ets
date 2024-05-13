@@ -1,8 +1,6 @@
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
 import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
-import { ArrayList } from '@kit.ArkTS'
 import { QTitleView } from '../../common/component/QTitleView'
-import { ifaa } from '@kit.OnlineAuthenticationKit'
 import { QPlayerSeek } from '@QN/QPlayer2-core/qplayer2-core'
 
 @Entry
