@@ -76,6 +76,9 @@ export struct QPlayerUrlListView{
     .height('100%')
   }
   currentMediaModelIdChange () {
+    if (this.mCurrentPlayerMediaModelId == -1) {
+      return
+    }
     this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel,0)
   }
 }
@@ -99,6 +102,10 @@ struct UrlListItem{
             })
             .onClick(()=>{
               this.mIsPlaying = false
+              if (this.mCurrentPlayerMediaModelId == this.mId) {
+                //此处设置-1 用于触发 mCurrentPlayerMediaModelId 后面的@watch监听
+                this.mCurrentPlayerMediaModelId = -1
+              }
               this.mCurrentPlayerMediaModelId = this.mId
             })
             .width('100%')
