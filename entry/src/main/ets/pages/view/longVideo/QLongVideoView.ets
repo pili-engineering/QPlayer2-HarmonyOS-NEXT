@@ -243,7 +243,7 @@ struct QLongVideoView {
               left: 5
             })
             .id("qplayer_toast_view")
-            .responseRegion({x : 0 , y : 0 , width : 0 , height : 0})
+            .enabled(false)
       }
     }
     .justifyContent(FlexAlign.Center)
