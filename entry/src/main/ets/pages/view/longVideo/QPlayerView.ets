@@ -20,7 +20,6 @@ export struct QPlayerView{
   @Link mPlayerContext : QIPlayerContext
   @Link mIsPlaying : Boolean
   @State mXComponentId : string = 'qplayer2-core-renderview'
-  @State mSurfaceSize : SurfaceRect = { offsetX: 0, offsetY: 0, surfaceWidth: 500, surfaceHeight: 500 }
   build(){
     Row() {
       Stack(){
