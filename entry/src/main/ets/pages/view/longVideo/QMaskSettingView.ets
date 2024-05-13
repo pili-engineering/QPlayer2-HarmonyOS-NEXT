@@ -9,7 +9,9 @@ import { QPlayerSeek } from '@QN/QPlayer2-core/qplayer2-core'
 export struct QMaskSettingView{
   @State mQPlayerSettingModel : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get("context") as Context)
   @State mInnerSettingModel : innerSettingModel[] = [
-    new innerSettingModel("seekMode",["关键帧","精准"], this.mQPlayerSettingModel.mSeekMode.valueOf())
+    new innerSettingModel("切换下集生效",[], 0),
+    new innerSettingModel("seekMode",["关键帧","精准"], this.mQPlayerSettingModel.mSeekMode.valueOf()),
+    new innerSettingModel("立即生效",[], 0)
   ]
   private mSettingViewUnitHeight :  number = 100
   private mSettingViewUnitLineHeight :  number = 2
@@ -19,23 +21,46 @@ export struct QMaskSettingView{
         Column() {
           ForEach(this.mInnerSettingModel, (element: innerSettingModel, index: number) => {
             if (index == 0) {
-              SettingViewUnit({mSettingModel : element, mQPlayerSetting : this.mQPlayerSettingModel})
-                .height(this.mSettingViewUnitHeight)
-                .width("100%")
-                .alignRules({
-                  top: { anchor: "__container__", align: VerticalAlign.Top },
-                  left: { anchor: "__container__", align: HorizontalAlign.Start }
-                })
-                .id(element.mTitle + "_unit_" + index.toString())
+              if (element.mRadioButtonNameArray.length == 0) {
+                SettingViewUnit({mSettingModel : element, mQPlayerSetting : this.mQPlayerSettingModel})
+                  .height(this.mSettingViewUnitHeight / 2.8)
+                  .width("100%")
+                  .alignRules({
+                    top: { anchor: "__container__", align: VerticalAlign.Top },
+                    left: { anchor: "__container__", align: HorizontalAlign.Start }
+                  })
+                  .id(element.mTitle + "_unit_" + index.toString())
+              }else {
+                SettingViewUnit({mSettingModel : element, mQPlayerSetting : this.mQPlayerSettingModel})
+                  .height(this.mSettingViewUnitHeight)
+                  .width("100%")
+                  .alignRules({
+                    top: { anchor: "__container__", align: VerticalAlign.Top },
+                    left: { anchor: "__container__", align: HorizontalAlign.Start }
+                  })
+                  .id(element.mTitle + "_unit_" + index.toString())
+              }
             } else {
-              SettingViewUnit({mSettingModel : element, mQPlayerSetting : this.mQPlayerSettingModel})
-                .height(this.mSettingViewUnitHeight)
-                .width("100%")
-                .alignRules({
-                  top: { anchor: element.mTitle + "_line_" + index.toString(), align: VerticalAlign.Bottom },
-                  left: { anchor: "__container__", align: HorizontalAlign.Start }
-                })
-                .id(element.mTitle + "_unit_" + index.toString())
+              if (element.mRadioButtonNameArray.length == 0) {
+                SettingViewUnit({mSettingModel : element, mQPlayerSetting : this.mQPlayerSettingModel})
+                  .height(this.mSettingViewUnitHeight / 2.8)
+                  .width("100%")
+                  .alignRules({
+                    top: { anchor: element.mTitle + "_line_" + index.toString(), align: VerticalAlign.Bottom },
+                    left: { anchor: "__container__", align: HorizontalAlign.Start }
+                  })
+                  .id(element.mTitle + "_unit_" + index.toString())
+              }
+              else {
+                SettingViewUnit({ mSettingModel: element, mQPlayerSetting: this.mQPlayerSettingModel })
+                  .height(this.mSettingViewUnitHeight)
+                  .width("100%")
+                  .alignRules({
+                    top: { anchor: element.mTitle + "_line_" + index.toString(), align: VerticalAlign.Bottom },
+                    left: { anchor: "__container__", align: HorizontalAlign.Start }
+                  })
+                  .id(element.mTitle + "_unit_" + index.toString())
+              }
             }
 
             Line()
