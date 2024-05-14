@@ -4,10 +4,12 @@ import { window } from '@kit.ArkUI'
 import {QSurfaceRenderView,QIPlayerContext,
   QPlayerContextFactory,
   QLogLevel,
-  QPlayerSeek
+  QPlayerSeek,
+  QIPlayerStateChangeListener
 } from '@QN/QPlayer2-core/qplayer2-core'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QMaskSettingView } from './QMaskSettingView'
+import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
 
 @Component
 export struct QPlayerView{
@@ -22,6 +24,16 @@ export struct QPlayerView{
   @Link mPlayerContext : QIPlayerContext
   @Link mIsPlaying : Boolean
   @State mXComponentId : string = 'qplayer2-core-renderview'
+  private mStateCallBack : QIPlayerStateChangeListener = {
+    onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
+      if (state == QPlayerState.PLAYING) {
+        this.mIsPlaying = true
+      }
+      else {
+        this.mIsPlaying = false
+      }
+    }
+  }
   build(){
     Row() {
       Stack() {
@@ -34,9 +46,18 @@ export struct QPlayerView{
         .width('100%')
         .height('100%')
         .backgroundColor("#00000000")
-        .onClick(() => {
-          this.visibleTimerChange()
-        })
+        .gesture(
+          TapGesture({count : 2})
+            .onAction((event : GestureEvent)=>{
+              this.onDoubleClick()
+            })
+        )
+        .gesture(
+          TapGesture({count : 1})
+            .onAction((event : GestureEvent)=>{
+              this.visibleTimerChange()
+            })
+        )
         .id('qplayer_render_view')
 
         QMaskView({
@@ -48,9 +69,18 @@ export struct QPlayerView{
           .width('100%')
           .height('100%')
           .backgroundColor('#801d1d1d')
-          .onClick(() => {
-            this.visibleTimerChange()
-          })
+          .gesture(
+            TapGesture({count : 2})
+              .onAction((event : GestureEvent)=>{
+                this.onDoubleClick()
+              })
+          )
+          .gesture(
+            TapGesture({count : 1})
+              .onAction((event : GestureEvent)=>{
+                this.visibleTimerChange()
+              })
+          )
           .visibility(this.mMaskVisible)
           .id('mask_view')
 
@@ -67,9 +97,6 @@ export struct QPlayerView{
             .backgroundColor($r("app.color.setting_view_background_color"))
             .margin({
               right: 50
-            })
-            .onClick(()=> {
-              let s =0
             })
         }
         .visibility(this.mSettingViewVisible)
@@ -90,6 +117,7 @@ export struct QPlayerView{
     let mContext : Context = AppStorage.get('context') as Context
     this.mPlayerContext.init(mContext)
     this.mPlayerContext.get_control_handler().setSeekMode(QPlayerSeek.NORMAL)
+    this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateCallBack)
     this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel,0)
 
   }
@@ -131,6 +159,14 @@ export struct QPlayerView{
           this.stopTimer()
         }
       },1000)
+    }
+  }
+  onDoubleClick(){
+    this.mQPlayerTimerCount = 0;
+    if (this.mIsPlaying == true) {
+      this.mPlayerContext.get_control_handler().pauseRender()
+    }else {
+      this.mPlayerContext.get_control_handler().resumeRender()
     }
   }
 }
