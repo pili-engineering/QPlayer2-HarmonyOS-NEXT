@@ -10,8 +10,8 @@ export struct QMaskSettingView{
   @State mQPlayerSettingModel : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get("context") as Context)
   @State mInnerSettingModel : innerSettingModel[] = [
     new innerSettingModel("切换下集生效",[], 0),
-    new innerSettingModel("seekMode",["关键帧","精准"], this.mQPlayerSettingModel.mSeekMode.valueOf()),
-    new innerSettingModel("立即生效",[], 0)
+    new innerSettingModel("立即生效",[], 0),
+    new innerSettingModel("seekMode",["关键帧","精准"], this.mQPlayerSettingModel.mSeekMode.valueOf())
   ]
   private mSettingViewUnitHeight :  number = 100
   private mSettingViewUnitLineHeight :  number = 2
