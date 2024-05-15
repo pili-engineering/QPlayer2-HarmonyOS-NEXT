@@ -52,6 +52,7 @@ struct QLongVideoView {
   @State @Watch('rotateScreen') mDeviceOrientation :window.Orientation = window.Orientation.PORTRAIT
   @State mToastText : String = ''
   @State mIsPlaying : Boolean = false
+  @State mIsLive : Boolean = false
   @State mPlayerContext : QIPlayerContext = QPlayerContextFactory.createPlayerContext(QLogLevel.LOG_INFO,"s","s","1.4.0")
   private mAudioDataListener : QIPlayerAudioDataListener = {
     onAudioData:(context : QIPlayerContext, sampleRate: number, format:QSampleFormat, channelNum: number, channelLayout: QChannelLayout, data:Uint8Array)=>{}
@@ -194,7 +195,8 @@ struct QLongVideoView {
           mDeviceOrientation: this.mDeviceOrientation,
           mMediaModel : this.mMediaModel,
           mPlayerContext : this.mPlayerContext,
-          mIsPlaying : this.mIsPlaying
+          mIsPlaying : this.mIsPlaying,
+          mIsLive : this.mIsLive
         })
           .alignRules({
             left: { anchor: "__container__", align: HorizontalAlign.Start },
@@ -219,7 +221,8 @@ struct QLongVideoView {
           QPlayerUrlListView({
             mMediaModel : this.mMediaModel,
             mPlayerContext : this.mPlayerContext,
-            mIsPlaying : this.mIsPlaying
+            mIsPlaying : this.mIsPlaying,
+            mIsLive : this.mIsLive
           })
             .backgroundColor($r('app.color.long_video_url_list_view_background_color'))
             .width('100%')
@@ -262,6 +265,9 @@ struct QLongVideoView {
     this.addAllQPlayerListeners()
   }
   aboutToDisappear(): void {
+    let windowStage : window.WindowStage = AppStorage.get("windowStage") as window.WindowStage
+    windowStage.getMainWindowSync().setWindowBackgroundColor("#ffffffff")
+
     if (this.mDeviceOrientation == window.Orientation.PORTRAIT){
       return
     }

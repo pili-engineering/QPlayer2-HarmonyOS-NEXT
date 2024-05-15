@@ -5,13 +5,13 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "/Users/laoganbu/.ohos/config/default_harmony-next_PSWYktjoGTELSGkVIEACb9gxCBAULFXApaGc7oMvnC8=.cer",
-          "storePassword": "0000001A42244A6A318ED7DA75B745C2241F5FB5092BB334AAE0E20833686EEB9EB0FBF160CC5FEDDF5F",
+          "certpath": "/Users/dynastydream/.ohos/config/default_harmony-next_yyr3OFuy9Ij1XS1lyLo19Qx3Qy4onG7cI3lffRXF-PI=.cer",
+          "storePassword": "0000001A6A07B68EAC61599391C6BE2F4972026A298D74BAE1838CCD9AE7460938243D917739760CD10D",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001A675A20F92957032A13C0FB124608F86C800C88B12846B1B938F60ACFD77D8C6F23B32F0AD28D",
-          "profile": "/Users/laoganbu/.ohos/config/default_harmony-next_PSWYktjoGTELSGkVIEACb9gxCBAULFXApaGc7oMvnC8=.p7b",
+          "keyPassword": "0000001A41DBD2BD46F8376FDB687D6DC01ED6D7A1C45C022A62DCCAD8847D51FDDE4859C71C01723BAB",
+          "profile": "/Users/dynastydream/.ohos/config/default_harmony-next_yyr3OFuy9Ij1XS1lyLo19Qx3Qy4onG7cI3lffRXF-PI=.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "/Users/laoganbu/.ohos/config/default_harmony-next_PSWYktjoGTELSGkVIEACb9gxCBAULFXApaGc7oMvnC8=.p12"
+          "storeFile": "/Users/dynastydream/.ohos/config/default_harmony-next_yyr3OFuy9Ij1XS1lyLo19Qx3Qy4onG7cI3lffRXF-PI=.p12"
         }
       }
     ],

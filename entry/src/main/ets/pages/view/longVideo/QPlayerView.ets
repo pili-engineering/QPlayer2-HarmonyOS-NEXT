@@ -23,6 +23,7 @@ export struct QPlayerView{
   @Link mMediaModel : QPlayerDemoMediaModels
   @Link mPlayerContext : QIPlayerContext
   @Link mIsPlaying : Boolean
+  @Link mIsLive : Boolean
   @State mXComponentId : string = 'qplayer2-core-renderview'
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
@@ -64,7 +65,8 @@ export struct QPlayerView{
           mDeviceOrientation: this.mDeviceOrientation,
           mPlayerContext: this.mPlayerContext,
           mIsPlaying: this.mIsPlaying,
-          mSettingViewVisible : this.mSettingViewVisible
+          mSettingViewVisible : this.mSettingViewVisible,
+          mIsLive : this.mIsLive
         })
           .width('100%')
           .height('100%')

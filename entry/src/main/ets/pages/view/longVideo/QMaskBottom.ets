@@ -1,5 +1,7 @@
 import { window } from '@kit.ArkUI'
-import { QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener } from '@QN/QPlayer2-core/qplayer2-core'
+import {
+  QIPlayerAudioListener,
+  QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener } from '@QN/QPlayer2-core/qplayer2-core'
 import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QTimestampHelper } from '../../common/helper/QTimestampHelper'
 import { common } from '@kit.AbilityKit'
@@ -10,6 +12,7 @@ export struct QMaskBottom{
   @State mMuteControlButtonImage:Resource = $r('app.media.qn_not_mute')
   @Link @Watch('mIsPlayingChange') mIsPlaying : Boolean
   @State mIsMute : Boolean = false
+
   // @State mProgressViewModel : QProgressViewModel = new QProgressViewModel(10,0,100)
   @State mProgressTextString : String = "00:00"
   @State mDurationTextString : String = "00:00"
@@ -17,16 +20,24 @@ export struct QMaskBottom{
   @State mDuration : number = 0
   @Link mDeviceOrientation : window.Orientation
   @Link mPlayerContext : QIPlayerContext
+  @Link mIsLive : Boolean
   private mIsSeeking : boolean = false
   private mProgressListener : QIPlayerProgressListener = {
     onProgressChanged:(context:QIPlayerContext,  progress:number, duration:number) => {
       if (this.mIsSeeking) {
         return
       }
-      this.mProgress = progress
-      this.mDuration = duration
+      if (this.mIsLive == false) {
+        this.mProgress = progress
+        this.mDuration = duration
+        this.mDurationTextString = QTimestampHelper.millisecondToHMSString(duration)
+      }
+      else{
+        this.mProgress = 0
+        this.mDuration = 0
+        this.mDurationTextString = QTimestampHelper.millisecondToHMSString(0)
+      }
       this.mProgressTextString = QTimestampHelper.millisecondToHMSString(progress)
-      this.mDurationTextString = QTimestampHelper.millisecondToHMSString(duration)
     }
   }
   private mQPlayerStateChangeListenrCallBack : QIPlayerStateChangeListener = {
@@ -37,6 +48,11 @@ export struct QMaskBottom{
       }
     }
   }
+  private mAudioListener : QIPlayerAudioListener = {
+  onMuteChanged:(context :QIPlayerContext , isMute:boolean)=>{
+    this.mIsMute = isMute
+  }
+}
   build(){
     Row({space: 5}) {
       RelativeContainer() {
@@ -98,14 +114,15 @@ export struct QMaskBottom{
             bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
           })
           .backgroundColor($r("app.color.long_video_progress_slider_background_color"))
+          .enabled(!this.mIsLive)
           .onChange((value,mode) => {
+
             // this.mProgressViewModel.setProgress(value)
             if (mode == SliderChangeMode.Begin) {
               this.mIsSeeking = true
             }
             else if (mode == SliderChangeMode.End || mode == SliderChangeMode.Click){
               this.mPlayerContext.get_control_handler().seek(value * 1000)
-
             }
           })
 
@@ -131,10 +148,12 @@ export struct QMaskBottom{
           if (!this.mIsMute) {
             this.mIsMute = true
             this.mMuteControlButtonImage = $r('app.media.qn_mute')
+            this.mPlayerContext.get_control_handler().setMute(true)
           }
           else {
             this.mIsMute = false
             this.mMuteControlButtonImage = $r('app.media.qn_not_mute')
+            this.mPlayerContext.get_control_handler().setMute(false)
           }
         })
         .alignRules({
@@ -171,6 +190,7 @@ export struct QMaskBottom{
   aboutToAppear(): void {
     this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mQPlayerStateChangeListenrCallBack)
     this.mPlayerContext.get_control_handler().addPlayerProgressChangeListener(this.mProgressListener)
+    this.mPlayerContext.get_control_handler().addPlayerAudioListener(this.mAudioListener)
   }
   mIsPlayingChange(){
     if (this.mIsPlaying) {

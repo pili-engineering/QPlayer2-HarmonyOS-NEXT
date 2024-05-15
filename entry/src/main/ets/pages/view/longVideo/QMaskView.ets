@@ -1,7 +1,9 @@
 
 import { router, window } from '@kit.ArkUI'
 import { common } from '@kit.AbilityKit'
-import { QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener } from '@QN/QPlayer2-core/qplayer2-core'
+import {
+  QIPlayerAudioListener,
+  QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener } from '@QN/QPlayer2-core/qplayer2-core'
 import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QMaskBottom } from './QMaskBottom'
 
@@ -13,6 +15,7 @@ export struct QMaskView{
   @Link mPlayerContext : QIPlayerContext
   @Link mIsPlaying : Boolean
   @State mIsBack : Boolean = false
+  @Link mIsLive : Boolean
   @Link mSettingViewVisible : Visibility
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
@@ -73,11 +76,10 @@ export struct QMaskView{
         .backgroundColor('#00000000')
         .id('setting_view_button')
 
-
-
         QMaskBottom({mDeviceOrientation : this.mDeviceOrientation,
                      mPlayerContext : this.mPlayerContext ,
-                     mIsPlaying : this.mIsPlaying})
+                     mIsPlaying : this.mIsPlaying,
+                    mIsLive : this.mIsLive})
           .height($r('app.float.long_video_bottom_view_height'))
           .alignRules({
             bottom : {anchor : "__container__" , align : VerticalAlign.Bottom},

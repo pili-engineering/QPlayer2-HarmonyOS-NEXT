@@ -32,6 +32,7 @@ export struct QPlayerUrlListView{
   @ObjectLink mMediaModel : QPlayerDemoMediaModels
   @Link mPlayerContext : QIPlayerContext
   @Link mIsPlaying : Boolean
+  @Link mIsLive : Boolean
   @State @Watch('currentMediaModelIdChange') mCurrentPlayerMediaModelId : Number  = 0
   build() {
     Column(){
@@ -80,6 +81,8 @@ export struct QPlayerUrlListView{
       return
     }
     this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel,0)
+
+    this.mIsLive = this.mMediaModel.mMediaModels[this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel.isLive
   }
 }
 @Component
@@ -87,14 +90,15 @@ struct UrlListItem{
   mName :String = ""
   mUrl : String = ""
   mId: Number = 0
-  @Link mCurrentPlayerMediaModelId : Number
+  @Link @Watch("currentPlayerMediaModelIdChange") mCurrentPlayerMediaModelId : Number
   @Link mIsPlaying : Boolean
+  @State fontColor : ResourceColor = $r('app.color.default_font_color')
   build() {
     Row(){
       RelativeContainer(){
           Button(this.mName.toString())
             .backgroundColor($r('app.color.hyaline_background_color'))
-            .fontColor($r('app.color.default_font_color'))
+            .fontColor(this.fontColor)
             .fontSize(($r('app.float.default_font_size')))
             .alignRules({
               left : {anchor : "__container__" , align : HorizontalAlign.Start},
@@ -107,6 +111,7 @@ struct UrlListItem{
                 this.mCurrentPlayerMediaModelId = -1
               }
               this.mCurrentPlayerMediaModelId = this.mId
+
             })
             .width('100%')
             .height('100%')
@@ -119,6 +124,16 @@ struct UrlListItem{
     .height('100%')
     .backgroundColor($r('app.color.hyaline_background_color'))
 
+  }
+  aboutToAppear(): void {
+    this.currentPlayerMediaModelIdChange()
+  }
+  currentPlayerMediaModelIdChange(){
+    if (this.mCurrentPlayerMediaModelId == this .mId) {
+      this.fontColor = $r("app.color.selected_font_color")
+    }else {
+      this.fontColor = $r("app.color.default_font_color")
+    }
   }
 }
 @Component
