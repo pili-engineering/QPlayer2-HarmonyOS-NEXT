@@ -12,8 +12,6 @@ export struct QMaskBottom{
   @State mMuteControlButtonImage:Resource = $r('app.media.qn_not_mute')
   @Link @Watch('mIsPlayingChange') mIsPlaying : Boolean
   @State mIsMute : Boolean = false
-
-  // @State mProgressViewModel : QProgressViewModel = new QProgressViewModel(10,0,100)
   @State mProgressTextString : String = "00:00"
   @State mDurationTextString : String = "00:00"
   @State mProgress : number = 0
