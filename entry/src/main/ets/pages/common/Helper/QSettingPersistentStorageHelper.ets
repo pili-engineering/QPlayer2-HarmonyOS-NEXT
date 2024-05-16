@@ -14,7 +14,7 @@ export class QSettingPersistentStorageHelper{
   static read(context : Context) : QPlayerSettingModel{
     let options: dataPreferences.Options = { name: 'qplayer2-setting' };
     let preferences :dataPreferences.Preferences = dataPreferences.getPreferencesSync(context,options)
-    let value : QPlayerSeek = preferences.getSync('seek_mode',-1) as QPlayerSeek
+    let value : QPlayerSeek = preferences.getSync('seek_mode',0) as QPlayerSeek
     let setting_model = new QPlayerSettingModel()
     setting_model.mSeekMode = value
     return setting_model
