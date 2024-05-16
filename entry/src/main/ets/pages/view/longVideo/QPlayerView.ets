@@ -10,6 +10,8 @@ import {QSurfaceRenderView,QIPlayerContext,
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QMaskSettingView } from './QMaskSettingView'
 import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
+import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
+import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 
 @Component
 export struct QPlayerView{
@@ -25,6 +27,7 @@ export struct QPlayerView{
   @Link mIsPlaying : Boolean
   @Link mIsLive : Boolean
   @State mXComponentId : string = 'qplayer2-core-renderview'
+  @State mQPlayerSettingModel : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get("context") as Context)
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
       if (state == QPlayerState.PLAYING) {
@@ -87,7 +90,7 @@ export struct QPlayerView{
           .id('mask_view')
 
         RelativeContainer() {
-          QMaskSettingView()
+          QMaskSettingView({mPlayerContext : this.mPlayerContext})
             .alignRules({
               top : {anchor : "__container__" , align : VerticalAlign.Top},
               right : {anchor : "__container__", align : HorizontalAlign.End}
@@ -118,7 +121,7 @@ export struct QPlayerView{
     this.visibleTimerChange()
     let mContext : Context = AppStorage.get('context') as Context
     this.mPlayerContext.init(mContext)
-    this.mPlayerContext.get_control_handler().setSeekMode(QPlayerSeek.NORMAL)
+    this.mPlayerContext.get_control_handler().setSeekMode(this.mQPlayerSettingModel.mSeekMode)
     this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateCallBack)
     this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel,0)
 

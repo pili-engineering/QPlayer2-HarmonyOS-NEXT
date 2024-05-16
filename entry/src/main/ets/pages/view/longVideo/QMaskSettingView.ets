@@ -3,7 +3,7 @@ import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { Context } from '@ohos.abilityAccessCtrl'
 import { ArrayList } from '@kit.ArkTS'
 import App from '@system.app'
-import { QPlayerSeek } from '@QN/QPlayer2-core/qplayer2-core'
+import { QIPlayerContext, QPlayerSeek } from '@QN/QPlayer2-core/qplayer2-core'
 
 @Component
 export struct QMaskSettingView{
@@ -15,6 +15,7 @@ export struct QMaskSettingView{
   ]
   private mSettingViewUnitHeight :  number = 100
   private mSettingViewUnitLineHeight :  number = 2
+  @Link mPlayerContext : QIPlayerContext
   build() {
     RelativeContainer(){
       Scroll(){
@@ -22,7 +23,7 @@ export struct QMaskSettingView{
           ForEach(this.mInnerSettingModel, (element: innerSettingModel, index: number) => {
             if (index == 0) {
               if (element.mRadioButtonNameArray.length == 0) {
-                SettingViewUnit({mSettingModel : element, mQPlayerSetting : this.mQPlayerSettingModel})
+                SettingViewUnit({mSettingModel : element, mQPlayerSetting : this.mQPlayerSettingModel, mPlayerContext : this.mPlayerContext})
                   .height(this.mSettingViewUnitHeight / 2.8)
                   .width("100%")
                   .alignRules({
@@ -31,7 +32,7 @@ export struct QMaskSettingView{
                   })
                   .id(element.mTitle + "_unit_" + index.toString())
               }else {
-                SettingViewUnit({mSettingModel : element, mQPlayerSetting : this.mQPlayerSettingModel})
+                SettingViewUnit({mSettingModel : element, mQPlayerSetting : this.mQPlayerSettingModel, mPlayerContext : this.mPlayerContext})
                   .height(this.mSettingViewUnitHeight)
                   .width("100%")
                   .alignRules({
@@ -42,7 +43,7 @@ export struct QMaskSettingView{
               }
             } else {
               if (element.mRadioButtonNameArray.length == 0) {
-                SettingViewUnit({mSettingModel : element, mQPlayerSetting : this.mQPlayerSettingModel})
+                SettingViewUnit({mSettingModel : element, mQPlayerSetting : this.mQPlayerSettingModel, mPlayerContext : this.mPlayerContext})
                   .height(this.mSettingViewUnitHeight / 2.8)
                   .width("100%")
                   .alignRules({
@@ -52,7 +53,7 @@ export struct QMaskSettingView{
                   .id(element.mTitle + "_unit_" + index.toString())
               }
               else {
-                SettingViewUnit({ mSettingModel: element, mQPlayerSetting: this.mQPlayerSettingModel })
+                SettingViewUnit({ mSettingModel: element, mQPlayerSetting: this.mQPlayerSettingModel , mPlayerContext : this.mPlayerContext})
                   .height(this.mSettingViewUnitHeight)
                   .width("100%")
                   .alignRules({
@@ -99,6 +100,7 @@ export struct QMaskSettingView{
 struct SettingViewUnit{
   @ObjectLink mSettingModel : innerSettingModel
   @Link mQPlayerSetting : QPlayerSettingModel
+  @Link mPlayerContext : QIPlayerContext
   build() {
     Column(){
       RelativeContainer(){
@@ -236,6 +238,7 @@ struct SettingViewUnit{
       }else {
         this.mQPlayerSetting.mSeekMode = QPlayerSeek.ACCURATE
       }
+      this.mPlayerContext.get_control_handler().setSeekMode(this.mQPlayerSetting.mSeekMode)
     }
     QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context, this.mQPlayerSetting)
   }
