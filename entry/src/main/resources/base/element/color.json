@@ -21,6 +21,10 @@
       "value": "#000"
     },
     {
+      "name": "selected_font_color",
+      "value": "#FFFF0000"
+    },
+    {
       "name": "long_video_mask_font_color",
       "value": "#FFFFFFFF"
     },
