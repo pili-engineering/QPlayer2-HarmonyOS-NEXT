@@ -780,7 +780,7 @@
         ]
     },
     {
-        "name" : "8.直播-纯视频-rtmp-video-only",
+        "name" : "38.直播-纯视频-rtmp-video-only",
         "isLive": 1,
         "streamElements": [
             {
@@ -914,12 +914,11 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "http://80rjmu.com1.z0.glb.clouddn.com/ncyY3ioGAakS-Lg252IscrXNxyo=/Fgny-rvibYqoFP-lPkI53JfmoIx5",
+                "url": "https://kodo.koafun.com/qiniu-2023-1080p-new.m3u8?v=123123",
                 "quality": 360,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
-                "hlsDrmKey": "testtesttesttest"
+                "referer": ""
                 
             }
         ]
@@ -984,8 +983,7 @@
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
-                "mp4DrmKey" : "c7e16c4403654b85847037383f0c2db3"
+                "referer": ""
             }
         ]
     },
@@ -1000,9 +998,7 @@
                 "quality": 960,
                 "isSelected": 1,
                 "backupUrl": "",
-                "referer": "",
-                "mp4QNDrmComKey" : "comnew",
-                "mp4QNDrmFileKey" : "filenew"
+                "referer": ""
             }
         ]
     }
