@@ -7,7 +7,7 @@ import { QPlayerToastView } from './QPlayerToastView'
 import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
-import { common, Context } from '@kit.AbilityKit'
+import { bundleManager, common, Context } from '@kit.AbilityKit'
 import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
   QIPlayerAudioDataListener,
   QSampleFormat,
@@ -53,7 +53,11 @@ struct QLongVideoView {
   @State mToastText : String = ''
   @State mIsPlaying : Boolean = false
   @State mIsLive : Boolean = false
-  @State mPlayerContext : QIPlayerContext = QPlayerContextFactory.createPlayerContext(QLogLevel.LOG_INFO,"s","s","1.4.0")
+  @State mPlayerContext : QIPlayerContext = QPlayerContextFactory.createPlayerContext(QLogLevel.LOG_INFO,
+    (AppStorage.get("context") as Context).filesDir,
+    bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).name,
+    bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).versionName,
+    "")
   private mAudioDataListener : QIPlayerAudioDataListener = {
     onAudioData:(context : QIPlayerContext, sampleRate: number, format:QSampleFormat, channelNum: number, channelLayout: QChannelLayout, data:Uint8Array)=>{}
   }
