@@ -116,7 +116,7 @@ export  struct  QPlayerStatusView{
                })
                .id("player_down_load_speed_text")
 
-            Text("下载速度 : " + this.mPlayerBufferPostion)
+            Text("BufferPostion : " + this.mPlayerBufferPostion)
                .statusTextStyle()
                .alignRules({
                   left : {anchor : "__container__" , align : HorizontalAlign.Start},
