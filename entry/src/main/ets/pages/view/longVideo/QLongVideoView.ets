@@ -53,9 +53,9 @@ struct QLongVideoView {
   @State mToastText : String = ''
   @State mIsPlaying : Boolean = false
   @State mIsLive : Boolean = false
-  @State mPlayerContext : QIPlayerContext = QPlayerContextFactory.createPlayerContext(QLogLevel.LOG_INFO,
+  @State mPlayerContext : QIPlayerContext = QPlayerContextFactory.createPlayerContext(
+    QLogLevel.LOG_INFO,
     (AppStorage.get("context") as Context).filesDir,
-    bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).name,
     bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).versionName,
     "")
   private mAudioDataListener : QIPlayerAudioDataListener = {
