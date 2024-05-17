@@ -1,35 +1,35 @@
 {
   "app": {
-    "signingConfigs": [
-      {
-        "name": "default",
-        "type": "HarmonyOS",
-        "material": {
-          "certpath": "/Users/dynastydream/.ohos/config/default_harmony-next_yyr3OFuy9Ij1XS1lyLo19Qx3Qy4onG7cI3lffRXF-PI=.cer",
-          "storePassword": "0000001A6A07B68EAC61599391C6BE2F4972026A298D74BAE1838CCD9AE7460938243D917739760CD10D",
-          "keyAlias": "debugKey",
-          "keyPassword": "0000001A41DBD2BD46F8376FDB687D6DC01ED6D7A1C45C022A62DCCAD8847D51FDDE4859C71C01723BAB",
-          "profile": "/Users/dynastydream/.ohos/config/default_harmony-next_yyr3OFuy9Ij1XS1lyLo19Qx3Qy4onG7cI3lffRXF-PI=.p7b",
-          "signAlg": "SHA256withECDSA",
-          "storeFile": "/Users/dynastydream/.ohos/config/default_harmony-next_yyr3OFuy9Ij1XS1lyLo19Qx3Qy4onG7cI3lffRXF-PI=.p12"
-        }
-      }
-    ],
     "products": [
       {
         "name": "default",
         "signingConfig": "default",
         "compileSdkVersion": "5.0.0(12)",
         "compatibleSdkVersion": "5.0.0(12)",
-        "runtimeOS": "HarmonyOS",
+        "runtimeOS": "HarmonyOS"
       }
     ],
     "buildModeSet": [
       {
-        "name": "debug",
+        "name": "debug"
       },
       {
         "name": "release"
+      }
+    ],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "./signingConfigs/default_harmony-next_yyr3OFuy9Ij1XS1lyLo19Qx3Qy4onG7cI3lffRXF-PI=.cer",
+          "storePassword": "0000001BB3731156BF6AE10CC6D8F4120628C8F5916D0E02298BC3D6CCAC5ACD995AD8D0201112375C395E",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B6538323D23341B8A09A1A072F078196451CFCB82D32776DE7BF9A67A0926F4B5A4D640A4D17D17",
+          "profile": "./signingConfigs/default_harmony-next_yyr3OFuy9Ij1XS1lyLo19Qx3Qy4onG7cI3lffRXF-PI=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "./signingConfigs/default_harmony-next_yyr3OFuy9Ij1XS1lyLo19Qx3Qy4onG7cI3lffRXF-PI=.p12"
+        }
       }
     ]
   },
