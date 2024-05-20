@@ -8,7 +8,8 @@ import { QPlayerSeek } from '@QN/QPlayer2-core/qplayer2-core'
 struct QPlayerDefaultSettingView{
   @State mQPlayerSetting : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get('context') as Context)
   @State mSettingModel : Array<innerSettingModel> = [
-    new innerSettingModel("seekMode", this.mQPlayerSetting.mSeekMode.valueOf(),["关键帧","精准"])
+    new innerSettingModel("seekMode", this.mQPlayerSetting.mSeekMode.valueOf(),["关键帧","精准"]),
+    new innerSettingModel("backgroundPlay", this.mQPlayerSetting.mBackgroundPlay.valueOf(),["关闭","开启"])
   ]
   mUnitHeight : Number = 150
     build() {
@@ -79,6 +80,7 @@ struct settingViewUnit{
                 .onClick(()=>{
                   this.radioClick(this.mSettingModel.mTitleString.toString(), index.valueOf())
                 })
+
               Text(element.toString())
                 .alignRules({
                   left : {anchor: this.mSettingModel.mTitleString.toString() + "radio_" + index.valueOf(),align: HorizontalAlign.End},
@@ -200,6 +202,8 @@ struct settingViewUnit{
       }else {
         this.mQPlayerSetting.mSeekMode = QPlayerSeek.ACCURATE
       }
+    }else if (title == "backgroundPlay") {
+        this.mQPlayerSetting.mBackgroundPlay = index
     }
   }
 }

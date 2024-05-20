@@ -11,7 +11,8 @@ export struct QMaskSettingView{
   @State mInnerSettingModel : innerSettingModel[] = [
     new innerSettingModel("切换下集生效",[], 0),
     new innerSettingModel("立即生效",[], 0),
-    new innerSettingModel("seekMode",["关键帧","精准"], this.mQPlayerSettingModel.mSeekMode.valueOf())
+    new innerSettingModel("seekMode",["关键帧","精准"], this.mQPlayerSettingModel.mSeekMode.valueOf()),
+    new innerSettingModel("backgroundPlay",["关闭","开启"] , this.mQPlayerSettingModel.mBackgroundPlay.valueOf())
   ]
   private mSettingViewUnitHeight :  number = 100
   private mSettingViewUnitLineHeight :  number = 2
@@ -239,6 +240,13 @@ struct SettingViewUnit{
         this.mQPlayerSetting.mSeekMode = QPlayerSeek.ACCURATE
       }
       this.mPlayerContext.get_control_handler().setSeekMode(this.mQPlayerSetting.mSeekMode)
+    }else if (title == "backgroundPlay"){
+      this.mQPlayerSetting.mBackgroundPlay = index
+      if (this.mQPlayerSetting.mBackgroundPlay == 0) {
+        this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(false)
+      }else {
+        this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
+      }
     }
     QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context, this.mQPlayerSetting)
   }

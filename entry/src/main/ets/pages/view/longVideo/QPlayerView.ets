@@ -123,6 +123,11 @@ export struct QPlayerView{
     let mContext : Context = AppStorage.get('context') as Context
     this.mPlayerContext.init(mContext, getContext(this) as common.UIAbilityContext)
     this.mPlayerContext.get_control_handler().setSeekMode(this.mQPlayerSettingModel.mSeekMode)
+    if (this.mQPlayerSettingModel.mBackgroundPlay == 0) {
+      this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(false)
+    }else {
+      this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
+    }
     this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateCallBack)
     this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel,0)
     this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
