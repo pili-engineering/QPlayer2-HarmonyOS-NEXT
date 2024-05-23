@@ -40,7 +40,7 @@ import { QPlayerDecoderType } from '@QN/QPlayer2-core/src/main/ets/public/enums/
 @Entry
 @Component
 struct QLongVideoView {
-  @State @Watch('QPlayerSettingModelChange') mQPlayerSetting : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get('context') as Context)
+  @State mQPlayerSetting : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get('context') as Context)
   @State mMediaModel : QPlayerDemoMediaModels = new QPlayerDemoMediaModels(AppStorage.get('context') as Context)
   @State mQPlayerViewWidth : Length = '100%'
   @State mQPlayerViewHeight : Length = '30%'
@@ -270,7 +270,12 @@ struct QLongVideoView {
   }
   aboutToDisappear(): void {
     let windowStage : window.WindowStage = AppStorage.get("windowStage") as window.WindowStage
-    windowStage.getMainWindowSync().setWindowBackgroundColor("#ffffffff")
+
+    try {
+      windowStage.getMainWindowSync().setWindowBackgroundColor("#ffffffff")
+    }catch (error){
+      return
+    }
 
     if (this.mDeviceOrientation == window.Orientation.PORTRAIT){
       return
@@ -312,10 +317,6 @@ struct QLongVideoView {
       this.mQPlayerViewFrameTopAlign = VerticalAlign.Bottom
       windowStage.getMainWindowSync().setWindowBackgroundColor("#ffffffff")
     }
-  }
-
-  QPlayerSettingModelChange(name: String){
-
   }
 
   addAllQPlayerListeners(){
