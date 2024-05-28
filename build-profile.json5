@@ -34,11 +34,11 @@
   },
   "modules": [
     {
-      "name": "entry",
+      "name": "qplayer2",
       "srcPath": "./entry",
       "targets": [
         {
-          "name": "default",
+          "name": "demo",
           "applyToProducts": [
             "default"
           ]

@@ -1,6 +1,6 @@
 {
   "module": {
-    "name": "entry",
+    "name": "qplayer2",
     "type": "entry",
     "description": "$string:module_desc",
     "mainElement": "EntryAbility",
