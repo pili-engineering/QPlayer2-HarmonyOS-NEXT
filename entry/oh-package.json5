@@ -7,5 +7,6 @@
   "license": "",
   "dependencies": {
     "@QN/QPlayer2-core" : 'file:../qplayer2_core'
+//    "@QN/QPlayer2-core" : 'file:./dependency/qplayer2_core.har'
   }
 }
