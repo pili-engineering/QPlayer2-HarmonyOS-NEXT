@@ -5,7 +5,8 @@ import {QSurfaceRenderView,QIPlayerContext,
   QPlayerContextFactory,
   QLogLevel,
   QPlayerSeek,
-  QIPlayerStateChangeListener
+  QIPlayerStateChangeListener,
+  QIPlayerBufferingListener
 } from '@QN/QPlayer2-core/qplayer2-core'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QMaskSettingView } from './QMaskSettingView'
@@ -27,6 +28,7 @@ export struct QPlayerView{
   @Link mPlayerContext : QIPlayerContext
   @Link mIsPlaying : Boolean
   @Link mIsLive : Boolean
+  @State mBufferringVisible  : Visibility = Visibility.Hidden
   @State mXComponentId : string = 'qplayer2-core-renderview'
   @State mQPlayerSettingModel : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get("context") as Context)
   private mStateCallBack : QIPlayerStateChangeListener = {
@@ -37,6 +39,15 @@ export struct QPlayerView{
       else {
         this.mIsPlaying = false
       }
+    }
+  }
+  private mBufferingCallBack : QIPlayerBufferingListener = {
+
+    onBufferingStart:(context:QIPlayerContext)=>{
+      this.mBufferringVisible = Visibility.Visible
+    },
+    onBufferingEnd:(context: QIPlayerContext)=>{
+      this.mBufferringVisible = Visibility.Hidden
     }
   }
   build(){
@@ -65,6 +76,20 @@ export struct QPlayerView{
         )
         .id('qplayer_render_view')
 
+        Text("Bufferring .......")
+          .width('100%')
+          .height('100%')
+          .textAlign(TextAlign.Center)
+          .alignRules({
+            left:{anchor: "__container__" , align : HorizontalAlign.Start},
+            top : { anchor : "__container__" , align : VerticalAlign.Top},
+          })
+          .id("buffering_text")
+          .visibility(this.mBufferringVisible)
+          .enabled(false)
+          .fontColor("#ff426ae5")
+          .backgroundColor($r("app.color.hyaline_background_color"))
+          .fontSize(30)
         QMaskView({
           mDeviceOrientation: this.mDeviceOrientation,
           mPlayerContext: this.mPlayerContext,
@@ -129,6 +154,7 @@ export struct QPlayerView{
       this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
     }
     this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateCallBack)
+    this.mPlayerContext.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingCallBack)
     this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel,0)
     this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
 
