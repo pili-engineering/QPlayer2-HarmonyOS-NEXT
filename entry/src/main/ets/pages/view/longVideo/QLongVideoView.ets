@@ -9,10 +9,6 @@ import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaMo
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
 import { bundleManager, common, Context } from '@kit.AbilityKit'
 import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
-  QIPlayerAudioDataListener,
-  QSampleFormat,
-  QChannelLayout,
-  QIPlayerAudioListener,
   QIPlayerAuthenticationListener,
   QPlayerAuthenticationErrorType,
   QIPlayerBiteRateListener,
@@ -22,16 +18,7 @@ import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
   QIPlayerMediaNetworkListener,
   QPlayerOpenError,
   QPlayerUrlType,
-  QIPlayerQualityListener,
-  QIPlayerSeekListener,
-  QIPlayerSEIDataListener,
-  QPlayerShootVideoType,
-  QIPlayerSpeedListener,
-  QIPlayerShootVideoListener,
-  QIPlayerSubtitleListener,
-  QIPlayerVideoDataListener,
-  QIPlayerVideoDecodeListener,
-  QIPlayerVideoFrameSizeChangeListener} from '@QN/QPlayer2-core/qplayer2-core'
+  QIPlayerSeekListener} from '@QN/QPlayer2-core/qplayer2-core'
 import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QVideoType } from '@QN/QPlayer2-core/src/main/ets/public/listeners/QIPlayerVideoDataListener'
 import { QPlayerDecoderType } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerDecoderType'
@@ -58,19 +45,19 @@ struct QLongVideoView {
     (AppStorage.get("context") as Context).filesDir,
     bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).versionName,
     "")
-  private mAudioDataListener : QIPlayerAudioDataListener = {
-    onAudioData:(context : QIPlayerContext, sampleRate: number, format:QSampleFormat, channelNum: number, channelLayout: QChannelLayout, data:Uint8Array)=>{}
-  }
-  private mAudioListener : QIPlayerAudioListener = {
-    onMuteChanged:(context :QIPlayerContext , isMute:boolean)=>{
-      if (isMute) {
-        this.addToastView("开启静音")
-      }
-      else {
-        this.addToastView("关闭静音")
-      }
-    }
-  }
+  // private mAudioDataListener : QIPlayerAudioDataListener = {
+  //   onAudioData:(context : QIPlayerContext, sampleRate: number, format:QSampleFormat, channelNum: number, channelLayout: QChannelLayout, data:Uint8Array)=>{}
+  // }
+  // private mAudioListener : QIPlayerAudioListener = {
+  //   onMuteChanged:(context :QIPlayerContext , isMute:boolean)=>{
+  //     if (isMute) {
+  //       this.addToastView("开启静音")
+  //     }
+  //     else {
+  //       this.addToastView("关闭静音")
+  //     }
+  //   }
+  // }
   private mAuthenticationListener : QIPlayerAuthenticationListener = {
     onAuthenticationFailed:(context: QIPlayerContext, error:QPlayerAuthenticationErrorType)=>{
       this.addToastView(`鉴权失败：${error.valueOf()}`)
@@ -84,9 +71,12 @@ struct QLongVideoView {
     onBiteRateChanged:(context:QIPlayerContext, bitrate:number)=>{}
   }
   private mBufferingListener : QIPlayerBufferingListener = {
-    onBufferingStart:(context:QIPlayerContext)=>{},
+    onBufferingStart:(context:QIPlayerContext)=>{
+      this.addToastView("start buffer")
+    },
 
-    onBufferingEnd:(context: QIPlayerContext)=>{}
+    onBufferingEnd:(context: QIPlayerContext)=>{
+      this.addToastView("end buffer")}
   }
   private mCommandNotAllowListener : QIPlayerCommandNotAllowListener = {
     onCommandNotAllow:(context:QIPlayerContext, commandName:string, state:QPlayerState)=>{}
@@ -111,18 +101,18 @@ struct QLongVideoView {
     }
 
   }
-  private mQualityListener : QIPlayerQualityListener = {
-    onQualitySwitchStart:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {},
-
-    onQualitySwitchComplete:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {},
-
-    onQualitySwitchCanceled:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {},
-
-    onQualitySwitchFailed:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {},
-
-    onQualitySwitchRetryLater:(context : QIPlayerContext ,  usertype: string , urlType: QPlayerUrlType ) => {}
-
-  }
+  // private mQualityListener : QIPlayerQualityListener = {
+  //   onQualitySwitchStart:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {},
+  //
+  //   onQualitySwitchComplete:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {},
+  //
+  //   onQualitySwitchCanceled:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {},
+  //
+  //   onQualitySwitchFailed:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {},
+  //
+  //   onQualitySwitchRetryLater:(context : QIPlayerContext ,  usertype: string , urlType: QPlayerUrlType ) => {}
+  //
+  // }
   private mSeekListener : QIPlayerSeekListener = {
     onSeekSuccess:(context : QIPlayerContext) => {
       this.addToastView(`seek 成功`)
@@ -132,45 +122,45 @@ struct QLongVideoView {
       this.addToastView(`seek 失败`)
     }
   }
-  private mSEIDataListener : QIPlayerSEIDataListener = {
-    onSEIData:(context:QIPlayerContext, data:Uint8Array)=>{
-      this.addToastView(`sei`)
-    }
-  }
-  private mShootVideoListener : QIPlayerShootVideoListener = {
-    onShootSuccessful:(context : QIPlayerContext, imageData:Uint8Array, width:number, height:number, type: QPlayerShootVideoType) => {},
-    onShootFailed:(context : QIPlayerContext) => {}
-  }
-  private mSpeedListener : QIPlayerSpeedListener = {
-    onSpeedChanged:(context : QIPlayerContext, speed:number ) => {}
-  }
+  // private mSEIDataListener : QIPlayerSEIDataListener = {
+  //   onSEIData:(context:QIPlayerContext, data:Uint8Array)=>{
+  //     this.addToastView(`sei`)
+  //   }
+  // }
+  // private mShootVideoListener : QIPlayerShootVideoListener = {
+  //   onShootSuccessful:(context : QIPlayerContext, imageData:Uint8Array, width:number, height:number, type: QPlayerShootVideoType) => {},
+  //   onShootFailed:(context : QIPlayerContext) => {}
+  // }
+  // private mSpeedListener : QIPlayerSpeedListener = {
+  //   onSpeedChanged:(context : QIPlayerContext, speed:number ) => {}
+  // }
 
-  private mSubtitleListener : QIPlayerSubtitleListener = {
-    onSubtitleTextChange:(context : QIPlayerContext , text: string ) => {},
-
-    onSubtitleNameChange:(context : QIPlayerContext , name: string ) => {},
-
-    onSubtitleEnable:(context : QIPlayerContext , enable: boolean ) => {},
-
-    onSubtitleLoaded:(context : QIPlayerContext , name: string , result: boolean ) => {},
-
-    onSubtitleDecoded:(context : QIPlayerContext , name: string , result: boolean ) => {}
-
-  }
-  private mVideoDataListener : QIPlayerVideoDataListener = {
-    onVideoData:(context : QIPlayerContext, width: number, height: number, videoType: QVideoType, buffer: Uint8Array) => {}
-  }
-  private mVideoDecodeListener : QIPlayerVideoDecodeListener = {
-    onVideoDecodeByType:(context : QIPlayerContext , Type: QPlayerDecoderType) => {},
-
-    onDecodeFailed:(context : QIPlayerContext , retry: boolean) => {},
-
-    onNotSupportCodecFormat:(context : QIPlayerContext , codec: number) => {}
-
-  }
-  private mVideoFrameSizeChangeListener : QIPlayerVideoFrameSizeChangeListener = {
-    onVideoFrameSizeChanged:(context : QIPlayerContext, width: number, height:number ) => {}
-  }
+  // private mSubtitleListener : QIPlayerSubtitleListener = {
+  //   onSubtitleTextChange:(context : QIPlayerContext , text: string ) => {},
+  //
+  //   onSubtitleNameChange:(context : QIPlayerContext , name: string ) => {},
+  //
+  //   onSubtitleEnable:(context : QIPlayerContext , enable: boolean ) => {},
+  //
+  //   onSubtitleLoaded:(context : QIPlayerContext , name: string , result: boolean ) => {},
+  //
+  //   onSubtitleDecoded:(context : QIPlayerContext , name: string , result: boolean ) => {}
+  //
+  // }
+  // private mVideoDataListener : QIPlayerVideoDataListener = {
+  //   onVideoData:(context : QIPlayerContext, width: number, height: number, videoType: QVideoType, buffer: Uint8Array) => {}
+  // }
+  // private mVideoDecodeListener : QIPlayerVideoDecodeListener = {
+  //   onVideoDecodeByType:(context : QIPlayerContext , Type: QPlayerDecoderType) => {},
+  //
+  //   onDecodeFailed:(context : QIPlayerContext , retry: boolean) => {},
+  //
+  //   onNotSupportCodecFormat:(context : QIPlayerContext , codec: number) => {}
+  //
+  // }
+  // private mVideoFrameSizeChangeListener : QIPlayerVideoFrameSizeChangeListener = {
+  //   onVideoFrameSizeChanged:(context : QIPlayerContext, width: number, height:number ) => {}
+  // }
 
   build() {
     Column() {
@@ -320,23 +310,23 @@ struct QLongVideoView {
   }
 
   addAllQPlayerListeners(){
-    this.mPlayerContext.get_control_handler().addPlayerVideoDecodeTypeListener(this.mVideoDecodeListener)
+    // this.mPlayerContext.get_control_handler().addPlayerVideoDecodeTypeListener(this.mVideoDecodeListener)
     this.mPlayerContext.get_control_handler().addPlayerMediaNetworkListener(this.mMediaNetworkListener)
     this.mPlayerContext.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingListener)
     this.mPlayerContext.get_control_handler().addPlayerBiteRateChangeListener(this.mBiteRateListener)
     this.mPlayerContext.get_control_handler().addPlayerCommandNotAllowListener(this.mCommandNotAllowListener)
-    this.mPlayerContext.get_control_handler().addPlayerQualityListener(this.mQualityListener)
-    this.mPlayerContext.get_control_handler().addPlayerSpeedChangeListener(this.mSpeedListener)
+    // this.mPlayerContext.get_control_handler().addPlayerQualityListener(this.mQualityListener)
+    // this.mPlayerContext.get_control_handler().addPlayerSpeedChangeListener(this.mSpeedListener)
     this.mPlayerContext.get_control_handler().addPlayerAuthenticationListener(this.mAuthenticationListener)
     this.mPlayerContext.get_control_handler().addPlayerFormatListener(this.mFormatListener)
-    this.mPlayerContext.get_control_handler().addPlayerSEIDataListener(this.mSEIDataListener)
-    this.mPlayerContext.get_control_handler().addPlayerShootVideoListener(this.mShootVideoListener)
-    this.mPlayerContext.get_control_handler().addPlayerAudioListener(this.mAudioListener)
-    this.mPlayerContext.get_control_handler().addPlayerVideoFrameSizeChangeListener(this.mVideoFrameSizeChangeListener)
+    // this.mPlayerContext.get_control_handler().addPlayerSEIDataListener(this.mSEIDataListener)
+    // this.mPlayerContext.get_control_handler().addPlayerShootVideoListener(this.mShootVideoListener)
+    // this.mPlayerContext.get_control_handler().addPlayerAudioListener(this.mAudioListener)
+    // this.mPlayerContext.get_control_handler().addPlayerVideoFrameSizeChangeListener(this.mVideoFrameSizeChangeListener)
     this.mPlayerContext.get_control_handler().addPlayerSeekListener(this.mSeekListener)
-    this.mPlayerContext.get_control_handler().addPlayerSubtitleListener(this.mSubtitleListener)
-    this.mPlayerContext.get_control_handler().addPlayerAudioDataListener(this.mAudioDataListener)
-    this.mPlayerContext.get_control_handler().addPlayerVideoDataListener(this.mVideoDataListener)
+    // this.mPlayerContext.get_control_handler().addPlayerSubtitleListener(this.mSubtitleListener)
+    // this.mPlayerContext.get_control_handler().addPlayerAudioDataListener(this.mAudioDataListener)
+    // this.mPlayerContext.get_control_handler().addPlayerVideoDataListener(this.mVideoDataListener)
   }
   //弹出toast，文本为text
   addToastView(text:String){

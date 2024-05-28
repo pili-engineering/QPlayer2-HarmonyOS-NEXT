@@ -1,6 +1,5 @@
 import { window } from '@kit.ArkUI'
 import {
-  QIPlayerAudioListener,
   QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener } from '@QN/QPlayer2-core/qplayer2-core'
 import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QTimestampHelper } from '../../common/helper/QTimestampHelper'
@@ -46,11 +45,11 @@ export struct QMaskBottom{
       }
     }
   }
-  private mAudioListener : QIPlayerAudioListener = {
-  onMuteChanged:(context :QIPlayerContext , isMute:boolean)=>{
-    this.mIsMute = isMute
-  }
-}
+//   private mAudioListener : QIPlayerAudioListener = {
+//   onMuteChanged:(context :QIPlayerContext , isMute:boolean)=>{
+//     this.mIsMute = isMute
+//   }
+// }
   build(){
     Row({space: 5}) {
       RelativeContainer() {
@@ -69,9 +68,12 @@ export struct QMaskBottom{
             this.mIsPlaying = false
             this.mPlayerContext.get_control_handler().pauseRender()
           }
+          else if(this.mPlayerContext.get_control_handler().currentPlayerState == QPlayerState.COMPLETED) {
+            this.mPlayerContext.get_control_handler().seek(0)
+          }
           else {
-            this.mIsPlaying = true
-            this.mPlayerContext.get_control_handler().resumeRender()
+              this.mIsPlaying = true
+              this.mPlayerContext.get_control_handler().resumeRender()
           }
         })
         .horizontalMaskButtonStyle()
@@ -128,7 +130,7 @@ export struct QMaskBottom{
 
         Text(this.mDurationTextString.valueOf())
           .alignRules({
-            right: { anchor: "mute_button", align: HorizontalAlign.Start },
+            right: { anchor: "full_screen_button", align: HorizontalAlign.Start },
             top: { anchor: "__container__", align: VerticalAlign.Top },
             bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
           })
@@ -137,30 +139,30 @@ export struct QMaskBottom{
           .fontColor($r('app.color.long_video_mask_font_color'))
           .id('duration_text')
 
-        Button() {
-          Image(this.mMuteControlButtonImage)
-            .maskNormalImageStyle()
-        }
-        .horizontalMaskButtonStyle()
-        .onClick(() => {
-          if (!this.mIsMute) {
-            this.mIsMute = true
-            this.mMuteControlButtonImage = $r('app.media.qn_mute')
-            this.mPlayerContext.get_control_handler().setMute(true)
-          }
-          else {
-            this.mIsMute = false
-            this.mMuteControlButtonImage = $r('app.media.qn_not_mute')
-            this.mPlayerContext.get_control_handler().setMute(false)
-          }
-        })
-        .alignRules({
-          // left: { anchor: "progress_text", align: HorizontalAlign.End },
-          right: { anchor: "full_screen_button", align: HorizontalAlign.Start },
-          top: { anchor: "__container__", align: VerticalAlign.Top },
-          bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
-        })
-        .id("mute_button")
+        // Button() {
+        //   Image(this.mMuteControlButtonImage)
+        //     .maskNormalImageStyle()
+        // }
+        // .horizontalMaskButtonStyle()
+        // .onClick(() => {
+        //   if (!this.mIsMute) {
+        //     this.mIsMute = true
+        //     this.mMuteControlButtonImage = $r('app.media.qn_mute')
+        //     this.mPlayerContext.get_control_handler().setMute(true)
+        //   }
+        //   else {
+        //     this.mIsMute = false
+        //     this.mMuteControlButtonImage = $r('app.media.qn_not_mute')
+        //     this.mPlayerContext.get_control_handler().setMute(false)
+        //   }
+        // })
+        // .alignRules({
+        //   // left: { anchor: "progress_text", align: HorizontalAlign.End },
+        //   right: { anchor: "full_screen_button", align: HorizontalAlign.Start },
+        //   top: { anchor: "__container__", align: VerticalAlign.Top },
+        //   bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
+        // })
+        // .id("mute_button")
 
 
         Button() {
@@ -188,11 +190,15 @@ export struct QMaskBottom{
   aboutToAppear(): void {
     this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mQPlayerStateChangeListenrCallBack)
     this.mPlayerContext.get_control_handler().addPlayerProgressChangeListener(this.mProgressListener)
-    this.mPlayerContext.get_control_handler().addPlayerAudioListener(this.mAudioListener)
+    // this.mPlayerContext.get_control_handler().addPlayerAudioListener(this.mAudioListener)
   }
   mIsPlayingChange(){
+
     if (this.mIsPlaying) {
       this.mPlayControlButtonImage = $r('app.media.qn_pause')
+    }
+    else if(this.mPlayerContext.get_control_handler().currentPlayerState == QPlayerState.COMPLETED){
+      this.mPlayControlButtonImage = $r('app.media.qn_replay')
     }
     else {
       this.mPlayControlButtonImage = $r('app.media.qn_play')

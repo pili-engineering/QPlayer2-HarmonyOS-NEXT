@@ -13,13 +13,6 @@ class InnerUrlClass{
   public mStreamElements:Array<QPlayerDemoStreamElement> = []
   public mSubtitleElements:Array<InnerSubtitleElement> = []
   constructor(id:Number , name : String,stream_elements:Array<QPlayerDemoStreamElement>,subtitle_elements:Array<InnerSubtitleElement>) {
-     //本地文件读取只能是沙河路径，预览器获取不到../../json/urls.json 数据
-    // let stat = fileIo.statSync('../../json/urls.json');
-    // let jsonfd = fileIo.openSync('../../json/urls.json').fd
-    // let stream : fileIo.Stream = fileIo.fdopenStreamSync(jsonfd, "r")
-    // let buf = new ArrayBuffer(stat.size) //文件大小
-    // let readOut = stream.read(buf)
-    // console.log(`json: ${readOut.toString()}`)
     this.mId = id
     this.mName = name
     this.mStreamElements = stream_elements

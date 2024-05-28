@@ -2,7 +2,6 @@
 import { router, window } from '@kit.ArkUI'
 import { common } from '@kit.AbilityKit'
 import {
-  QIPlayerAudioListener,
   QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener } from '@QN/QPlayer2-core/qplayer2-core'
 import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QMaskBottom } from './QMaskBottom'
