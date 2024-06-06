@@ -3,13 +3,14 @@ import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { Context } from '@ohos.abilityAccessCtrl'
 import { ArrayList } from '@kit.ArkTS'
 import App from '@system.app'
-import { QIPlayerContext, QPlayerSeek } from '@qiniu/qplayer2-core/qplayer2-core'
+import { QIPlayerContext, QPlayerDecoderPriority, QPlayerSeek } from '@QN/QPlayer2-core/qplayer2-core'
 
 @Component
 export struct QMaskSettingView{
   @State mQPlayerSettingModel : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get("context") as Context)
   @State mInnerSettingModel : innerSettingModel[] = [
     new innerSettingModel("切换下集生效",[], 0),
+    new innerSettingModel("decoderType",["自动","硬解","软解"] , this.mQPlayerSettingModel.mDecoderType.valueOf()),
     new innerSettingModel("立即生效",[], 0),
     new innerSettingModel("seekMode",["关键帧","精准"], this.mQPlayerSettingModel.mSeekMode.valueOf()),
     new innerSettingModel("backgroundPlay",["关闭","开启"] , this.mQPlayerSettingModel.mBackgroundPlay.valueOf())
@@ -247,6 +248,10 @@ struct SettingViewUnit{
       }else {
         this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
       }
+    }
+    else if (title == "decoderType"){
+      this.mQPlayerSetting.mDecoderType = index as QPlayerDecoderPriority
+      this.mPlayerContext.get_control_handler().setDecodeType(this.mQPlayerSetting.mDecoderType)
     }
     QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context, this.mQPlayerSetting)
   }

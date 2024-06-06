@@ -9,7 +9,8 @@ struct QPlayerDefaultSettingView{
   @State mQPlayerSetting : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get('context') as Context)
   @State mSettingModel : Array<innerSettingModel> = [
     new innerSettingModel("seekMode", this.mQPlayerSetting.mSeekMode.valueOf(),["关键帧","精准"]),
-    new innerSettingModel("backgroundPlay", this.mQPlayerSetting.mBackgroundPlay.valueOf(),["关闭","开启"])
+    new innerSettingModel("backgroundPlay", this.mQPlayerSetting.mBackgroundPlay.valueOf(),["关闭","开启"]),
+    new innerSettingModel("decoderType", this.mQPlayerSetting.mDecoderType.valueOf(),["自动","硬解","软解"])
   ]
   mUnitHeight : Number = 150
     build() {
@@ -204,6 +205,8 @@ struct settingViewUnit{
       }
     }else if (title == "backgroundPlay") {
         this.mQPlayerSetting.mBackgroundPlay = index
+    }else if (title == "decoderType"){
+      this.mQPlayerSetting.mDecoderType = index
     }
   }
 }

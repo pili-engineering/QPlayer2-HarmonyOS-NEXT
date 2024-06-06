@@ -155,6 +155,7 @@ export struct QPlayerView{
     }
     this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateCallBack)
     this.mPlayerContext.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingCallBack)
+    this.mPlayerContext.get_control_handler().setDecodeType(this.mQPlayerSettingModel.mDecoderType)
     this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel,0)
     this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
 
