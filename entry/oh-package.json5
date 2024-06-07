@@ -6,6 +6,6 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "@QN/QPlayer2-core" : 'file:./dependency/qplayer2_core.har'
+    "@QN/QPlayer2-core" : 'file:./dependency/qplayer2_core-harmony-1.5.0-preview.har'
   }
 }

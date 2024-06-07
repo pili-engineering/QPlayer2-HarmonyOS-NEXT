@@ -44,10 +44,6 @@
           ]
         }
       ]
-    },
-    {
-      "name": "qplayer2_core",
-      "srcPath": "./qplayer2_core"
     }
   ]
 }
