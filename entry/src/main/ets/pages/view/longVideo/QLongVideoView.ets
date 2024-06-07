@@ -18,8 +18,11 @@ import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
   QIPlayerMediaNetworkListener,
   QPlayerOpenError,
   QPlayerUrlType,
-  QIPlayerSeekListener} from '@qiniu/qplayer2-core/qplayer2-core'
-import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
+  QIPlayerSeekListener,
+  QIPlayerVideoDecodeListener} from '@QN/QPlayer2-core/qplayer2-core'
+import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
+import { QVideoType } from '@QN/QPlayer2-core/src/main/ets/public/listeners/QIPlayerVideoDataListener'
+import { QPlayerDecoderType } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerDecoderType'
 
 
 @Entry
@@ -95,6 +98,32 @@ struct QLongVideoView {
 
     onSeekFailed:(context : QIPlayerContext) => {
       this.addToastView(`seek 失败`)
+    }
+  }
+
+  private mDecoderTypeListener : QIPlayerVideoDecodeListener = {
+    onVideoDecodeByType:(context : QIPlayerContext , Type: QPlayerDecoderType) => {
+      switch (Type){
+        case QPlayerDecoderType.NONE:
+          this.addToastView(`解码方式 : NONE`)
+          break
+        case QPlayerDecoderType.HARDWARE:
+          this.addToastView(`解码方式 : 硬解`)
+          break
+        case QPlayerDecoderType.SOFTWARE:
+          this.addToastView(`解码方式 : 软解`)
+          break
+        default :
+          this.addToastView(`解码方式 : 未知`)
+          break
+      }
+  },
+
+    onDecodeFailed:(context : QIPlayerContext , retry: boolean) => {
+      this.addToastView(`解码失败 ： retry ${retry}`)
+    },
+    onNotSupportCodecFormat:(context : QIPlayerContext , codec: number) => {
+      this.addToastView(`解码格式不支持 ： codec ${codec}`)
     }
   }
 
@@ -254,15 +283,12 @@ struct QLongVideoView {
     this.mPlayerContext.get_control_handler().addPlayerAuthenticationListener(this.mAuthenticationListener)
     this.mPlayerContext.get_control_handler().addPlayerFormatListener(this.mFormatListener)
     this.mPlayerContext.get_control_handler().addPlayerSeekListener(this.mSeekListener)
+    this.mPlayerContext.get_control_handler().addPlayerVideoDecodeTypeListener(this.mDecoderTypeListener)
   }
   //弹出toast，文本为text
   addToastView(text:String){
     this.mToastText = text
     this.mToastText = ""
-  }
-  onBackPress(): boolean | void {
-    this.mPlayerContext.get_control_handler().release()
-    return true
   }
 }
 
