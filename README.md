@@ -33,9 +33,7 @@ Qplayer2是一款跨平台的播放器SDK,除了基础的播放器能力外，�
 
 ##### 下载安装
 
-```groovy
-ohpm install @QiNiu/qplayer2_core
-```
+https://sdk-release.qnsdk.com/qplayer2_core-harmony-1.5.0-preview.zip
 
 
 
@@ -47,7 +45,6 @@ ohpm install @QiNiu/qplayer2_core
 {
   "dependencies": {
     "@QN/QPlayer2-core" : 'file:./qplayer2_core.har',  // 本地压缩包引用
-    "@QN/QPlayer2-core": "1.5.0-preview"  // 远程引用，固定版本
   }
 }
 ```
@@ -63,9 +60,6 @@ ohpm install @QiNiu/qplayer2_core
 
 
 
-##### API文档
-
-请查阅document目录下的api文档
 
 ##### 接入文档
 
