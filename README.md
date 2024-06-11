@@ -31,10 +31,24 @@ Qplayer2是一款跨平台的播放器SDK,除了基础的播放器能力外，�
 
 | 类别     | 说明                                                         |
 | -------- | ------------------------------------------------------------ |
-| 系统版本 | harmony api 12 及以上版本的 harmony 设备 ，系统版本 3.0.0.22 及以上 |
-| IDE 版本 | DevEco Studio NEXT Developer Beta1 version 5.0.3.300 及以上  |
+| 系统版本 | harmony api 12 及以上版本的 harmony 设备 ，系统版本 3.0.0.22 |
+| IDE 版本 | DevEco Studio NEXT Developer Beta1 version 5.0.3.300         |
 
 
+
+## 权限要求
+
+```
+  {
+    "name": "ohos.permission.INTERNET"
+  },
+  {
+    "name": "ohos.permission.GET_NETWORK_INFO"
+  },
+  {
+    "name": "ohos.permission.KEEP_BACKGROUND_RUNNING"
+  }
+```
 
 ### Harmony
 
