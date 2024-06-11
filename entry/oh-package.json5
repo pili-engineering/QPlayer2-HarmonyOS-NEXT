@@ -1,0 +1,11 @@
+{
+  "name": "entry",
+  "version": "1.0.0",
+  "description": "Please describe the basic information.",
+  "main": "",
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "@QN/QPlayer2-core" : 'file:./dependency/qplayer2_core-harmony-1.5.0-preview.har'
+  }
+}

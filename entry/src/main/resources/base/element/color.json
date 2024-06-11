@@ -1,0 +1,72 @@
+{
+  "color": [
+    {
+      "name": "default_background_color",
+      "value": "#FFFFFFFF"
+    },
+    {
+    "name": "hyaline_background_color",
+    "value": "#00000000"
+  },
+    {
+      "name": "start_window_background",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "title_view_background",
+      "value": "#ff51aae8"
+    },
+    {
+      "name": "default_font_color",
+      "value": "#000"
+    },
+    {
+      "name": "selected_font_color",
+      "value": "#FF005EFF"
+    },
+    {
+      "name": "long_video_mask_font_color",
+      "value": "#FFFFFFFF"
+    },
+    {
+      "name": "long_video_progress_slider_background_color",
+      "value": "#02000000"
+    },
+    {
+      "name": "long_video_status_view_background_color",
+      "value": "#FFD3E342"
+    },
+    {
+      "name": "long_video_player_view_background_color",
+      "value": "#FFFFFFFF"
+    },
+    {
+      "name": "long_video_url_list_view_background_color",
+      "value": "#FFFFFFFF"
+    },
+    {
+      "name": "long_video_title_view_background_color",
+      "value": "#FF69B8DE"
+    },
+    {
+      "name": "toast_view_background_color",
+      "value": "#8D030303"
+    },
+    {
+      "name": "toast_view_font_color",
+      "value": "#FFFFFFFF"
+    },
+    {
+      "name": "default_line_color",
+      "value": "#000"
+    },
+    {
+      "name": "white",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "setting_view_background_color",
+      "value": "#C3000000"
+    }
+  ]
+}

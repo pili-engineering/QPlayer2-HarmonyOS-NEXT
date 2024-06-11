@@ -1,0 +1,49 @@
+{
+  "app": {
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.0(12)",
+        "runtimeOS": "HarmonyOS"
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug"
+      },
+      {
+        "name": "release"
+      }
+    ],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "./signingConfigs/default_harmony-next_yyr3OFuy9Ij1XS1lyLo19Qx3Qy4onG7cI3lffRXF-PI=.cer",
+          "storePassword": "0000001BB3731156BF6AE10CC6D8F4120628C8F5916D0E02298BC3D6CCAC5ACD995AD8D0201112375C395E",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B6538323D23341B8A09A1A072F078196451CFCB82D32776DE7BF9A67A0926F4B5A4D640A4D17D17",
+          "profile": "./signingConfigs/default_harmony-next_yyr3OFuy9Ij1XS1lyLo19Qx3Qy4onG7cI3lffRXF-PI=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "./signingConfigs/default_harmony-next_yyr3OFuy9Ij1XS1lyLo19Qx3Qy4onG7cI3lffRXF-PI=.p12"
+        }
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "qplayer2",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "demo",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}
