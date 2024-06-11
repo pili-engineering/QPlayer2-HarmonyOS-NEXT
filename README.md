@@ -29,10 +29,10 @@ Qplayer2是一款跨平台的播放器SDK,除了基础的播放器能力外，�
 
 ## 环境要求
 
-| 类别     | 说明                                                         |
-| -------- | ------------------------------------------------------------ |
-| 系统版本 | harmony api 12 及以上版本的 harmony 设备 ，系统版本 3.0.0.22 |
-| IDE 版本 | DevEco Studio NEXT Developer Beta1 version 5.0.3.300         |
+| 类别     | 说明                                                 |
+| -------- | ---------------------------------------------------- |
+| 系统版本 | 版本为 3.0.0.22 的 harmony-next 手机                 |
+| IDE 版本 | DevEco Studio NEXT Developer Beta1 version 5.0.3.300 |
 
 
 
@@ -52,15 +52,11 @@ Qplayer2是一款跨平台的播放器SDK,除了基础的播放器能力外，�
 
 ### Harmony
 
-##### 下载安装
-
-https://sdk-release.qnsdk.com/qplayer2_core-harmony-1.5.0-preview.zip
-
 
 
 ##### 引入依赖
 
-须在 oh-package.json5 文件中 dependencies 字段中列出引用的三方库，其版本号遵循 [semver](https://www.npmjs.com/package/semver) 规范。
+须在 oh-package.json5 文件中 dependencies 字段中列出引用的三方库，sdk 在demo 工程的dependency 目录下。
 
 ```awk
 {
@@ -76,7 +72,7 @@ https://sdk-release.qnsdk.com/qplayer2_core-harmony-1.5.0-preview.zip
 | ---- | ------------ | ------------------- |
 | Base | 基础播放能力 | 播放器进入error状态 |
 
-如需使用该套sdk到其他工程中，请联系我们的技术支持开通帐号和权限。
+如需使用该套sdk到其他工程中，可通过 400-808-9176 联系七牛商务开通帐号和权限 或者 通过 [工单](https://support.qiniu.com/?ref=developer.qiniu.com) 联系七牛的技术支持。
 
 
 
@@ -92,7 +88,15 @@ https://developer.qiniu.io/pili/12702/qplayer2-harmony
 
 1. demo 工程内的 长视频播放页 是基于 qplayer2-core 来实现的
 
-1. demo 下载：https://github.com/pili-engineering/QPlayer2-HarmonyOS-NEXT
+1. demo 下载：https://sdk-release.qnsdk.com/qplayer2-demo-v1.5.0-preview.hap
+
+1.  电脑连接 harmony next 手机，执行下方命令安装 hap 包
+
+   ```awk
+   hdc install qplayer2-demo-v1.5.0-preview.hap
+   ```
+
+   ##### 
 
    
 
