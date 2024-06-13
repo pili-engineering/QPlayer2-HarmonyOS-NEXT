@@ -1,4 +1,4 @@
-import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel';
+import { PlaySpeed, QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel';
 import dataPreferences from '@ohos.data.preferences';
 import { Context } from '@kit.AbilityKit';
 import { QPlayerDecoderPriority, QPlayerSeek } from '@QN/QPlayer2-core/qplayer2-core';
@@ -10,6 +10,7 @@ export class QSettingPersistentStorageHelper{
     preferences.putSync('seek_mode', settingModel.mSeekMode)
     preferences.putSync('background_play_mode', settingModel.mBackgroundPlay)
     preferences.putSync('decoder_type', settingModel.mDecoderType)
+    preferences.putSync('play_speed', settingModel.mPlaySpeed)
     preferences.flush()
   }
 
@@ -19,10 +20,12 @@ export class QSettingPersistentStorageHelper{
     let seekValue : QPlayerSeek = preferences.getSync('seek_mode',0) as QPlayerSeek
     let backgroundPlayValue : number = preferences.getSync('background_play_mode',0) as number
     let decoderPriorityValue : QPlayerDecoderPriority = preferences.getSync('decoder_type',0) as QPlayerDecoderPriority
+    let playSpeedValue : PlaySpeed = preferences.getSync('play_speed',2) as PlaySpeed
     let settingModel = new QPlayerSettingModel()
     settingModel.mSeekMode = seekValue
     settingModel.mBackgroundPlay = backgroundPlayValue
     settingModel.mDecoderType = decoderPriorityValue
+    settingModel.mPlaySpeed = playSpeedValue
     return settingModel
   }
 

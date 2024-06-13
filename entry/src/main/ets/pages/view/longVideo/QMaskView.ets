@@ -16,6 +16,8 @@ export struct QMaskView{
   @State mIsBack : Boolean = false
   @Link mIsLive : Boolean
   @Link mSettingViewVisible : Visibility
+  @Link mPlaySpeedViewVisible : Visibility
+  private  mSpeedButtonTitle : string = "倍速"
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
       if (state == QPlayerState.RELEASE) {
@@ -75,6 +77,23 @@ export struct QMaskView{
         })
         .backgroundColor('#00000000')
         .id('setting_view_button')
+
+        Button(this.mSpeedButtonTitle)
+        .type(ButtonType.Normal)
+        .width(60)
+        .height(40)
+        .alignRules({
+          right:{anchor: "setting_view_button" , align : HorizontalAlign.Start},
+          top : { anchor : "__container__" , align : VerticalAlign.Top}
+        })
+        .margin({right : 20,top : 0})
+        .visibility(this.mPortraitShow)
+        .onClick(()=>{
+          this.mPlaySpeedViewVisible = Visibility.Visible
+        })
+        .backgroundColor($r('app.color.hyaline_background_color'))
+        .fontColor("#ffffffff")
+        .id('setting_play_speed_button')
 
         QMaskBottom({mDeviceOrientation : this.mDeviceOrientation,
                      mPlayerContext : this.mPlayerContext ,

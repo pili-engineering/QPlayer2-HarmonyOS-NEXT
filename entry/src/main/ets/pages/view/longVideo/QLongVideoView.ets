@@ -19,7 +19,8 @@ import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
   QPlayerOpenError,
   QPlayerUrlType,
   QIPlayerSeekListener,
-  QIPlayerVideoDecodeListener} from '@QN/QPlayer2-core/qplayer2-core'
+  QIPlayerVideoDecodeListener,
+  QIPlayerSpeedListener} from '@QN/QPlayer2-core/qplayer2-core'
 import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QVideoType } from '@QN/QPlayer2-core/src/main/ets/public/listeners/QIPlayerVideoDataListener'
 import { QPlayerDecoderType } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerDecoderType'
@@ -73,6 +74,11 @@ struct QLongVideoView {
   private mFormatListener : QIPlayerFormatListener = {
     onFormatNotSupport:(context:QIPlayerContext)=>{
       this.addToastView("onFormatNotSupport")
+    }
+  }
+  private mPlaySpeed : QIPlayerSpeedListener = {
+    onSpeedChanged:(context : QIPlayerContext, speed:number)=>{
+      this.addToastView(`播放速度 : ${speed}`)
     }
   }
 
@@ -284,6 +290,7 @@ struct QLongVideoView {
     this.mPlayerContext.get_control_handler().addPlayerFormatListener(this.mFormatListener)
     this.mPlayerContext.get_control_handler().addPlayerSeekListener(this.mSeekListener)
     this.mPlayerContext.get_control_handler().addPlayerVideoDecodeTypeListener(this.mDecoderTypeListener)
+    this.mPlayerContext.get_control_handler().addPlayerSpeedChangeListener(this.mPlaySpeed)
   }
   //弹出toast，文本为text
   addToastView(text:String){

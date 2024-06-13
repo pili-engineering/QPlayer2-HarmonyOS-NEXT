@@ -67,6 +67,14 @@
     {
       "name": "setting_view_background_color",
       "value": "#C3000000"
+    },
+    {
+      "name": "selected_play_speed_button_background_color",
+      "value": "#FF3761FF"
+    },
+    {
+      "name": "not_selected_play_speed_button_background_color",
+      "value": "#FFFFFFFF"
     }
   ]
 }

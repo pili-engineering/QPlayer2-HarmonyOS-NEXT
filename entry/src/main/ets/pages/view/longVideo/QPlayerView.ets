@@ -12,8 +12,9 @@ import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaMo
 import { QMaskSettingView } from './QMaskSettingView'
 import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
-import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
+import { PlaySpeed, QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { common } from '@kit.AbilityKit'
+import { QMaskPlaySpeedView } from './QMaskPlaySpeedView'
 
 @Component
 export struct QPlayerView{
@@ -23,6 +24,7 @@ export struct QPlayerView{
   // @Link PlayerSettingViewModel: QPlayerSettingViewModel
   @State mMaskVisible : Visibility = Visibility.Visible
   @State @Watch("settingViewVisibleChange") mSettingViewVisible : Visibility = Visibility.Hidden
+  @State @Watch("playSpeedViewVisibleChange") mPlaySpeedViewVisible : Visibility = Visibility.Hidden
   @Link @Watch("deviceOrientationChange") mDeviceOrientation : window.Orientation
   @Link mMediaModel : QPlayerDemoMediaModels
   @Link mPlayerContext : QIPlayerContext
@@ -95,7 +97,8 @@ export struct QPlayerView{
           mPlayerContext: this.mPlayerContext,
           mIsPlaying: this.mIsPlaying,
           mSettingViewVisible : this.mSettingViewVisible,
-          mIsLive : this.mIsLive
+          mIsLive : this.mIsLive,
+          mPlaySpeedViewVisible : this.mPlaySpeedViewVisible
         })
           .width('100%')
           .height('100%')
@@ -129,6 +132,7 @@ export struct QPlayerView{
             .margin({
               right: 50
             })
+
         }
         .visibility(this.mSettingViewVisible)
         .onClick(()=>{
@@ -138,6 +142,30 @@ export struct QPlayerView{
         .height("100%")
         .width("100%")
         .id("setting_view_relativeContainer")
+
+        RelativeContainer() {
+          QMaskPlaySpeedView({mPlayerContext : this.mPlayerContext})
+            .alignRules({
+              top : {anchor : "__container__" , align : VerticalAlign.Top},
+              right : {anchor : "__container__", align : HorizontalAlign.End}
+            })
+            .visibility(this.mPlaySpeedViewVisible)
+            .height("100%")
+            .width(100)
+            .id("play_speed_view")
+            .backgroundColor($r("app.color.setting_view_background_color"))
+            .margin({
+              right: 50
+            })
+        }
+        .visibility(this.mPlaySpeedViewVisible)
+        .onClick(()=>{
+          this.mPlaySpeedViewVisible = Visibility.Hidden
+          this.stopTimer()
+        })
+        .height("100%")
+        .width("100%")
+        .id("play_speed_view_relativeContainer")
       }
     }
     .height("100%")
@@ -154,6 +182,19 @@ export struct QPlayerView{
       this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
     }
     this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateCallBack)
+    if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_0_5) {
+      this.mPlayerContext.get_control_handler().setSpeed(0.5)
+    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_0_75){
+      this.mPlayerContext.get_control_handler().setSpeed(0.75)
+    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_1_0){
+      this.mPlayerContext.get_control_handler().setSpeed(1.0)
+    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_1_25){
+      this.mPlayerContext.get_control_handler().setSpeed(1.25)
+    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_1_5){
+      this.mPlayerContext.get_control_handler().setSpeed(1.5)
+    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_2_0){
+      this.mPlayerContext.get_control_handler().setSpeed(2.0)
+    }
     this.mPlayerContext.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingCallBack)
     this.mPlayerContext.get_control_handler().setDecodeType(this.mQPlayerSettingModel.mDecoderType)
     this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel,0)
@@ -165,6 +206,7 @@ export struct QPlayerView{
   deviceOrientationChange(){
     if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {
       this.mSettingViewVisible = Visibility.Hidden
+      this.mPlaySpeedViewVisible = Visibility.Hidden
     }
   }
   maskShowAndHide() {
@@ -177,6 +219,11 @@ export struct QPlayerView{
   }
   settingViewVisibleChange(){
     if (this.mSettingViewVisible == Visibility.Visible) {
+      this.mMaskVisible = Visibility.Hidden
+    }
+  }
+  playSpeedViewVisibleChange(){
+    if (this.mPlaySpeedViewVisible == Visibility.Visible) {
       this.mMaskVisible = Visibility.Hidden
     }
   }

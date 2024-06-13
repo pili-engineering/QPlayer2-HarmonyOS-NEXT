@@ -62,7 +62,7 @@ export struct QMaskBottom{
           top: { anchor: "__container__", align: VerticalAlign.Top },
           bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
         })
-        .margin({ left: 2 })
+        .margin({ left: 5 })
         .onClick(() => {
           if (this.mIsPlaying) {
             this.mIsPlaying = false
@@ -83,6 +83,7 @@ export struct QMaskBottom{
           Image($r('app.media.qn_stop'))
             .maskNormalImageStyle()
         }
+        .margin({left : 3})
         .alignRules({
           left: { anchor: "play_button", align: HorizontalAlign.End },
           top: { anchor: "__container__", align: VerticalAlign.Top },
@@ -174,6 +175,7 @@ export struct QMaskBottom{
           top: { anchor: "__container__", align: VerticalAlign.Top },
           bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
         })
+        .margin({right : 4})
         .horizontalMaskButtonStyle()
         .id('full_screen_button')
         .onClick(()=>{
