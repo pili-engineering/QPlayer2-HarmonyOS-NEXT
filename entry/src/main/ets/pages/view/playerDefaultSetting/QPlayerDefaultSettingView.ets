@@ -1,7 +1,7 @@
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
 import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { QTitleView } from '../../common/component/QTitleView'
-import { QPlayerSeek } from '@QN/QPlayer2-core/qplayer2-core'
+import { QPlayerSeek } from '@qiniu/qplayer2-core/qplayer2-core'
 
 @Entry
 @Component

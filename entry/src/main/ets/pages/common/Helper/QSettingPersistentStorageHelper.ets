@@ -1,7 +1,7 @@
 import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel';
 import dataPreferences from '@ohos.data.preferences';
 import { Context } from '@kit.AbilityKit';
-import { QPlayerSeek } from '@QN/QPlayer2-core/qplayer2-core';
+import { QPlayerSeek } from '@qiniu/qplayer2-core/qplayer2-core';
 
 export class QSettingPersistentStorageHelper{
   static save(context : Context,settingModel : QPlayerSettingModel){

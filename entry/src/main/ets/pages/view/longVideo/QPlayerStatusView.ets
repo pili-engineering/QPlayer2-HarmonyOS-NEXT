@@ -2,8 +2,8 @@ import { QIPlayerContext,
    QIPlayerDownloadListener,
    QIPlayerFPSListener,
    QIPlayerRenderListener,
-   QIPlayerStateChangeListener } from '@QN/QPlayer2-core/qplayer2-core'
-import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
+   QIPlayerStateChangeListener } from '@qiniu/qplayer2-core/qplayer2-core'
+import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
 
 @Component
 export  struct  QPlayerStatusView{

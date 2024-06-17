@@ -7,10 +7,10 @@ import {QSurfaceRenderView,QIPlayerContext,
   QPlayerSeek,
   QIPlayerStateChangeListener,
   QIPlayerBufferingListener
-} from '@QN/QPlayer2-core/qplayer2-core'
+} from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QMaskSettingView } from './QMaskSettingView'
-import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
+import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
 import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { common } from '@kit.AbilityKit'

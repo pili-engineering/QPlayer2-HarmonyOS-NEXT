@@ -3,7 +3,7 @@ import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { Context } from '@ohos.abilityAccessCtrl'
 import { ArrayList } from '@kit.ArkTS'
 import App from '@system.app'
-import { QIPlayerContext, QPlayerSeek } from '@QN/QPlayer2-core/qplayer2-core'
+import { QIPlayerContext, QPlayerSeek } from '@qiniu/qplayer2-core/qplayer2-core'
 
 @Component
 export struct QMaskSettingView{
