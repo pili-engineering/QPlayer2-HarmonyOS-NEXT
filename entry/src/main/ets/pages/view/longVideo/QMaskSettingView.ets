@@ -5,7 +5,7 @@ import { ArrayList } from '@kit.ArkTS'
 import App from '@system.app'
 import {
   QBlindType,
-  QIPlayerContext, QPlayerDecoderPriority, QPlayerSeek, QRenderRatio } from '@QN/QPlayer2-core/qplayer2-core'
+  QIPlayerContext, QPlayerDecoderPriority, QPlayerSeek, QRenderRatio } from '@qiniu/qplayer2-core/qplayer2-core'
 
 @Component
 export struct QMaskSettingView{

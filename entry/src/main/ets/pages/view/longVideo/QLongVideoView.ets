@@ -19,11 +19,10 @@ import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
   QPlayerOpenError,
   QPlayerUrlType,
   QIPlayerSeekListener,
-  QIPlayerVideoDecodeListener,
-  QIPlayerSpeedListener} from '@QN/QPlayer2-core/qplayer2-core'
-import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
-import { QVideoType } from '@QN/QPlayer2-core/src/main/ets/public/listeners/QIPlayerVideoDataListener'
-import { QPlayerDecoderType } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerDecoderType'
+  QIPlayerSpeedListener,
+  QIPlayerVideoDecodeListener} from '@qiniu/qplayer2-core/qplayer2-core'
+import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
+import { QPlayerDecoderType } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerDecoderType'
 
 
 @Entry

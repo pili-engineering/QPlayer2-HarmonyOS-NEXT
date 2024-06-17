@@ -1,4 +1,4 @@
-import { QIPlayerContext } from '@QN/QPlayer2-core/qplayer2-core'
+import { QIPlayerContext } from '@qiniu/qplayer2-core/qplayer2-core'
 
 @Component
 export struct QMaskPlaySpeedView{
