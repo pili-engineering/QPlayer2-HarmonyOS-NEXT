@@ -61,7 +61,7 @@ Qplayer2是一款跨平台的播放器SDK,除了基础的播放器能力外，�
 ```awk
 {
   "dependencies": {
-    "@qiniu/qplayer2-core": "^1.5.0-preview1",  // 本地压缩包引用
+    "@qiniu/qplayer2-core": "^1.5.0-preview1",  //依赖 open harmony 中心仓
   }
 }
 ```
