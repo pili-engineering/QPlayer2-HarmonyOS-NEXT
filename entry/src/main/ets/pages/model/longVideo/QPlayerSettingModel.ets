@@ -1,4 +1,6 @@
-import { QPlayerDecoderPriority, QPlayerSeek } from '@QN/QPlayer2-core/qplayer2-core'
+import {
+  QBlindType,
+  QPlayerDecoderPriority, QPlayerSeek, QRenderRatio } from '@QN/QPlayer2-core/qplayer2-core'
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
 import { Context } from '@ohos.abilityAccessCtrl'
 import { QPlayerDecoderType } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerDecoderType'
@@ -17,6 +19,8 @@ export class QPlayerSettingModel{
   public mBackgroundPlay : number = 1
   public mDecoderType : QPlayerDecoderPriority = QPlayerDecoderPriority.AUTO
   public mPlaySpeed : PlaySpeed = PlaySpeed.SPEED_1_0
+  public mRenderRatio : QRenderRatio = QRenderRatio.AUTO
+  public mBlinderType : QBlindType = QBlindType.NONE
   constructor() {
   }
 }

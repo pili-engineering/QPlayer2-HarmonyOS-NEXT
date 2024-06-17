@@ -3,7 +3,9 @@ import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { Context } from '@ohos.abilityAccessCtrl'
 import { ArrayList } from '@kit.ArkTS'
 import App from '@system.app'
-import { QIPlayerContext, QPlayerDecoderPriority, QPlayerSeek } from '@QN/QPlayer2-core/qplayer2-core'
+import {
+  QBlindType,
+  QIPlayerContext, QPlayerDecoderPriority, QPlayerSeek, QRenderRatio } from '@QN/QPlayer2-core/qplayer2-core'
 
 @Component
 export struct QMaskSettingView{
@@ -13,7 +15,9 @@ export struct QMaskSettingView{
     new innerSettingModel("decoderType",["自动","硬解","软解"] , this.mQPlayerSettingModel.mDecoderType.valueOf()),
     new innerSettingModel("立即生效",[], 0),
     new innerSettingModel("seekMode",["关键帧","精准"], this.mQPlayerSettingModel.mSeekMode.valueOf()),
-    new innerSettingModel("backgroundPlay",["关闭","开启"] , this.mQPlayerSettingModel.mBackgroundPlay.valueOf())
+    new innerSettingModel("backgroundPlay",["关闭","开启"] , this.mQPlayerSettingModel.mBackgroundPlay.valueOf()),
+    new innerSettingModel("renderRatio",["自动","拉伸","铺满","16:9","4:3"], this.mQPlayerSettingModel.mRenderRatio.valueOf()),
+    new innerSettingModel("binderType",["无","红色盲","绿色盲","蓝色盲"], this.mQPlayerSettingModel.mBlinderType.valueOf())
   ]
   private mSettingViewUnitHeight :  number = 100
   private mSettingViewUnitLineHeight :  number = 2
@@ -248,10 +252,15 @@ struct SettingViewUnit{
       }else {
         this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
       }
-    }
-    else if (title == "decoderType"){
+    }else if (title == "decoderType"){
       this.mQPlayerSetting.mDecoderType = index as QPlayerDecoderPriority
-      this.mPlayerContext.get_control_handler().setDecodeType(this.mQPlayerSetting.mDecoderType)
+      this.mPlayerContext.get_control_handler().setDecoderType(this.mQPlayerSetting.mDecoderType)
+    }else if (title == "renderRatio"){
+      this.mQPlayerSetting.mRenderRatio = index as QRenderRatio
+      this.mPlayerContext.get_render_handler().setRenderRatio(this.mQPlayerSetting.mRenderRatio)
+    }else if (title == "binderType"){
+      this.mQPlayerSetting.mBlinderType = index as QBlindType
+      this.mPlayerContext.get_render_handler().setBlindType(this.mQPlayerSetting.mBlinderType)
     }
     QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context, this.mQPlayerSetting)
   }

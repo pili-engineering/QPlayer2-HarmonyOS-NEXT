@@ -11,9 +11,10 @@ struct QPlayerDefaultSettingView{
     new innerSettingModel("seekMode", this.mQPlayerSetting.mSeekMode.valueOf(),["关键帧","精准"]),
     new innerSettingModel("backgroundPlay", this.mQPlayerSetting.mBackgroundPlay.valueOf(),["关闭","开启"]),
     new innerSettingModel("decoderType", this.mQPlayerSetting.mDecoderType.valueOf(),["自动","硬解","软解"]),
-    new innerSettingModel("playSpeed", this.mQPlayerSetting.mPlaySpeed.valueOf(),["0.5","0.75","1.0","1.25","1.5","2.0"])
+    new innerSettingModel("renderRatio", this.mQPlayerSetting.mRenderRatio.valueOf(),["自动","拉伸","铺满","16:9","4:3"]),
+    new innerSettingModel("binderType", this.mQPlayerSetting.mBlinderType.valueOf(),["无","红色盲","绿色盲","蓝色盲"])
   ]
-  mUnitHeight : Number = 110
+  mUnitHeight : Number = 125
     build() {
       Column() {
 
@@ -210,6 +211,10 @@ struct settingViewUnit{
       this.mQPlayerSetting.mDecoderType = index
     }else if (title == "playSpeed"){
       this.mQPlayerSetting.mPlaySpeed = index
+    }else if (title == "renderRatio"){
+      this.mQPlayerSetting.mRenderRatio = index
+    }else if (title == "binderType"){
+      this.mQPlayerSetting.mBlinderType = index
     }
   }
 }

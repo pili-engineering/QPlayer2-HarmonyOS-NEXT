@@ -126,7 +126,7 @@ export struct QPlayerView{
             })
             .visibility(this.mSettingViewVisible)
             .height("100%")
-            .width(300)
+            .width(340)
             .id("setting_view")
             .backgroundColor($r("app.color.setting_view_background_color"))
             .margin({
@@ -196,7 +196,9 @@ export struct QPlayerView{
       this.mPlayerContext.get_control_handler().setSpeed(2.0)
     }
     this.mPlayerContext.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingCallBack)
-    this.mPlayerContext.get_control_handler().setDecodeType(this.mQPlayerSettingModel.mDecoderType)
+    this.mPlayerContext.get_control_handler().setDecoderType(this.mQPlayerSettingModel.mDecoderType)
+    this.mPlayerContext.get_render_handler().setRenderRatio(this.mQPlayerSettingModel.mRenderRatio)
+    this.mPlayerContext.get_render_handler().setBlindType(this.mQPlayerSettingModel.mBlinderType)
     this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel,0)
     this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
 
