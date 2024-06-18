@@ -9,11 +9,12 @@ import {
 
 @Component
 export struct QMaskSettingView{
-  @State mQPlayerSettingModel : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get("context") as Context)
+  @Link mQPlayerSettingModel : QPlayerSettingModel
   @State mInnerSettingModel : innerSettingModel[] = [
     new innerSettingModel("切换下集生效",[], 0),
     new innerSettingModel("解码方式",["自动","硬解","软解"] , this.mQPlayerSettingModel.mDecoderType.valueOf()),
     new innerSettingModel("立即生效",[], 0),
+    new innerSettingModel("起播位置",[], this.mQPlayerSettingModel.mPosition.valueOf()),
     new innerSettingModel("seek模式",["关键帧","精准"], this.mQPlayerSettingModel.mSeekMode.valueOf()),
     new innerSettingModel("后台播放",["关闭","开启"] , this.mQPlayerSettingModel.mBackgroundPlay.valueOf()),
     new innerSettingModel("渲染比例",["自动","拉伸","铺满","16:9","4:3"], this.mQPlayerSettingModel.mRenderRatio.valueOf()),
@@ -49,14 +50,34 @@ export struct QMaskSettingView{
               }
             } else {
               if (element.mRadioButtonNameArray.length == 0) {
-                SettingViewUnit({mSettingModel : element, mQPlayerSetting : this.mQPlayerSettingModel, mPlayerContext : this.mPlayerContext})
-                  .height(this.mSettingViewUnitHeight / 2.8)
-                  .width("100%")
-                  .alignRules({
-                    top: { anchor: element.mTitle + "_line_" + index.toString(), align: VerticalAlign.Bottom },
-                    left: { anchor: "__container__", align: HorizontalAlign.Start }
+                if (element.mTitle.toString() == "起播位置") {
+                  SettingViewUnit({
+                    mSettingModel: element,
+                    mQPlayerSetting: this.mQPlayerSettingModel,
+                    mPlayerContext: this.mPlayerContext
                   })
-                  .id(element.mTitle + "_unit_" + index.toString())
+                    .height(this.mSettingViewUnitHeight)
+                    .width("100%")
+                    .alignRules({
+                      top: { anchor: element.mTitle + "_line_" + index.toString(), align: VerticalAlign.Bottom },
+                      left: { anchor: "__container__", align: HorizontalAlign.Start }
+                    })
+                    .id(element.mTitle + "_unit_" + index.toString())
+
+                } else {
+                  SettingViewUnit({
+                    mSettingModel: element,
+                    mQPlayerSetting: this.mQPlayerSettingModel,
+                    mPlayerContext: this.mPlayerContext
+                  })
+                    .height(this.mSettingViewUnitHeight / 2.8)
+                    .width("100%")
+                    .alignRules({
+                      top: { anchor: element.mTitle + "_line_" + index.toString(), align: VerticalAlign.Bottom },
+                      left: { anchor: "__container__", align: HorizontalAlign.Start }
+                    })
+                    .id(element.mTitle + "_unit_" + index.toString())
+                }
               }
               else {
                 SettingViewUnit({ mSettingModel: element, mQPlayerSetting: this.mQPlayerSettingModel , mPlayerContext : this.mPlayerContext})
@@ -119,8 +140,25 @@ struct SettingViewUnit{
             top : {anchor : "__container__", align : VerticalAlign.Top}
           })
           .id('title_' + this.mSettingModel.mTitle)
+        if (this.mSettingModel.mTitle.toString() == "起播位置"){
 
-        ForEach(this.mSettingModel.mRadioButtonNameArray,(element:String,index:Number)=>{
+          TextInput({placeholder : this.mQPlayerSetting.mPosition.valueOf() + ""})
+            .alignRules({
+              left : {anchor: "__container__",align: HorizontalAlign.Start},
+              top : {anchor : 'title_' + this.mSettingModel.mTitle , align : VerticalAlign.Bottom}
+            })
+            .backgroundColor($r('app.color.white'))
+            .type(InputType.Number)
+            .enterKeyType(EnterKeyType.Done)
+            .onChange((value)=>{
+              this.mQPlayerSetting.mPosition = Number(value).valueOf()
+              QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context , this.mQPlayerSetting)
+            })
+            .height(40)
+            .width('90%')
+            .id(this.mSettingModel.mTitle.toString() + "radio_" + -1)
+        }
+          ForEach(this.mSettingModel.mRadioButtonNameArray,(element:String,index:Number)=>{
           if(index.valueOf() / 4 <1){
             if (index.valueOf() % 4 == 0) {
               Radio({group:this.mSettingModel.mTitle.toString(), value:element.toString()})

@@ -32,7 +32,7 @@ export struct QPlayerView{
   @Link mIsLive : Boolean
   @State mBufferringVisible  : Visibility = Visibility.Hidden
   @State mXComponentId : string = 'qplayer2-core-renderview'
-  @State mQPlayerSettingModel : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get("context") as Context)
+  @Link mQPlayerSettingModel : QPlayerSettingModel
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
       if (state == QPlayerState.PLAYING) {
@@ -119,7 +119,7 @@ export struct QPlayerView{
           .id('mask_view')
 
         RelativeContainer() {
-          QMaskSettingView({mPlayerContext : this.mPlayerContext})
+          QMaskSettingView({mPlayerContext : this.mPlayerContext, mQPlayerSettingModel: this.mQPlayerSettingModel})
             .alignRules({
               top : {anchor : "__container__" , align : VerticalAlign.Top},
               right : {anchor : "__container__", align : HorizontalAlign.End}
@@ -187,7 +187,7 @@ export struct QPlayerView{
     this.mPlayerContext.get_control_handler().setDecoderType(this.mQPlayerSettingModel.mDecoderType)
     this.mPlayerContext.get_render_handler().setRenderRatio(this.mQPlayerSettingModel.mRenderRatio)
     this.mPlayerContext.get_render_handler().setBlindType(this.mQPlayerSettingModel.mBlinderType)
-    this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel,0)
+    this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel, this.mQPlayerSettingModel.mPosition)
     this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
     if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_0_5) {
       this.mPlayerContext.get_control_handler().setSpeed(0.5)

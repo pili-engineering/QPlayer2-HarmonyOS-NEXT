@@ -78,6 +78,11 @@ struct settingViewUnit{
             })
             .type(InputType.Number)
             .enterKeyType(EnterKeyType.Done)
+            .onChange((value)=>{
+              this.mQPlayerSetting.mPosition = Number(value).valueOf()
+            })
+            .height(40)
+            .width('90%')
             .id(this.mSettingModel.mTitleString.toString() + "radio_" + -1)
         }
         ForEach(this.mSettingModel.mButtonTitleStringArray,(element:String,index:Number)=>{
@@ -190,11 +195,12 @@ struct settingViewUnit{
         Line()
           .alignRules({
             left: {anchor: "__container__" , align : HorizontalAlign.Start},
-            top : {anchor : this.mSettingModel.mTitleString.toString() + "radio_" + (this.mSettingModel.mButtonTitleStringArray.length.valueOf() - 1), align: VerticalAlign.Bottom}
+            bottom : {anchor : "__container__", align : VerticalAlign.Bottom}
+            // top : {anchor : this.mSettingModel.mTitleString.toString() + "radio_" + (this.mSettingModel.mButtonTitleStringArray.length.valueOf() - 1), align: VerticalAlign.Bottom}
           })
-          .width('100%')
+          .width('94%')
           .height(2)
-          .margin({top : 3})
+          .margin({top : 3, left : '3%'})
           .backgroundColor($r('app.color.default_line_color'))
           .id(this.mSettingModel.mTitleString.toString() + "line")
       }

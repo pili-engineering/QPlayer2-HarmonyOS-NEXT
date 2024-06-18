@@ -8,7 +8,6 @@ import { QMaskBottom } from './QMaskBottom'
 
 @Component
 export struct QMaskView{
-  // @Link PlayerSettingViewModel: QPlayerSettingViewModel
   @Link @Watch("orientationChange") mDeviceOrientation : window.Orientation
   @State mPortraitShow : Visibility = Visibility.Hidden
   @Link mPlayerContext : QIPlayerContext

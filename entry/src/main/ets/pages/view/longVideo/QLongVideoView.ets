@@ -161,7 +161,8 @@ struct QLongVideoView {
           mMediaModel : this.mMediaModel,
           mPlayerContext : this.mPlayerContext,
           mIsPlaying : this.mIsPlaying,
-          mIsLive : this.mIsLive
+          mIsLive : this.mIsLive,
+          mQPlayerSettingModel : this.mQPlayerSetting
         })
           .alignRules({
             left: { anchor: "__container__", align: HorizontalAlign.Start },
@@ -187,7 +188,8 @@ struct QLongVideoView {
             mMediaModel : this.mMediaModel,
             mPlayerContext : this.mPlayerContext,
             mIsPlaying : this.mIsPlaying,
-            mIsLive : this.mIsLive
+            mIsLive : this.mIsLive,
+            mQPlayerSettingModel : this.mQPlayerSetting
           })
             .backgroundColor($r('app.color.long_video_url_list_view_background_color'))
             .width('100%')
