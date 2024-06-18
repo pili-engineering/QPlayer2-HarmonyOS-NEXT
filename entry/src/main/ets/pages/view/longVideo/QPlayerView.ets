@@ -144,7 +144,7 @@ export struct QPlayerView{
         .id("setting_view_relativeContainer")
 
         RelativeContainer() {
-          QMaskPlaySpeedView({mPlayerContext : this.mPlayerContext})
+          QMaskPlaySpeedView({mPlayerContext : this.mPlayerContext,mQPlayerSettingModel : this.mQPlayerSettingModel})
             .alignRules({
               top : {anchor : "__container__" , align : VerticalAlign.Top},
               right : {anchor : "__container__", align : HorizontalAlign.End}
@@ -182,6 +182,13 @@ export struct QPlayerView{
       this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
     }
     this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateCallBack)
+
+    this.mPlayerContext.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingCallBack)
+    this.mPlayerContext.get_control_handler().setDecoderType(this.mQPlayerSettingModel.mDecoderType)
+    this.mPlayerContext.get_render_handler().setRenderRatio(this.mQPlayerSettingModel.mRenderRatio)
+    this.mPlayerContext.get_render_handler().setBlindType(this.mQPlayerSettingModel.mBlinderType)
+    this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel,0)
+    this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
     if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_0_5) {
       this.mPlayerContext.get_control_handler().setSpeed(0.5)
     }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_0_75){
@@ -195,15 +202,6 @@ export struct QPlayerView{
     }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_2_0){
       this.mPlayerContext.get_control_handler().setSpeed(2.0)
     }
-    this.mPlayerContext.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingCallBack)
-    this.mPlayerContext.get_control_handler().setDecoderType(this.mQPlayerSettingModel.mDecoderType)
-    this.mPlayerContext.get_render_handler().setRenderRatio(this.mQPlayerSettingModel.mRenderRatio)
-    this.mPlayerContext.get_render_handler().setBlindType(this.mQPlayerSettingModel.mBlinderType)
-    this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel,0)
-    this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
-
-  }
-  settingDefault(){
   }
   deviceOrientationChange(){
     if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {

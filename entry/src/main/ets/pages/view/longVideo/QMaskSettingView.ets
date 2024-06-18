@@ -12,12 +12,12 @@ export struct QMaskSettingView{
   @State mQPlayerSettingModel : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get("context") as Context)
   @State mInnerSettingModel : innerSettingModel[] = [
     new innerSettingModel("切换下集生效",[], 0),
-    new innerSettingModel("decoderType",["自动","硬解","软解"] , this.mQPlayerSettingModel.mDecoderType.valueOf()),
+    new innerSettingModel("解码方式",["自动","硬解","软解"] , this.mQPlayerSettingModel.mDecoderType.valueOf()),
     new innerSettingModel("立即生效",[], 0),
-    new innerSettingModel("seekMode",["关键帧","精准"], this.mQPlayerSettingModel.mSeekMode.valueOf()),
-    new innerSettingModel("backgroundPlay",["关闭","开启"] , this.mQPlayerSettingModel.mBackgroundPlay.valueOf()),
-    new innerSettingModel("renderRatio",["自动","拉伸","铺满","16:9","4:3"], this.mQPlayerSettingModel.mRenderRatio.valueOf()),
-    new innerSettingModel("binderType",["无","红色盲","绿色盲","蓝色盲"], this.mQPlayerSettingModel.mBlinderType.valueOf())
+    new innerSettingModel("seek模式",["关键帧","精准"], this.mQPlayerSettingModel.mSeekMode.valueOf()),
+    new innerSettingModel("后台播放",["关闭","开启"] , this.mQPlayerSettingModel.mBackgroundPlay.valueOf()),
+    new innerSettingModel("渲染比例",["自动","拉伸","铺满","16:9","4:3"], this.mQPlayerSettingModel.mRenderRatio.valueOf()),
+    new innerSettingModel("色盲模式",["无","红色盲","绿色盲","蓝色盲"], this.mQPlayerSettingModel.mBlinderType.valueOf())
   ]
   private mSettingViewUnitHeight :  number = 100
   private mSettingViewUnitLineHeight :  number = 2
@@ -238,27 +238,27 @@ struct SettingViewUnit{
   radioClick(title:string, index : number)
   {
     this.mSettingModel.mIsSelectedIndex = index
-    if (title == "seekMode") {
+    if (title == "seek模式") {
       if (index == 0) {
         this.mQPlayerSetting.mSeekMode = QPlayerSeek.NORMAL
       }else {
         this.mQPlayerSetting.mSeekMode = QPlayerSeek.ACCURATE
       }
       this.mPlayerContext.get_control_handler().setSeekMode(this.mQPlayerSetting.mSeekMode)
-    }else if (title == "backgroundPlay"){
+    }else if (title == "后台播放"){
       this.mQPlayerSetting.mBackgroundPlay = index
       if (this.mQPlayerSetting.mBackgroundPlay == 0) {
         this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(false)
       }else {
         this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
       }
-    }else if (title == "decoderType"){
+    }else if (title == "解码方式"){
       this.mQPlayerSetting.mDecoderType = index as QPlayerDecoderPriority
       this.mPlayerContext.get_control_handler().setDecoderType(this.mQPlayerSetting.mDecoderType)
-    }else if (title == "renderRatio"){
+    }else if (title == "渲染比例"){
       this.mQPlayerSetting.mRenderRatio = index as QRenderRatio
       this.mPlayerContext.get_render_handler().setRenderRatio(this.mQPlayerSetting.mRenderRatio)
-    }else if (title == "binderType"){
+    }else if (title == "色盲模式"){
       this.mQPlayerSetting.mBlinderType = index as QBlindType
       this.mPlayerContext.get_render_handler().setBlindType(this.mQPlayerSetting.mBlinderType)
     }
