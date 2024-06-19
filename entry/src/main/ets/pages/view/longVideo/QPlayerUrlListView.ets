@@ -28,6 +28,7 @@ export struct QPlayerUrlListView{
   @Link mIsPlaying : Boolean
   @Link mIsLive : Boolean
   @Link mQPlayerSettingModel : QPlayerSettingModel
+  @Link mCurrentModel : QMediaModel | null
   @State @Watch('currentMediaModelIdChange') mCurrentPlayerMediaModelId : Number  = 0
   build() {
     Column(){
@@ -76,7 +77,7 @@ export struct QPlayerUrlListView{
       return
     }
     this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel, this.mQPlayerSettingModel.mPosition)
-
+    this.mCurrentModel = this.mMediaModel.mMediaModels[this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel
     this.mIsLive = this.mMediaModel.mMediaModels[this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel.isLive
   }
 }

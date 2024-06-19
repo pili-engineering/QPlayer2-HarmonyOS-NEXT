@@ -16,7 +16,10 @@ export struct QMaskView{
   @Link mIsLive : Boolean
   @Link mSettingViewVisible : Visibility
   @Link mPlaySpeedViewVisible : Visibility
+  @Link mSwitchQualityViewVisible : Visibility
+  @State mBottomMarginValue : number = 0
   private  mSpeedButtonTitle : string = "倍速"
+  private  mSwitchQualityButtonTitle : string = "清晰度"
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
       if (state == QPlayerState.RELEASE) {
@@ -94,6 +97,24 @@ export struct QMaskView{
         .fontColor("#ffffffff")
         .id('setting_play_speed_button')
 
+        Button(this.mSwitchQualityButtonTitle)
+          .type(ButtonType.Normal)
+          .width(100)
+          .height(40)
+          .alignRules({
+            right:{anchor: "setting_play_speed_button" , align : HorizontalAlign.Start},
+            top : { anchor : "__container__" , align : VerticalAlign.Top}
+          })
+          .margin({right : 20,top : 0})
+          .visibility(this.mPortraitShow)
+          .onClick(()=>{
+            this.mSwitchQualityViewVisible = Visibility.Visible
+          })
+          .backgroundColor($r('app.color.hyaline_background_color'))
+          .fontColor("#ffffffff")
+          .fontSize(15)
+          .id('switch_quality_button')
+
         QMaskBottom({mDeviceOrientation : this.mDeviceOrientation,
                      mPlayerContext : this.mPlayerContext ,
                      mIsPlaying : this.mIsPlaying,
@@ -104,6 +125,7 @@ export struct QMaskView{
             left : {anchor : "__container__" , align : HorizontalAlign.Start},
             right : {anchor : "__container__" , align : HorizontalAlign.End}
           })
+          .margin({bottom: this.mBottomMarginValue})
           .backgroundColor('#00000000')
           .id('mask_bottom_view')
 
@@ -120,9 +142,11 @@ export struct QMaskView{
   orientationChange(){
     if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {
       this.mPortraitShow = Visibility.Hidden
+      this.mBottomMarginValue = 0
     }
     else {
       this.mPortraitShow = Visibility.Visible
+      this.mBottomMarginValue = 30
     }
   }
 

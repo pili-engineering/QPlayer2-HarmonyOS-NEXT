@@ -20,7 +20,9 @@ import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
   QPlayerUrlType,
   QIPlayerSeekListener,
   QIPlayerSpeedListener,
-  QIPlayerVideoDecodeListener} from '@qiniu/qplayer2-core/qplayer2-core'
+  QIPlayerVideoDecodeListener,
+  QIPlayerQualityListener,
+  QMediaModel} from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QPlayerDecoderType } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerDecoderType'
 
@@ -41,12 +43,40 @@ struct QLongVideoView {
   @State mToastText : String = ''
   @State mIsPlaying : Boolean = false
   @State mIsLive : Boolean = false
+  @State mToastMarginValue : number = 0
+  @State mCurrentModel : QMediaModel | null = null
   @State mPlayerContext : QIPlayerContext = QPlayerContextFactory.createPlayerContext(
     QLogLevel.LOG_INFO,
     (AppStorage.get("context") as Context).filesDir,
     bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).versionName,
     "")
 
+  private mQualityListener: QIPlayerQualityListener = {
+    onQualitySwitchStart:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {
+
+      this.addToastView(`开始切换清晰度：new : ${newQuality.valueOf()} old : ${oldQuality.valueOf()}`)
+    },
+
+    onQualitySwitchComplete:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {
+      this.addToastView(`切换清晰度成功：new : ${newQuality.valueOf()} old : ${oldQuality.valueOf()}`)
+      },
+
+    onQualitySwitchCanceled:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {
+
+      this.addToastView(`取消切换清晰度：new : ${newQuality.valueOf()} old : ${oldQuality.valueOf()}`)
+    },
+
+    onQualitySwitchFailed:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {
+
+      this.addToastView(`切换清晰度失败：new : ${newQuality.valueOf()} old : ${oldQuality.valueOf()}`)
+      },
+
+    onQualitySwitchRetryLater:(context : QIPlayerContext ,  usertype: string , urlType: QPlayerUrlType ) => {
+
+      this.addToastView(`不可重复切换清晰度`)
+    }
+
+  }
   private mAuthenticationListener : QIPlayerAuthenticationListener = {
     onAuthenticationFailed:(context: QIPlayerContext, error:QPlayerAuthenticationErrorType)=>{
       this.addToastView(`鉴权失败：${error.valueOf()}`)
@@ -162,7 +192,8 @@ struct QLongVideoView {
           mPlayerContext : this.mPlayerContext,
           mIsPlaying : this.mIsPlaying,
           mIsLive : this.mIsLive,
-          mQPlayerSettingModel : this.mQPlayerSetting
+          mQPlayerSettingModel : this.mQPlayerSetting,
+          mCurrentModel : this.mCurrentModel
         })
           .alignRules({
             left: { anchor: "__container__", align: HorizontalAlign.Start },
@@ -189,7 +220,8 @@ struct QLongVideoView {
             mPlayerContext : this.mPlayerContext,
             mIsPlaying : this.mIsPlaying,
             mIsLive : this.mIsLive,
-            mQPlayerSettingModel : this.mQPlayerSetting
+            mQPlayerSettingModel : this.mQPlayerSetting,
+            mCurrentModel : this.mCurrentModel
           })
             .backgroundColor($r('app.color.long_video_url_list_view_background_color'))
             .width('100%')
@@ -210,7 +242,8 @@ struct QLongVideoView {
               bottom : {anchor : "__container__", align : VerticalAlign.Bottom}
             })
             .margin({
-              left: 5
+              left: 5,
+              bottom : this.mToastMarginValue
             })
             .id("qplayer_toast_view")
             .enabled(false)
@@ -267,6 +300,7 @@ struct QLongVideoView {
       this.mQPlayerViewFrameTop = "__container__"
       this.mQPlayerViewFrameTopAlign = VerticalAlign.Top
       windowStage.getMainWindowSync().setWindowBackgroundColor("#ff000000")
+      this.mToastMarginValue = 50
 
     }
     //竖屏
@@ -279,6 +313,7 @@ struct QLongVideoView {
       this.mQPlayerViewFrameTop = "title_view_row"
       this.mQPlayerViewFrameTopAlign = VerticalAlign.Bottom
       windowStage.getMainWindowSync().setWindowBackgroundColor("#ffffffff")
+      this.mToastMarginValue = 0
     }
   }
 
@@ -292,6 +327,8 @@ struct QLongVideoView {
     this.mPlayerContext.get_control_handler().addPlayerSeekListener(this.mSeekListener)
     this.mPlayerContext.get_control_handler().addPlayerVideoDecodeTypeListener(this.mDecoderTypeListener)
     this.mPlayerContext.get_control_handler().addPlayerSpeedChangeListener(this.mPlaySpeed)
+    this.mPlayerContext.get_control_handler().addPlayerQualityListener(this.mQualityListener)
+
   }
   //弹出toast，文本为text
   addToastView(text:String){

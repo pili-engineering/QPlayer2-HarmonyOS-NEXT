@@ -1,7 +1,8 @@
 import { window } from '@kit.ArkUI'
 import {
   QIPlayerAudioListener,
-  QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener } from '@qiniu/qplayer2-core/qplayer2-core'
+  QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener,
+  QPlayerUrlType } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QTimestampHelper } from '../../common/helper/QTimestampHelper'
 import { common } from '@kit.AbilityKit'
@@ -121,7 +122,6 @@ export struct QMaskBottom{
           .enabled(!this.mIsLive)
           .onChange((value,mode) => {
 
-            // this.mProgressViewModel.setProgress(value)
             if (mode == SliderChangeMode.Begin) {
               this.mIsSeeking = true
             }
@@ -129,7 +129,6 @@ export struct QMaskBottom{
               this.mPlayerContext.get_control_handler().seek(value * 1000)
             }
           })
-
           .id('progress_slider')
 
         Text(this.mDurationTextString.valueOf())
@@ -169,7 +168,6 @@ export struct QMaskBottom{
           bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
         })
         .id("mute_button")
-
 
         Button() {
           Image($r('app.media.qn_full_screen'))

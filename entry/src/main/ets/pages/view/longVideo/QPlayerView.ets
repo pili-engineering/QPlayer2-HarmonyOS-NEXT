@@ -6,7 +6,8 @@ import {QSurfaceRenderView,QIPlayerContext,
   QLogLevel,
   QPlayerSeek,
   QIPlayerStateChangeListener,
-  QIPlayerBufferingListener
+  QIPlayerBufferingListener,
+  QMediaModel
 } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QMaskSettingView } from './QMaskSettingView'
@@ -15,6 +16,7 @@ import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPer
 import { PlaySpeed, QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { common } from '@kit.AbilityKit'
 import { QMaskPlaySpeedView } from './QMaskPlaySpeedView'
+import { QMaskSwitchQualityView } from './QMaskSwitchQualityView'
 
 @Component
 export struct QPlayerView{
@@ -25,6 +27,7 @@ export struct QPlayerView{
   @State mMaskVisible : Visibility = Visibility.Visible
   @State @Watch("settingViewVisibleChange") mSettingViewVisible : Visibility = Visibility.Hidden
   @State @Watch("playSpeedViewVisibleChange") mPlaySpeedViewVisible : Visibility = Visibility.Hidden
+  @State @Watch("playSwitchQualityVisibleChange") mSwitchQualityViewVisible : Visibility = Visibility.Hidden
   @Link @Watch("deviceOrientationChange") mDeviceOrientation : window.Orientation
   @Link mMediaModel : QPlayerDemoMediaModels
   @Link mPlayerContext : QIPlayerContext
@@ -33,6 +36,7 @@ export struct QPlayerView{
   @State mBufferringVisible  : Visibility = Visibility.Hidden
   @State mXComponentId : string = 'qplayer2-core-renderview'
   @Link mQPlayerSettingModel : QPlayerSettingModel
+  @Link mCurrentModel : QMediaModel | null
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
       if (state == QPlayerState.PLAYING) {
@@ -98,7 +102,8 @@ export struct QPlayerView{
           mIsPlaying: this.mIsPlaying,
           mSettingViewVisible : this.mSettingViewVisible,
           mIsLive : this.mIsLive,
-          mPlaySpeedViewVisible : this.mPlaySpeedViewVisible
+          mPlaySpeedViewVisible : this.mPlaySpeedViewVisible,
+          mSwitchQualityViewVisible : this.mSwitchQualityViewVisible
         })
           .width('100%')
           .height('100%')
@@ -166,6 +171,30 @@ export struct QPlayerView{
         .height("100%")
         .width("100%")
         .id("play_speed_view_relativeContainer")
+
+        RelativeContainer() {
+          QMaskSwitchQualityView({mCurrentModel : this.mCurrentModel,mPlayerContext : this.mPlayerContext})
+            .alignRules({
+              top : {anchor : "__container__" , align : VerticalAlign.Top},
+              right : {anchor : "__container__", align : HorizontalAlign.End}
+            })
+            .visibility(this.mSwitchQualityViewVisible)
+            .height("100%")
+            .width(100)
+            .id("switch_quality_view")
+            .backgroundColor($r("app.color.setting_view_background_color"))
+            .margin({
+              right: 50
+            })
+        }
+        .visibility(this.mSwitchQualityViewVisible)
+        .onClick(()=>{
+          this.mSwitchQualityViewVisible = Visibility.Hidden
+          this.stopTimer()
+        })
+        .height("100%")
+        .width("100%")
+        .id("switch_quality_view_relativeContainer")
       }
     }
     .height("100%")
@@ -188,6 +217,7 @@ export struct QPlayerView{
     this.mPlayerContext.get_render_handler().setRenderRatio(this.mQPlayerSettingModel.mRenderRatio)
     this.mPlayerContext.get_render_handler().setBlindType(this.mQPlayerSettingModel.mBlinderType)
     this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel, this.mQPlayerSettingModel.mPosition)
+    this.mCurrentModel = this.mMediaModel.mMediaModels[0].mMediaModel
     this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
     if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_0_5) {
       this.mPlayerContext.get_control_handler().setSpeed(0.5)
@@ -224,6 +254,11 @@ export struct QPlayerView{
   }
   playSpeedViewVisibleChange(){
     if (this.mPlaySpeedViewVisible == Visibility.Visible) {
+      this.mMaskVisible = Visibility.Hidden
+    }
+  }
+  playSwitchQualityVisibleChange(){
+    if (this.mSwitchQualityViewVisible == Visibility.Visible) {
       this.mMaskVisible = Visibility.Hidden
     }
   }
