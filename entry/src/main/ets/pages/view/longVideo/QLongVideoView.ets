@@ -22,9 +22,13 @@ import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
   QIPlayerSpeedListener,
   QIPlayerVideoDecodeListener,
   QIPlayerQualityListener,
-  QMediaModel} from '@qiniu/qplayer2-core/qplayer2-core'
+  QMediaModel,
+  QIPlayerSEIDataListener} from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QPlayerDecoderType } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerDecoderType'
+import { util } from '@kit.ArkTS'
+import utils from '@arkts.utils'
+import { QDecimalToHexHelper } from '../../common/Helper/QDecimalToHexHelper'
 
 
 @Entry
@@ -91,11 +95,12 @@ struct QLongVideoView {
   }
   private mBufferingListener : QIPlayerBufferingListener = {
     onBufferingStart:(context:QIPlayerContext)=>{
-      this.addToastView("start buffer")
+      // this.addToastView("start buffer")
     },
 
-    onBufferingEnd:(context: QIPlayerContext)=>{
-      this.addToastView("end buffer")}
+    onBufferingEnd:(context: QIPlayerContext)=> {
+      // this.addToastView("end buffer")
+    }
   }
   private mCommandNotAllowListener : QIPlayerCommandNotAllowListener = {
     onCommandNotAllow:(context:QIPlayerContext, commandName:string, state:QPlayerState)=>{}
@@ -108,6 +113,32 @@ struct QLongVideoView {
   private mPlaySpeed : QIPlayerSpeedListener = {
     onSpeedChanged:(context : QIPlayerContext, speed:number)=>{
       this.addToastView(`播放速度 : ${speed}`)
+    }
+  }
+  private mSEIListener: QIPlayerSEIDataListener = {
+
+    onSEIData:(context:QIPlayerContext, data:Uint8Array)=> {
+      let seiData = data
+
+      let uuid :Uint8Array
+      if (data.byteLength > 16) {
+        let uuid :Uint8Array = seiData.slice(0,16)
+        seiData = seiData.slice(16,seiData.length)
+        let uuidStr : string = ""
+        uuid.forEach((value : number , index : number) =>{
+          let secondValue = value % 16
+          let firstValue = (value - secondValue) / 16
+          uuidStr += QDecimalToHexHelper.decimalToHex(firstValue)
+          uuidStr += QDecimalToHexHelper.decimalToHex(secondValue)
+          if (index == 3 || index == 5 || index == 7 || index == 9) {
+            uuidStr += "-"
+          }
+        })
+        this.addToastView(uuidStr)
+      }
+      const textDecoder = util.TextDecoder.create("utf-8")
+      let seiStr : string =  textDecoder.decodeWithStream(seiData, { stream: false })
+      this.addToastView(seiStr.toString())
     }
   }
 
@@ -328,6 +359,7 @@ struct QLongVideoView {
     this.mPlayerContext.get_control_handler().addPlayerVideoDecodeTypeListener(this.mDecoderTypeListener)
     this.mPlayerContext.get_control_handler().addPlayerSpeedChangeListener(this.mPlaySpeed)
     this.mPlayerContext.get_control_handler().addPlayerQualityListener(this.mQualityListener)
+    this.mPlayerContext.get_control_handler().addPlayerSEIDataListener(this.mSEIListener)
 
   }
   //弹出toast，文本为text

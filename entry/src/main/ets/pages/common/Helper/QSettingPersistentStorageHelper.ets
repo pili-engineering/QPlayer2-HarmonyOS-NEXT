@@ -14,6 +14,7 @@ export class QSettingPersistentStorageHelper{
     preferences.putSync('binder_type', settingModel.mBlinderType)
     preferences.putSync('render_ratio', settingModel.mRenderRatio)
     preferences.putSync('position', settingModel.mPosition)
+    preferences.putSync('sei_enable', settingModel.mSEIEnable)
     console.log(`write settingModel.mPosition : ${settingModel.mPosition}`);
     preferences.flush()
   }
@@ -28,6 +29,7 @@ export class QSettingPersistentStorageHelper{
     let renderRatioValue : QRenderRatio = preferences.getSync('render_ratio',0) as QRenderRatio
     let blindType : QBlindType = preferences.getSync('binder_type',0) as QBlindType
     let position : number =  preferences.getSync('position',0) as number
+    let seiEnable : number =  preferences.getSync('sei_enable',0) as number
     let settingModel = new QPlayerSettingModel()
     settingModel.mSeekMode = seekValue
     settingModel.mBackgroundPlay = backgroundPlayValue
@@ -36,6 +38,7 @@ export class QSettingPersistentStorageHelper{
     settingModel.mRenderRatio = renderRatioValue
     settingModel.mBlinderType = blindType
     settingModel.mPosition = position
+    settingModel.mSEIEnable = seiEnable
     console.log(`read settingModel.mPosition : ${settingModel.mPosition}`);
     return settingModel
   }

@@ -20,6 +20,7 @@ export class QPlayerSettingModel{
   public mRenderRatio : QRenderRatio = QRenderRatio.AUTO
   public mBlinderType : QBlindType = QBlindType.NONE
   public mPosition : number = 0
+  public mSEIEnable : number = 0
   constructor() {
   }
 }

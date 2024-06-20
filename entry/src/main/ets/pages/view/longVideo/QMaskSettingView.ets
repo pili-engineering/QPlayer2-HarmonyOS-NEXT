@@ -17,8 +17,9 @@ export struct QMaskSettingView{
     new innerSettingModel("起播位置",[], this.mQPlayerSettingModel.mPosition.valueOf()),
     new innerSettingModel("seek模式",["关键帧","精准"], this.mQPlayerSettingModel.mSeekMode.valueOf()),
     new innerSettingModel("后台播放",["关闭","开启"] , this.mQPlayerSettingModel.mBackgroundPlay.valueOf()),
-    new innerSettingModel("渲染比例",["自动","拉伸","铺满","16:9","4:3"], this.mQPlayerSettingModel.mRenderRatio.valueOf()),
-    new innerSettingModel("色盲模式",["无","红色盲","绿色盲","蓝色盲"], this.mQPlayerSettingModel.mBlinderType.valueOf())
+    new innerSettingModel("渲染比例",["自动","拉伸","铺满","16:9","4:3"], this.mQPlayerSettingModel.mRenderRatio.valueOf() - 1),
+    new innerSettingModel("色盲模式",["无","红色盲","绿色盲","蓝色盲"], this.mQPlayerSettingModel.mBlinderType.valueOf()),
+    new innerSettingModel("sei",["关闭","开启"], this.mQPlayerSettingModel.mSEIEnable.valueOf())
   ]
   private mSettingViewUnitHeight :  number = 100
   private mSettingViewUnitLineHeight :  number = 2
@@ -294,11 +295,14 @@ struct SettingViewUnit{
       this.mQPlayerSetting.mDecoderType = index as QPlayerDecoderPriority
       this.mPlayerContext.get_control_handler().setDecoderType(this.mQPlayerSetting.mDecoderType)
     }else if (title == "渲染比例"){
-      this.mQPlayerSetting.mRenderRatio = index as QRenderRatio
+      this.mQPlayerSetting.mRenderRatio = (index + 1) as QRenderRatio
       this.mPlayerContext.get_render_handler().setRenderRatio(this.mQPlayerSetting.mRenderRatio)
     }else if (title == "色盲模式"){
       this.mQPlayerSetting.mBlinderType = index as QBlindType
       this.mPlayerContext.get_render_handler().setBlindType(this.mQPlayerSetting.mBlinderType)
+    }else if (title == "sei"){
+      this.mQPlayerSetting.mSEIEnable = index
+      this.mPlayerContext.get_control_handler().setSEIEnable(this.mQPlayerSetting.mSEIEnable == 0 ? false : true)
     }
     QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context, this.mQPlayerSetting)
   }
