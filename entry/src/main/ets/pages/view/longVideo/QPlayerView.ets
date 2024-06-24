@@ -7,7 +7,9 @@ import {QSurfaceRenderView,QIPlayerContext,
   QPlayerSeek,
   QIPlayerStateChangeListener,
   QIPlayerBufferingListener,
-  QMediaModel
+  QMediaModel,
+  QIPlayerShootVideoListener,
+  QPlayerShootVideoType
 } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QMaskSettingView } from './QMaskSettingView'
@@ -17,12 +19,19 @@ import { PlaySpeed, QPlayerSettingModel } from '../../model/longVideo/QPlayerSet
 import { common } from '@kit.AbilityKit'
 import { QMaskPlaySpeedView } from './QMaskPlaySpeedView'
 import { QMaskSwitchQualityView } from './QMaskSwitchQualityView'
+import { image } from '@kit.ImageKit'
+import { BusinessError } from '@ohos.base'
 
 @Component
 export struct QPlayerView{
-  private mQPlayerTimerCount : Number = 0
-  private mQPlayerTimerId : Number = 0
-  private mQPlayerIsTimerStart : Boolean = false
+  private mQPlayerMaskTimerCount : Number = 0
+  private mQPlayerMaskTimerId : Number = 0
+  private mQPlayerIsMaskTimerStart : Boolean = false
+
+  private mQPlayerShootTimerCount : Number = 0
+  private mQPlayerShootTimerId : Number = 0
+  private mQPlayerIsShootTimerStart : Boolean = false
+  @State mShootViewVisible : Visibility = Visibility.Hidden
   // @Link PlayerSettingViewModel: QPlayerSettingViewModel
   @State mMaskVisible : Visibility = Visibility.Visible
   @State @Watch("settingViewVisibleChange") mSettingViewVisible : Visibility = Visibility.Hidden
@@ -33,6 +42,7 @@ export struct QPlayerView{
   @Link mPlayerContext : QIPlayerContext
   @Link mIsPlaying : Boolean
   @Link mIsLive : Boolean
+  @State mShootImagePixelMap : PixelMap | null = null
   @State mBufferringVisible  : Visibility = Visibility.Hidden
   @State mXComponentId : string = 'qplayer2-core-renderview'
   @Link mQPlayerSettingModel : QPlayerSettingModel
@@ -45,6 +55,29 @@ export struct QPlayerView{
       else {
         this.mIsPlaying = false
       }
+    }
+  }
+  private mShootVideoListener : QIPlayerShootVideoListener = {
+    onShootSuccessful:(context : QIPlayerContext, imageData:Uint8Array, width:number, height:number, type: QPlayerShootVideoType) => {
+      if (type == QPlayerShootVideoType.JPEG) {
+        let buffer : ArrayBufferLike = imageData.buffer
+        let source:image.ImageSource = image.createImageSource(buffer)
+        let option : image.InitializationOptions = {size : {height : height ,width : width}}
+        let pixelMap : PixelMap = source.createPixelMapSync(option)
+        this.mShootImagePixelMap = pixelMap
+        this.shootVisibleTimeChange()
+      }
+      // const imagePackerApi = image.createImagePacker();
+      // let packOpts : image.PackingOption = { format:"image/jpeg", quality:100 };
+      // imagePackerApi.packing(pixelMap, packOpts).then( (data : ArrayBuffer) => {
+      //   // data 为打包获取到的文件流，写入文件保存即可得到一张图片
+      //   let sss = 0;
+      // }).catch((error : BusinessError) => {
+      //   console.error('Failed to pack the image. And the error is: ' + error);
+      // })
+    },
+
+    onShootFailed:(context : QIPlayerContext) => {
     }
   }
   private mBufferingCallBack : QIPlayerBufferingListener = {
@@ -77,7 +110,7 @@ export struct QPlayerView{
         .gesture(
           TapGesture({count : 1})
             .onAction((event : GestureEvent)=>{
-              this.visibleTimerChange()
+              this.maskVisibleTimerChange()
             })
         )
         .id('qplayer_render_view')
@@ -96,6 +129,8 @@ export struct QPlayerView{
           .fontColor("#ff426ae5")
           .backgroundColor($r("app.color.hyaline_background_color"))
           .fontSize(30)
+
+
         QMaskView({
           mDeviceOrientation: this.mDeviceOrientation,
           mPlayerContext: this.mPlayerContext,
@@ -117,11 +152,23 @@ export struct QPlayerView{
           .gesture(
             TapGesture({count : 1})
               .onAction((event : GestureEvent)=>{
-                this.visibleTimerChange()
+                this.maskVisibleTimerChange()
               })
           )
           .visibility(this.mMaskVisible)
           .id('mask_view')
+
+        Image(this.mShootImagePixelMap)
+          .alignRules({
+            left:{anchor: "__container__" , align : HorizontalAlign.Start},
+            top : { anchor : "__container__" , align : VerticalAlign.Top},
+          })
+          .width('80%')
+          .height('80%')
+          .id('shoot_view')
+          .enabled(false)
+          .visibility(this.mShootViewVisible)
+          .backgroundColor('#ff000000')
 
         RelativeContainer() {
           QMaskSettingView({mPlayerContext : this.mPlayerContext, mQPlayerSettingModel: this.mQPlayerSettingModel})
@@ -142,7 +189,7 @@ export struct QPlayerView{
         .visibility(this.mSettingViewVisible)
         .onClick(()=>{
           this.mSettingViewVisible = Visibility.Hidden
-          this.stopTimer()
+          this.stopMaskTimer()
         })
         .height("100%")
         .width("100%")
@@ -166,7 +213,7 @@ export struct QPlayerView{
         .visibility(this.mPlaySpeedViewVisible)
         .onClick(()=>{
           this.mPlaySpeedViewVisible = Visibility.Hidden
-          this.stopTimer()
+          this.stopMaskTimer()
         })
         .height("100%")
         .width("100%")
@@ -190,7 +237,7 @@ export struct QPlayerView{
         .visibility(this.mSwitchQualityViewVisible)
         .onClick(()=>{
           this.mSwitchQualityViewVisible = Visibility.Hidden
-          this.stopTimer()
+          this.stopMaskTimer()
         })
         .height("100%")
         .width("100%")
@@ -201,7 +248,7 @@ export struct QPlayerView{
     .width("100%")
   }
   aboutToAppear(): void {
-    this.visibleTimerChange()
+    this.maskVisibleTimerChange()
     let mContext : Context = AppStorage.get('context') as Context
     this.mPlayerContext.init(mContext, getContext(this) as common.UIAbilityContext)
     this.mPlayerContext.get_control_handler().setSeekMode(this.mQPlayerSettingModel.mSeekMode)
@@ -213,6 +260,7 @@ export struct QPlayerView{
     this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateCallBack)
 
     this.mPlayerContext.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingCallBack)
+    this.mPlayerContext.get_control_handler().addPlayerShootVideoListener(this.mShootVideoListener)
     this.mPlayerContext.get_control_handler().setDecoderType(this.mQPlayerSettingModel.mDecoderType)
     this.mPlayerContext.get_control_handler().setSEIEnable(this.mQPlayerSettingModel.mSEIEnable == 0 ? false : true)
     this.mPlayerContext.get_render_handler().setRenderRatio(this.mQPlayerSettingModel.mRenderRatio)
@@ -263,28 +311,49 @@ export struct QPlayerView{
       this.mMaskVisible = Visibility.Hidden
     }
   }
-  stopTimer(){
-    clearInterval(this.mQPlayerTimerId.valueOf())
-    this.mQPlayerTimerCount = 0
-    this.mQPlayerIsTimerStart = false
+  shootVisibleTimeChange(){
+    if (this.mQPlayerIsShootTimerStart == true){
+      this.mQPlayerShootTimerCount = 0
+    }else {
+      this.mShootViewVisible = Visibility.Visible
+      this.mQPlayerIsShootTimerStart = true;
+      this.mQPlayerShootTimerId = setInterval(() => {
+        this.mQPlayerShootTimerCount = this.mQPlayerShootTimerCount.valueOf() + 1
+        if (this.mQPlayerShootTimerCount.valueOf() == 7) {
+          this.stopShootViewTimer()
+        }
+      }, 700)
+    }
+  }
+  stopShootViewTimer(){
+    clearInterval(this.mQPlayerShootTimerId.valueOf())
+    this.mShootImagePixelMap = null
+    this.mQPlayerShootTimerCount = 0
+    this.mQPlayerIsShootTimerStart = false
+    this.mShootViewVisible = Visibility.Hidden
+  }
+  stopMaskTimer(){
+    clearInterval(this.mQPlayerMaskTimerId.valueOf())
+    this.mQPlayerMaskTimerCount = 0
+    this.mQPlayerIsMaskTimerStart = false
     this.mMaskVisible = Visibility.Hidden
   }
-  visibleTimerChange(){
-    if(this.mQPlayerIsTimerStart){
-      this.stopTimer()
+  maskVisibleTimerChange(){
+    if(this.mQPlayerIsMaskTimerStart){
+      this.stopMaskTimer()
     }else {
       this.mMaskVisible = Visibility.Visible
-      this.mQPlayerIsTimerStart = true
-      this.mQPlayerTimerId = setInterval(()=>{
-        this.mQPlayerTimerCount = this.mQPlayerTimerCount.valueOf() + 1
-        if (this.mQPlayerTimerCount.valueOf() == 10) {
-          this.stopTimer()
+      this.mQPlayerIsMaskTimerStart = true
+      this.mQPlayerMaskTimerId = setInterval(()=>{
+        this.mQPlayerMaskTimerCount = this.mQPlayerMaskTimerCount.valueOf() + 1
+        if (this.mQPlayerMaskTimerCount.valueOf() == 10) {
+          this.stopMaskTimer()
         }
       },1000)
     }
   }
   onDoubleClick(){
-    this.mQPlayerTimerCount = 0;
+    this.mQPlayerMaskTimerCount = 0;
     if (this.mIsPlaying == true) {
       this.mPlayerContext.get_control_handler().pauseRender()
     }else {

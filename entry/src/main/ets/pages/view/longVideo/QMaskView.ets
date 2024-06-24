@@ -80,6 +80,27 @@ export struct QMaskView{
         .backgroundColor('#00000000')
         .id('setting_view_button')
 
+
+        Button(){
+          Image($r('app.media.qn_shoot'))
+            .maskNormalImageStyle()
+        }
+        .type(ButtonType.Normal)
+        .width(40)
+        .height(40)
+        .alignRules({
+          right:{anchor: "__container__" , align : HorizontalAlign.End},
+          top : { anchor : "setting_view_button" , align : VerticalAlign.Bottom}
+        })
+        .margin({right : 30,top : 40})
+        .visibility(this.mPortraitShow)
+        .onClick(()=>{
+          this.mPlayerContext.get_control_handler().shootVideo()
+        })
+        .backgroundColor('#00000000')
+        .id('shoot_view_button')
+
+
         Button(this.mSpeedButtonTitle)
         .type(ButtonType.Normal)
         .width(60)

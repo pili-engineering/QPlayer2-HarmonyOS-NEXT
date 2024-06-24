@@ -23,12 +23,15 @@ import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
   QIPlayerVideoDecodeListener,
   QIPlayerQualityListener,
   QMediaModel,
-  QIPlayerSEIDataListener} from '@qiniu/qplayer2-core/qplayer2-core'
+  QIPlayerSEIDataListener,
+  QIPlayerShootVideoListener,
+  QPlayerShootVideoType} from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QPlayerDecoderType } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerDecoderType'
 import { util } from '@kit.ArkTS'
 import utils from '@arkts.utils'
 import { QDecimalToHexHelper } from '../../common/Helper/QDecimalToHexHelper'
+import { image } from '@kit.ImageKit'
 
 
 @Entry
@@ -90,6 +93,19 @@ struct QLongVideoView {
       this.addToastView("鉴权成功")
     }
   }
+  private mShootVideoListener : QIPlayerShootVideoListener = {
+    onShootSuccessful:(context : QIPlayerContext, imageData:Uint8Array, width:number, height:number, type: QPlayerShootVideoType) => {
+      if (type == QPlayerShootVideoType.JPEG) {
+        this.addToastView("截图成功 格式 jpeg")
+      }else {
+        this.addToastView("截图成功 格式 none")
+      }
+    },
+
+    onShootFailed:(context : QIPlayerContext) => {
+      this.addToastView("截图失败")
+    }
+  }
   private mBiteRateListener : QIPlayerBiteRateListener = {
     onBiteRateChanged:(context:QIPlayerContext, bitrate:number)=>{}
   }
@@ -119,7 +135,6 @@ struct QLongVideoView {
 
     onSEIData:(context:QIPlayerContext, data:Uint8Array)=> {
       let seiData = data
-
       let uuid :Uint8Array
       if (data.byteLength > 16) {
         let uuid :Uint8Array = seiData.slice(0,16)
@@ -360,6 +375,7 @@ struct QLongVideoView {
     this.mPlayerContext.get_control_handler().addPlayerSpeedChangeListener(this.mPlaySpeed)
     this.mPlayerContext.get_control_handler().addPlayerQualityListener(this.mQualityListener)
     this.mPlayerContext.get_control_handler().addPlayerSEIDataListener(this.mSEIListener)
+    this.mPlayerContext.get_control_handler().addPlayerShootVideoListener(this.mShootVideoListener)
 
   }
   //弹出toast，文本为text
