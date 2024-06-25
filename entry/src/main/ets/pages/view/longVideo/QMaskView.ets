@@ -22,8 +22,7 @@ export struct QMaskView{
   private  mSwitchQualityButtonTitle : string = "清晰度"
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
-      if (state == QPlayerState.RELEASE) {
-        console.log(`qplayerstate : release`);
+      if (state == QPlayerState.END) {
         router.back()
       }
     }
