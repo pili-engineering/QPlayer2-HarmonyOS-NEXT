@@ -260,5 +260,9 @@ struct QLongVideoView {
     this.mToastText = text
     this.mToastText = ""
   }
+  onBackPress(): boolean | void {
+    this.mPlayerContext.get_control_handler().release()
+    return true
+  }
 }
 

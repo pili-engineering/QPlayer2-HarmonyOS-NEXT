@@ -98,8 +98,7 @@ export struct QMaskView{
     // this.settingDefault()
     this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateCallBack)
   }
-  aboutToDisappear(): void {
-  }
+
   orientationChange(){
     if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {
       this.mPortraitShow = Visibility.Hidden
