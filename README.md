@@ -6,6 +6,8 @@ Qplayer2是一款跨平台的播放器SDK,除了基础的播放器能力外，�
 
 注：preview 版本为预览版，仅支持基础功能，其他功能将陆续开放
 
+播放器 SDK 合规使用说明请参考[七牛 SDK 合规使用说明](https://developer.qiniu.com/pili/12616/sdk-compliance-instructions)；隐私政策说明请参考[七牛 SDK 隐私策略](https://developer.qiniu.com/pili/8027/sdk-privacy-policy)
+
 ### 支持的平台
 
  Platform | Build Status
