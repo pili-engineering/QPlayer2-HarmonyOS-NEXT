@@ -64,6 +64,10 @@ export struct QPlayerView{
         let source:image.ImageSource = image.createImageSource(buffer)
         let option : image.InitializationOptions = {size : {height : height ,width : width}}
         let pixelMap : PixelMap = source.createPixelMapSync(option)
+        if (this.mShootImagePixelMap) {
+          this.mShootImagePixelMap.release()
+        }
+        //浅拷贝
         this.mShootImagePixelMap = pixelMap
         this.shootVisibleTimeChange()
       }
@@ -327,6 +331,7 @@ export struct QPlayerView{
   }
   stopShootViewTimer(){
     clearInterval(this.mQPlayerShootTimerId.valueOf())
+    this.mShootImagePixelMap?.release()
     this.mShootImagePixelMap = null
     this.mQPlayerShootTimerCount = 0
     this.mQPlayerIsShootTimerStart = false
