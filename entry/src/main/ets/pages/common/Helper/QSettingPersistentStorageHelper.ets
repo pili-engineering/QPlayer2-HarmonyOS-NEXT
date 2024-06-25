@@ -26,7 +26,7 @@ export class QSettingPersistentStorageHelper{
     let backgroundPlayValue : number = preferences.getSync('background_play_mode',0) as number
     let decoderPriorityValue : QPlayerDecoderPriority = preferences.getSync('decoder_type',0) as QPlayerDecoderPriority
     let playSpeedValue : PlaySpeed = preferences.getSync('play_speed',2) as PlaySpeed
-    let renderRatioValue : QRenderRatio = preferences.getSync('render_ratio',0) as QRenderRatio
+    let renderRatioValue : QRenderRatio = preferences.getSync('render_ratio',1) as QRenderRatio
     let blindType : QBlindType = preferences.getSync('binder_type',0) as QBlindType
     let position : number =  preferences.getSync('position',0) as number
     let seiEnable : number =  preferences.getSync('sei_enable',0) as number
