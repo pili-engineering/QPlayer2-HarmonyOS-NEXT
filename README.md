@@ -90,7 +90,7 @@ https://developer.qiniu.io/pili/12702/qplayer2-harmony
 
 1. demo 工程内的 长视频播放页 是基于 qplayer2-core 来实现的
 
-1. demo 下载：https://sdk-release.qnsdk.com/qplayer2-demo-v1.5.0-preview2.hap
+1. demo 下载：https://sdk-release.qiniushawn.top/qplayer2-demo-v1.5.0-preview2.hap
 
 1.  电脑连接 harmony next 手机，执行下方命令安装 hap 包
 
