@@ -86,12 +86,12 @@ export struct QMaskView{
         }
         .type(ButtonType.Normal)
         .width(40)
-        .height(40)
+        .height(30)
         .alignRules({
           right:{anchor: "__container__" , align : HorizontalAlign.End},
           top : { anchor : "setting_view_button" , align : VerticalAlign.Bottom}
         })
-        .margin({right : 30,top : 40})
+        .margin({right : 30,top : 100})
         .visibility(this.mPortraitShow)
         .onClick(()=>{
           this.mPlayerContext.get_control_handler().shootVideo()

@@ -21,6 +21,8 @@ import { QMaskPlaySpeedView } from './QMaskPlaySpeedView'
 import { QMaskSwitchQualityView } from './QMaskSwitchQualityView'
 import { image } from '@kit.ImageKit'
 import { BusinessError } from '@ohos.base'
+import { photoAccessHelper } from '@kit.MediaLibraryKit'
+import fileIo from '@ohos.file.fs'
 
 @Component
 export struct QPlayerView{
@@ -70,6 +72,8 @@ export struct QPlayerView{
         //浅拷贝
         this.mShootImagePixelMap = pixelMap
         this.shootVisibleTimeChange()
+        //权限问题，保存失败，已咨询华为，尚未收到回复
+        // this.saveImage(buffer)
       }
       // const imagePackerApi = image.createImagePacker();
       // let packOpts : image.PackingOption = { format:"image/jpeg", quality:100 };
@@ -83,6 +87,16 @@ export struct QPlayerView{
 
     onShootFailed:(context : QIPlayerContext) => {
     }
+  }
+  saveImage(buffer: ArrayBuffer | string) {
+    let context = getContext(this) as common.UIAbilityContext;
+    let helper = photoAccessHelper.getPhotoAccessHelper(context);
+    helper.createAsset(photoAccessHelper.PhotoType.IMAGE, 'jpg',(error,value)=>{
+      console.error(`error ${error.message} + ${error.name} + ${error.code}`)
+      let file = fileIo.openSync(value, fileIo.OpenMode.READ_WRITE | fileIo.OpenMode.CREATE);
+      let num = fileIo.writeSync(file.fd, buffer);
+      fileIo.closeSync(file.fd);
+    });
   }
   private mBufferingCallBack : QIPlayerBufferingListener = {
 
