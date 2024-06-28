@@ -6,7 +6,7 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "@qiniu/qplayer2-core": "^1.5.0-preview1"
+    "@qiniu/qplayer2-core": "^1.5.0-preview2"
   },
   "devDependencies": {},
   "dynamicDependencies": {}
