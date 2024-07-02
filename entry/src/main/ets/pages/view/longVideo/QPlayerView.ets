@@ -49,6 +49,9 @@ export struct QPlayerView{
   @State mXComponentId : string = 'qplayer2-core-renderview'
   @Link mQPlayerSettingModel : QPlayerSettingModel
   @Link mCurrentModel : QMediaModel | null
+  @State mShootSaveButtonOptions : SaveButtonOptions = {text : SaveDescription.SAVE_IMAGE,buttonType: ButtonType.Capsule}
+  private mShootImageCallBack : (value : string)=>void = (value : string)=>{};
+  private mShootImageBuffer : ArrayBuffer | null = null
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
       if (state == QPlayerState.PLAYING) {
@@ -71,18 +74,10 @@ export struct QPlayerView{
         }
         //浅拷贝
         this.mShootImagePixelMap = pixelMap
-        this.shootVisibleTimeChange()
-        //权限问题，保存失败，已咨询华为，尚未收到回复
-        // this.saveImage(buffer)
+        // this.shootVisibleTimeChange()
+        this.mShootViewVisible = Visibility.Visible
+        this.mShootImageBuffer = buffer as ArrayBuffer
       }
-      // const imagePackerApi = image.createImagePacker();
-      // let packOpts : image.PackingOption = { format:"image/jpeg", quality:100 };
-      // imagePackerApi.packing(pixelMap, packOpts).then( (data : ArrayBuffer) => {
-      //   // data 为打包获取到的文件流，写入文件保存即可得到一张图片
-      //   let sss = 0;
-      // }).catch((error : BusinessError) => {
-      //   console.error('Failed to pack the image. And the error is: ' + error);
-      // })
     },
 
     onShootFailed:(context : QIPlayerContext) => {
@@ -92,10 +87,14 @@ export struct QPlayerView{
     let context = getContext(this) as common.UIAbilityContext;
     let helper = photoAccessHelper.getPhotoAccessHelper(context);
     helper.createAsset(photoAccessHelper.PhotoType.IMAGE, 'jpg',(error,value)=>{
-      console.error(`error ${error.message} + ${error.name} + ${error.code}`)
+      if (error != undefined) {
+        this.mShootImageCallBack("保存失败 : " + error.message)
+        return
+      }
       let file = fileIo.openSync(value, fileIo.OpenMode.READ_WRITE | fileIo.OpenMode.CREATE);
-      let num = fileIo.writeSync(file.fd, buffer);
+      fileIo.writeSync(file.fd, buffer);
       fileIo.closeSync(file.fd);
+      this.mShootImageCallBack("保存成功")
     });
   }
   private mBufferingCallBack : QIPlayerBufferingListener = {
@@ -176,17 +175,60 @@ export struct QPlayerView{
           .visibility(this.mMaskVisible)
           .id('mask_view')
 
-        Image(this.mShootImagePixelMap)
+
+        RelativeContainer() {
+          Image(this.mShootImagePixelMap)
+            .alignRules({
+              left:{anchor: "__container__" , align : HorizontalAlign.Start},
+              top : { anchor : "__container__" , align : VerticalAlign.Top},
+            })
+            .margin({left : '5%'})
+            .width('90%')
+            .height('90%')
+            .id('shoot_view')
+            .enabled(false)
+            .visibility(this.mShootViewVisible)
+            .backgroundColor('#ff000000')
+          Column(){
+            Row() {
+              // saveButton 因为 toastview（透明的） 覆盖在该按钮在上方导致该按钮无法获取点击事件，
+              // 但此处用 Button 则会收到点击事件。
+              // 图库必须使用 saveButton 无法使用 Button
+              // 已与华为沟通，暂未收到回复
+              SaveButton(this.mShootSaveButtonOptions)
+                .width("20%")
+                .onClick((event: ClickEvent, result: SaveButtonOnClickResult) => {
+                  if (result == SaveButtonOnClickResult.SUCCESS) {
+                    this.mShootViewVisible = Visibility.Hidden
+                    if (this.mShootImageBuffer == null) {
+                      return
+                    }
+                    this.saveImage(this.mShootImageBuffer!)
+                  }
+                })
+              Button("取消")
+                .onClick(() => {
+                  this.mShootViewVisible = Visibility.Hidden
+                })
+                .width("20%")
+                .margin({left : "5%"})
+            }
+            .id('shoot_view_row')
+          }
           .alignRules({
-            left:{anchor: "__container__" , align : HorizontalAlign.Start},
-            top : { anchor : "__container__" , align : VerticalAlign.Top},
+            left: { anchor: "shoot_view", align: HorizontalAlign.Start },
+            top: { anchor: "shoot_view", align: VerticalAlign.Bottom }
           })
-          .width('80%')
-          .height('80%')
-          .id('shoot_view')
-          .enabled(false)
+          .width('90%')
+          .height('10%')
+          .id('shoot_view_column')
           .visibility(this.mShootViewVisible)
-          .backgroundColor('#ff000000')
+          .backgroundColor($r("app.color.hyaline_background_color"))
+        }
+        .visibility(this.mShootViewVisible)
+        .height("70%")
+        .width("70%")
+        .id("shoot_view_relativeContainer")
 
         RelativeContainer() {
           QMaskSettingView({mPlayerContext : this.mPlayerContext, mQPlayerSettingModel: this.mQPlayerSettingModel})
@@ -260,6 +302,7 @@ export struct QPlayerView{
         .height("100%")
         .width("100%")
         .id("switch_quality_view_relativeContainer")
+
       }
     }
     .height("100%")
@@ -329,28 +372,28 @@ export struct QPlayerView{
       this.mMaskVisible = Visibility.Hidden
     }
   }
-  shootVisibleTimeChange(){
-    if (this.mQPlayerIsShootTimerStart == true){
-      this.mQPlayerShootTimerCount = 0
-    }else {
-      this.mShootViewVisible = Visibility.Visible
-      this.mQPlayerIsShootTimerStart = true;
-      this.mQPlayerShootTimerId = setInterval(() => {
-        this.mQPlayerShootTimerCount = this.mQPlayerShootTimerCount.valueOf() + 1
-        if (this.mQPlayerShootTimerCount.valueOf() == 7) {
-          this.stopShootViewTimer()
-        }
-      }, 700)
-    }
-  }
-  stopShootViewTimer(){
-    clearInterval(this.mQPlayerShootTimerId.valueOf())
-    this.mShootImagePixelMap?.release()
-    this.mShootImagePixelMap = null
-    this.mQPlayerShootTimerCount = 0
-    this.mQPlayerIsShootTimerStart = false
-    this.mShootViewVisible = Visibility.Hidden
-  }
+  // shootVisibleTimeChange(){
+  //   if (this.mQPlayerIsShootTimerStart == true){
+  //     this.mQPlayerShootTimerCount = 0
+  //   }else {
+  //     this.mShootViewVisible = Visibility.Visible
+  //     this.mQPlayerIsShootTimerStart = true;
+  //     this.mQPlayerShootTimerId = setInterval(() => {
+  //       this.mQPlayerShootTimerCount = this.mQPlayerShootTimerCount.valueOf() + 1
+  //       if (this.mQPlayerShootTimerCount.valueOf() == 7) {
+  //         this.stopShootViewTimer()
+  //       }
+  //     }, 700)
+  //   }
+  // }
+  // stopShootViewTimer(){
+  //   clearInterval(this.mQPlayerShootTimerId.valueOf())
+  //   this.mShootImagePixelMap?.release()
+  //   this.mShootImagePixelMap = null
+  //   this.mQPlayerShootTimerCount = 0
+  //   this.mQPlayerIsShootTimerStart = false
+  //   this.mShootViewVisible = Visibility.Hidden
+  // }
   stopMaskTimer(){
     clearInterval(this.mQPlayerMaskTimerId.valueOf())
     this.mQPlayerMaskTimerCount = 0

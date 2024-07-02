@@ -239,7 +239,10 @@ struct QLongVideoView {
           mIsPlaying : this.mIsPlaying,
           mIsLive : this.mIsLive,
           mQPlayerSettingModel : this.mQPlayerSetting,
-          mCurrentModel : this.mCurrentModel
+          mCurrentModel : this.mCurrentModel,
+          mShootImageCallBack : (value)=>{
+            this.addToastView(value)
+          }
         })
           .alignRules({
             left: { anchor: "__container__", align: HorizontalAlign.Start },
