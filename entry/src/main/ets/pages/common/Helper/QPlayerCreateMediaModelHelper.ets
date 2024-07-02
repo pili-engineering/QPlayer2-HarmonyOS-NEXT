@@ -1,5 +1,5 @@
 import { ArrayList } from '@kit.ArkTS';
-import { QMediaModel, QMediaModelBuilder } from '@QN/QPlayer2-core/qplayer2-core';
+import { QMediaModel, QMediaModelBuilder } from '@qiniu/qplayer2-core/qplayer2-core';
 import { QPlayerDemoStreamElement } from '../../model/longVideo/QPlayerDemoStreamElement';
 
 export class  QPlayerCreateMediaModelHelper{

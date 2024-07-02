@@ -1,4 +1,4 @@
-import { QPlayerUrlType } from '@QN/QPlayer2-core/qplayer2-core'
+import { QPlayerUrlType } from '@qiniu/qplayer2-core/qplayer2-core'
 
 export class QPlayerDemoStreamElement{
   public mUserType : string = ""

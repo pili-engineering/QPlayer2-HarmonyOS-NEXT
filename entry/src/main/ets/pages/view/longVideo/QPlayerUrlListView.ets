@@ -1,4 +1,4 @@
-import { QIPlayerContext, QMediaModel } from '@QN/QPlayer2-core/qplayer2-core'
+import { QIPlayerContext, QMediaModel } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerDemoMediaModel, QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QPlayerDemoStreamElement } from '../../model/longVideo/QPlayerDemoStreamElement'
 

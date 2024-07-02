@@ -2,8 +2,8 @@
 import { router, window } from '@kit.ArkUI'
 import { common } from '@kit.AbilityKit'
 import {
-  QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener } from '@QN/QPlayer2-core/qplayer2-core'
-import { QPlayerState } from '@QN/QPlayer2-core/src/main/ets/public/enums/QPlayerState'
+  QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener } from '@qiniu/qplayer2-core/qplayer2-core'
+import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QMaskBottom } from './QMaskBottom'
 
 @Component
@@ -20,6 +20,7 @@ export struct QMaskView{
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
       if (state == QPlayerState.RELEASE) {
         console.log(`qplayerstate : release`);
+        router.back()
       }
     }
   }
@@ -39,7 +40,7 @@ export struct QMaskView{
         })
         .onClick(()=>{
           if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {
-            router.back()
+            this.mPlayerContext.get_control_handler().release()
           }else {
             window.getLastWindow(getContext(this) as common.UIAbilityContext).then(res => {
               res.setPreferredOrientation(window.Orientation.PORTRAIT, (err) => {
@@ -97,9 +98,7 @@ export struct QMaskView{
     // this.settingDefault()
     this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateCallBack)
   }
-  aboutToDisappear(): void {
-    this.mPlayerContext.get_control_handler().release()
-  }
+
   orientationChange(){
     if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {
       this.mPortraitShow = Visibility.Hidden
