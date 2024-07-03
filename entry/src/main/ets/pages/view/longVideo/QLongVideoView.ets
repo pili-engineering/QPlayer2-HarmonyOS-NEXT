@@ -51,6 +51,7 @@ struct QLongVideoView {
   @State mIsPlaying : Boolean = false
   @State mIsLive : Boolean = false
   @State mToastMarginValue : number = 0
+  @State mToastViewWidth : Length = '70%'
   @State mCurrentModel : QMediaModel | null = null
   @State mPlayerContext : QIPlayerContext = QPlayerContextFactory.createPlayerContext(
     QLogLevel.LOG_INFO,
@@ -284,7 +285,7 @@ struct QLongVideoView {
 
           QPlayerToastView({mToastText : this.mToastText, mDeviceOrientation : this.mDeviceOrientation})
             .backgroundColor($r('app.color.hyaline_background_color'))
-            .width('70%')
+            .width(this.mToastViewWidth)
             .height('70%')
             .alignRules({
               left:{anchor : "__container__", align : HorizontalAlign.Start},
@@ -350,7 +351,7 @@ struct QLongVideoView {
       this.mQPlayerViewFrameTopAlign = VerticalAlign.Top
       windowStage.getMainWindowSync().setWindowBackgroundColor("#ff000000")
       this.mToastMarginValue = 50
-
+      this.mToastViewWidth = '35%'
     }
     //竖屏
     else if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {
@@ -363,6 +364,7 @@ struct QLongVideoView {
       this.mQPlayerViewFrameTopAlign = VerticalAlign.Bottom
       windowStage.getMainWindowSync().setWindowBackgroundColor("#ffffffff")
       this.mToastMarginValue = 0
+      this.mToastViewWidth = '70%'
     }
   }
 
