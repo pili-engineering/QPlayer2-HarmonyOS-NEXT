@@ -3,6 +3,9 @@ import {} from './view/longVideo/QLongVideoView'
 
 import connection from '@ohos.net.connection';
 import { BusinessError } from '@ohos.base';
+import { bundleManager } from '@kit.AbilityKit';
+import BuildProfile from 'BuildProfile'
+
 @Entry
 @Component
 struct Index {
@@ -39,6 +42,14 @@ struct Index {
               console.info('Invoke pushUrl succeeded.')
             })
           })
+
+        Text("demoVersion : " + bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).versionName)
+          .width('70%')
+          .height($r('app.float.index_button_height'))
+
+        Text("sdkVersion : " + BuildProfile.qplayer2_version)
+          .width('70%')
+          .height($r('app.float.index_button_height'))
       }
       .width('100%')
     }

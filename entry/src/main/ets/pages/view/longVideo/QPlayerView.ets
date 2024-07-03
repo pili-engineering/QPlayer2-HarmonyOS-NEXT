@@ -194,7 +194,6 @@ export struct QPlayerView{
               // saveButton 因为 toastview（透明的） 覆盖在该按钮在上方导致该按钮无法获取点击事件，
               // 但此处用 Button 则会收到点击事件。
               // 图库必须使用 saveButton 无法使用 Button
-              // 已与华为沟通，暂未收到回复
               SaveButton(this.mShootSaveButtonOptions)
                 .width("20%")
                 .onClick((event: ClickEvent, result: SaveButtonOnClickResult) => {
