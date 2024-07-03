@@ -5,7 +5,9 @@ import { ArrayList } from '@kit.ArkTS'
 import App from '@system.app'
 import {
   QBlindType,
-  QIPlayerContext, QPlayerDecoderPriority, QPlayerSeek, QRenderRatio } from '@qiniu/qplayer2-core/qplayer2-core'
+  QIPlayerContext, QPlayerDecoderPriority, QPlayerSeek,
+  QPlayerStart,
+  QRenderRatio } from '@qiniu/qplayer2-core/qplayer2-core'
 
 @Component
 export struct QMaskSettingView{
@@ -13,6 +15,7 @@ export struct QMaskSettingView{
   @State mInnerSettingModel : innerSettingModel[] = [
     new innerSettingModel("切换下集生效",[], 0),
     new innerSettingModel("解码方式",["自动","硬解","软解"] , this.mQPlayerSettingModel.mDecoderType.valueOf()),
+    new innerSettingModel("起播模式",["播放","暂停"], this.mQPlayerSettingModel.mStartAction.valueOf()),
     new innerSettingModel("立即生效",[], 0),
     new innerSettingModel("起播位置",[], this.mQPlayerSettingModel.mPosition.valueOf()),
     new innerSettingModel("seek模式",["关键帧","精准"], this.mQPlayerSettingModel.mSeekMode.valueOf()),
@@ -303,6 +306,9 @@ struct SettingViewUnit{
     }else if (title == "sei"){
       this.mQPlayerSetting.mSEIEnable = index
       this.mPlayerContext.get_control_handler().setSEIEnable(this.mQPlayerSetting.mSEIEnable == 0 ? false : true)
+    }else if (title == "起播模式"){
+      this.mQPlayerSetting.mStartAction = index as QPlayerStart
+      this.mPlayerContext.get_control_handler().setStartAction(this.mQPlayerSetting.mStartAction)
     }
     QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context, this.mQPlayerSetting)
   }

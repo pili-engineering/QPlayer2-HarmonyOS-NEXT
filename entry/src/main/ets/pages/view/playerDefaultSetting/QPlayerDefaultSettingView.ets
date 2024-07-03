@@ -1,21 +1,22 @@
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
 import { PlaySpeed, QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { QTitleView } from '../../common/component/QTitleView'
-import { QPlayerSeek } from '@qiniu/qplayer2-core/qplayer2-core'
+import { QPlayerSeek, QPlayerStart } from '@qiniu/qplayer2-core/qplayer2-core'
 
 @Entry
 @Component
 struct QPlayerDefaultSettingView{
   @State mQPlayerSetting : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get('context') as Context)
   @State mSettingModel : Array<innerSettingModel> = [
-    new innerSettingModel("seek模式", this.mQPlayerSetting.mSeekMode.valueOf(),["关键帧","精准"]),
-    new innerSettingModel("后台播放", this.mQPlayerSetting.mBackgroundPlay.valueOf(),["关闭","开启"]),
-    new innerSettingModel("起播位置", this.mQPlayerSetting.mPosition.valueOf(),[]),
-    new innerSettingModel("播放速度", this.mQPlayerSetting.mPlaySpeed.valueOf(),["0.5","0.75","1.0","1.25","1.5","2.0"]),
     new innerSettingModel("解码方式", this.mQPlayerSetting.mDecoderType.valueOf(),["自动","硬解","软解"]),
+    new innerSettingModel("seek模式", this.mQPlayerSetting.mSeekMode.valueOf(),["关键帧","精准"]),
+    new innerSettingModel("起播模式", this.mQPlayerSetting.mStartAction.valueOf(),["播放","暂停"]),
+    new innerSettingModel("起播位置", this.mQPlayerSetting.mPosition.valueOf(),[]),
     new innerSettingModel("渲染比例", this.mQPlayerSetting.mRenderRatio.valueOf() - 1,["自动","拉伸","铺满","16:9","4:3"]),
+    new innerSettingModel("播放速度", this.mQPlayerSetting.mPlaySpeed.valueOf(),["0.5","0.75","1.0","1.25","1.5","2.0"]),
     new innerSettingModel("色盲模式", this.mQPlayerSetting.mBlinderType.valueOf(),["无","红色盲","绿色盲","蓝色盲"]),
-    new innerSettingModel("sei", this.mQPlayerSetting.mSEIEnable.valueOf(),["关闭","开启"])
+    new innerSettingModel("sei", this.mQPlayerSetting.mSEIEnable.valueOf(),["关闭","开启"]),
+    new innerSettingModel("后台播放", this.mQPlayerSetting.mBackgroundPlay.valueOf(),["关闭","开启"]),
   ]
   mUnitHeight : Number = 125
     build() {
@@ -235,6 +236,8 @@ struct settingViewUnit{
       this.mQPlayerSetting.mBlinderType = index
     }else if (title == "sei"){
       this.mQPlayerSetting.mSEIEnable = index
+    }else if (title == "起播模式"){
+      this.mQPlayerSetting.mStartAction = index as QPlayerStart
     }
   }
 }

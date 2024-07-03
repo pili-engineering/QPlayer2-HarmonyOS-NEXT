@@ -1,5 +1,7 @@
 
-import { QBlindType, QPlayerDecoderPriority, QPlayerSeek, QRenderRatio } from '@qiniu/qplayer2-core/qplayer2-core'
+import { QBlindType, QPlayerDecoderPriority, QPlayerSeek,
+  QPlayerStart,
+  QRenderRatio } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
 import { Context } from '@ohos.abilityAccessCtrl'
 
@@ -21,6 +23,7 @@ export class QPlayerSettingModel{
   public mBlinderType : QBlindType = QBlindType.NONE
   public mPosition : number = 0
   public mSEIEnable : number = 0
+  public mStartAction : QPlayerStart = QPlayerStart.PLAYING
   constructor() {
   }
 }

@@ -1,7 +1,9 @@
 import { PlaySpeed, QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel';
 import dataPreferences from '@ohos.data.preferences';
 import { Context } from '@kit.AbilityKit';
-import { QBlindType, QPlayerDecoderPriority, QPlayerSeek, QRenderRatio } from '@qiniu/qplayer2-core/qplayer2-core';
+import { QBlindType, QPlayerDecoderPriority, QPlayerSeek,
+  QPlayerStart,
+  QRenderRatio } from '@qiniu/qplayer2-core/qplayer2-core';
 
 export class QSettingPersistentStorageHelper{
   static save(context : Context,settingModel : QPlayerSettingModel){
@@ -15,6 +17,7 @@ export class QSettingPersistentStorageHelper{
     preferences.putSync('render_ratio', settingModel.mRenderRatio)
     preferences.putSync('position', settingModel.mPosition)
     preferences.putSync('sei_enable', settingModel.mSEIEnable)
+    preferences.putSync('start_action', settingModel.mStartAction)
     console.log(`write settingModel.mPosition : ${settingModel.mPosition}`);
     preferences.flush()
   }
@@ -30,6 +33,7 @@ export class QSettingPersistentStorageHelper{
     let blindType : QBlindType = preferences.getSync('binder_type',0) as QBlindType
     let position : number =  preferences.getSync('position',0) as number
     let seiEnable : number =  preferences.getSync('sei_enable',0) as number
+    let startAction : QPlayerStart =  preferences.getSync('start_action',0) as QPlayerStart
     let settingModel = new QPlayerSettingModel()
     settingModel.mSeekMode = seekValue
     settingModel.mBackgroundPlay = backgroundPlayValue
@@ -39,6 +43,7 @@ export class QSettingPersistentStorageHelper{
     settingModel.mBlinderType = blindType
     settingModel.mPosition = position
     settingModel.mSEIEnable = seiEnable
+    settingModel.mStartAction = startAction
     console.log(`read settingModel.mPosition : ${settingModel.mPosition}`);
     return settingModel
   }
