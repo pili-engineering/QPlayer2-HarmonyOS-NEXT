@@ -53,20 +53,6 @@
                 "referer": ""
                 
             }
-        ],
-        "subtitleElements": [
-            {
-                "name": "中文",
-                "url": "http://demo-videos.qnsdk.com/qiniu-2023-chinese.srt",
-                "isSelected": 1
-                
-            },
-            {
-                "name": "英文",
-                "url": "http://demo-videos.qnsdk.com/qiniu-2023-english.srt",
-                "isSelected": 0
-                
-            }
         ]
     },
     {
@@ -293,22 +279,6 @@
                 "url": "rtmp://pili-live-rtmp.test.qnsdk.com/sdk-live-test/test6666@hugo240p",
                 "quality": 240,
                 "isSelected": 0,
-                "backupUrl": "",
-                "referer": ""
-                
-            }
-        ]
-    },
-    {
-        "name" : "12.直播-rtmp-zhiniao-sstg1",
-        "isLive": 1,
-        "streamElements": [
-            {
-                "userType": "",
-                "urlType": 0,
-                "url": "rtmp://pili-live-rtmp.cdn-stg1.zhi-niao.com/zhiniao-stg1/851131_59199A60361D4C54B944130794B1AEEE_1",
-                "quality": 360,
-                "isSelected": 1,
                 "backupUrl": "",
                 "referer": ""
                 
@@ -602,23 +572,6 @@
         ]
     },
     {
-        "name" : "27.点播-http-vr-mp4",
-        "isLive": 0,
-        "streamElements": [
-            {
-                "userType": "",
-                "urlType": 0,
-                "url": "http://demo-videos.qnsdk.com/VR-Panorama-Equirect-Angular-4500k.mp4",
-                "quality": 2048,
-                "isSelected": 1,
-                "backupUrl": "",
-                "referer": "",
-                "renderType": 1
-                
-            }
-        ]
-    },
-    {
         "name" : "28.点播-http-pili-直播回放-m3u8",
         "isLive": 0,
         "streamElements": [
@@ -860,22 +813,6 @@
         ]
     },
     {
-        "name" : "43.直播-srt-180.101.136.81:1935",
-        "isLive": 1,
-        "streamElements": [
-            {
-                "userType": "",
-                "urlType": 0,
-                "url": "srt://180.101.136.81:1935?streamid=#!::h=pilidemo/timestamp,m=request,domain=live-pilidemo.cloudvdn.com",
-                "quality": 360,
-                "isSelected": 1,
-                "backupUrl": "",
-                "referer": ""
-                
-            }
-        ]
-    },
-    {
         "name" : "44.直播-5.1声道-cici声-rtmp-Hera",
         "isLive": 1,
         "streamElements": [
@@ -907,23 +844,7 @@
             }
         ]
     },
-    {
-        "name" : "46.点播-HLS-DRM-http",
-        "isLive": 0,
-        "streamElements": [
-            {
-                "userType": "",
-                "urlType": 0,
-                "url": "https://kodo.koafun.com/qiniu-2023-1080p-new.m3u8?v=123123",
-                "quality": 360,
-                "isSelected": 1,
-                "backupUrl": "",
-                "referer": ""
-                
-            }
-        ]
-    },
-    
+
     {
         "name" : "47.点播-subtitle-http-mp4-EnglishVideo",
         "isLive": 0,
@@ -936,14 +857,6 @@
                 "isSelected": 1,
                 "backupUrl": "",
                 "referer": ""
-                
-            }
-        ],
-        "subtitleElements": [
-            {
-                "name": "英文",
-                "url": "http://demo-videos.qnsdk.com/EnglishVideo.srt",
-                "isSelected": 1
                 
             }
         ]
@@ -961,44 +874,6 @@
                 "backupUrl": "",
                 "referer": ""
                 
-            }
-        ],
-        "subtitleElements": [
-            {
-                "name": "英文",
-                "url": "http://demo-videos.qnsdk.com/EnglishVideo.srt",
-                "isSelected": 1
-                
-            }
-        ]
-    },
-    {
-        "name" : "49.点播-mp4-公有算法DRM-http-mp4-CENC-AES-CTR",
-        "isLive": 0,
-        "streamElements": [
-            {
-                "userType": "",
-                "urlType": 0,
-                "url": "https://sdk-release.qnsdk.com/CENC_AES-CTR.mp4",
-                "quality": 720,
-                "isSelected": 1,
-                "backupUrl": "",
-                "referer": ""
-            }
-        ]
-    },
-    {
-        "name" : "50.点播-七牛私有DRM算法-http-mp4-new",
-        "isLive": 0,
-        "streamElements": [
-            {
-                "userType": "",
-                "urlType": 0,
-                "url": "https://kodo.koafun.com/drm-16884581530881688458153078-new.mp4",
-                "quality": 960,
-                "isSelected": 1,
-                "backupUrl": "",
-                "referer": ""
             }
         ]
     }
