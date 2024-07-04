@@ -25,7 +25,8 @@ import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
   QMediaModel,
   QIPlayerSEIDataListener,
   QIPlayerShootVideoListener,
-  QPlayerShootVideoType} from '@qiniu/qplayer2-core/qplayer2-core'
+  QPlayerShootVideoType,
+  QIPlayerVideoFrameSizeChangeListener} from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QPlayerDecoderType } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerDecoderType'
 import { util } from '@kit.ArkTS'
@@ -117,6 +118,13 @@ struct QLongVideoView {
 
     onBufferingEnd:(context: QIPlayerContext)=> {
       // this.addToastView("end buffer")
+    }
+  }
+  private mVideoFrameSizeChangedListener : QIPlayerVideoFrameSizeChangeListener ={
+
+    onVideoFrameSizeChanged:(context : QIPlayerContext, width: number, height:number ) => {
+
+      this.addToastView("推流宽高变化 : width " + width + "height : " + height)
     }
   }
   private mCommandNotAllowListener : QIPlayerCommandNotAllowListener = {
@@ -381,7 +389,7 @@ struct QLongVideoView {
     this.mPlayerContext.get_control_handler().addPlayerQualityListener(this.mQualityListener)
     this.mPlayerContext.get_control_handler().addPlayerSEIDataListener(this.mSEIListener)
     this.mPlayerContext.get_control_handler().addPlayerShootVideoListener(this.mShootVideoListener)
-
+    this.mPlayerContext.get_control_handler().addPlayerVideoFrameSizeChangeListener(this.mVideoFrameSizeChangedListener)
   }
   //弹出toast，文本为text
   addToastView(text:String){
