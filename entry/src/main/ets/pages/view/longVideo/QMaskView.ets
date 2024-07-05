@@ -13,6 +13,7 @@ export struct QMaskView{
   @Link mPlayerContext : QIPlayerContext
   @Link mIsPlaying : Boolean
   @State mIsBack : Boolean = false
+  @State mBackMargin : Margin = {top : 0 , left : 0}
   @Link mIsLive : Boolean
   @Link mSettingViewVisible : Visibility
   @Link mPlaySpeedViewVisible : Visibility
@@ -37,6 +38,7 @@ export struct QMaskView{
         .type(ButtonType.Normal)
         .width($r('app.float.long_video_back_button_width'))
         .height($r('app.float.long_video_back_button_height'))
+        .margin(this.mBackMargin)
         .alignRules({
           left:{anchor: "__container__" , align : HorizontalAlign.Start},
           top : { anchor : "__container__" , align : VerticalAlign.Top}
@@ -163,10 +165,12 @@ export struct QMaskView{
     if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {
       this.mPortraitShow = Visibility.Hidden
       this.mBottomMarginValue = 0
+      this.mBackMargin = {top : 0 , left : 0}
     }
     else {
       this.mPortraitShow = Visibility.Visible
       this.mBottomMarginValue = 30
+      this.mBackMargin = {top : 20 , left : 20}
     }
   }
 
