@@ -16,7 +16,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "http://demovideos.qiniushawn.top/qiniu-2023-1080p.mp4",
+                "url": "http://demovideos.qiniushawn.top/qiniu-2023-720p.mp4",
                 "quality": 720,
                 "isSelected": 0,
                 "backupUrl": "",
@@ -26,7 +26,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "http://demo-videos.qnsdk.com/qiniu-2023-480p.mp4",
+                "url": "http://demovideos.qiniushawn.top/qiniu-2023-480p.mp4",
                 "quality": 480,
                 "isSelected": 0,
                 "backupUrl": "",
@@ -36,7 +36,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "http://demo-videos.qnsdk.com/qiniu-2023-360p.mp4",
+                "url": "http://demovideos.qiniushawn.top/qiniu-2023-360p.mp4",
                 "quality": 360,
                 "isSelected": 0,
                 "backupUrl": "",
@@ -46,7 +46,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "http://demo-videos.qnsdk.com/qiniu-2023-240p.mp4",
+                "url": "http://demovideos.qiniushawn.top/qiniu-2023-240p.mp4",
                 "quality": 240,
                 "isSelected": 0,
                 "backupUrl": "",
@@ -62,7 +62,7 @@
             {
                 "userType": "",
                 "urlType": 2,
-                "url": "http://demo-videos.qnsdk.com/only-video-1080p-60fps.m4s",
+                "url": "http://demovideos.qiniushawn.top/only-video-1080p-60fps.m4s",
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -72,7 +72,7 @@
             {
                 "userType": "",
                 "urlType": 1,
-                "url": "http://demo-videos.qnsdk.com/only-audio.m4s",
+                "url": "http://demovideos.qiniushawn.top/only-audio.m4s",
                 "quality": 0,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -88,7 +88,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "http://demo-videos.qnsdk.com/shortvideo/nike.mp4",
+                "url": "http://demovideos.qiniushawn.top/shortvideo/nike.mp4",
                 "quality": 960,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -104,7 +104,7 @@
             {
                 "userType": "",
                 "urlType": 1,
-                "url": "http://demo-videos.qnsdk.com/song.mp3",
+                "url": "http://demovideos.qiniushawn.top/song.mp3",
                 "quality": 0,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -136,7 +136,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "http://demo-videos.qnsdk.com/only-video-1080p-60fps.m4s",
+                "url": "http://demovideos.qiniushawn.top/only-video-1080p-60fps.m4s",
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -152,7 +152,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "http://demo-videos.qnsdk.com/bbk-bt709.mp4",
+                "url": "http://demovideos.qiniushawn.top/bbk-bt709.mp4",
                 "quality": 1280,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -168,7 +168,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "http://demo-videos.qnsdk.com/Sync-Footage-V1-H264.mp4",
+                "url": "http://demovideos.qiniushawn.top/Sync-Footage-V1-H264.mp4",
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -450,7 +450,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "https://sdk-release.qnsdk.com/H264-flv.flv",
+                "url": "https://sdk-release.qiniushawn.top/H264-flv.flv",
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -466,7 +466,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "https://sdk-release.qnsdk.com/10701032_194625-hd%20%281%29.mp4",
+                "url": "https://sdk-release.qiniushawn.top/10701032_194625-hd%20%281%29.mp4",
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -482,7 +482,7 @@
             {
                 "userType": "",
                 "urlType": 1,
-                "url": "https://sdk-release.qnsdk.com/1599039859854_9242359.mp3",
+                "url": "https://sdk-release.qiniushawn.top/1599039859854_9242359.mp3",
                 "quality": 0,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -498,7 +498,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "https://sdk-release.qnsdk.com/VID_20220207_144828.mp4",
+                "url": "https://sdk-release.qiniushawn.top/VID_20220207_144828.mp4",
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -514,7 +514,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "https://sdk-release.qnsdk.com/10037108_065355-hd%20%281%29.mp4",
+                "url": "https://sdk-release.qiniushawn.top/10037108_065355-hd%20%281%29.mp4",
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -530,7 +530,7 @@
             {
                 "userType": "",
                 "urlType": 1,
-                "url": "https://sdk-release.qnsdk.com/test1.wma",
+                "url": "https://sdk-release.qiniushawn.top/test1.wma",
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -546,7 +546,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "https://sdk-release.qnsdk.com/flv.flv",
+                "url": "https://sdk-release.qiniushawn.top/flv.flv",
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -562,7 +562,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "https://sdk-release.qnsdk.com/video1643265479033.mp4",
+                "url": "https://sdk-release.qiniushawn.top/video1643265479033.mp4",
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -594,7 +594,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "http://demo-videos.qnsdk.com/long_movie.mp4",
+                "url": "http://demovideos.qiniushawn.top/long_movie.mp4",
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -610,7 +610,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "https://sdk-release.qnsdk.com/2K_60_6040.mp4",
+                "url": "https://sdk-release.qiniushawn.top/2K_60_6040.mp4",
                 "quality": 1440,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -626,7 +626,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "https://sdk-release.qnsdk.com/2K_25_11700.mp4",
+                "url": "https://sdk-release.qiniushawn.top/2K_25_11700.mp4",
                 "quality": 1440,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -642,7 +642,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "https://sdk-release.qnsdk.com/1080_60_5390.mp4",
+                "url": "https://sdk-release.qiniushawn.top/1080_60_5390.mp4",
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -658,7 +658,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "https://sdk-release.qnsdk.com/4K_3840%2A1920.m4s",
+                "url": "https://sdk-release.qiniushawn.top/4K_3840%2A1920.m4s",
                 "quality": 1920,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -787,7 +787,7 @@
             {
                 "userType": "",
                 "urlType": 1,
-                "url": "http://demo-videos.qnsdk.com/only-audio-wav.wav",
+                "url": "http://demovideos.qiniushawn.top/only-audio-wav.wav",
                 "quality": 0,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -803,7 +803,7 @@
             {
                 "userType": "",
                 "urlType": 1,
-                "url": "http://demo-videos.qnsdk.com/audio-only-flac.flac",
+                "url": "http://demovideos.qiniushawn.top/audio-only-flac.flac",
                 "quality": 0,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -852,7 +852,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "http://demo-videos.qnsdk.com/EnglishVideo.mp4",
+                "url": "http://demovideos.qiniushawn.top/EnglishVideo.mp4",
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -868,7 +868,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "http://demo-videos.qnsdk.com/EnglishVideo.MOV",
+                "url": "http://demovideos.qiniushawn.top/EnglishVideo.MOV",
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
