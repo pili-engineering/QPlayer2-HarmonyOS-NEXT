@@ -16,7 +16,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "http://demovideos.qiniushawn.top/qiniu-2023-720p.mp4",
+                "url": "http://demovideos.qiniushawn.top/qiniu-2023-1080p.mp4",
                 "quality": 720,
                 "isSelected": 0,
                 "backupUrl": "",
@@ -450,7 +450,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "https://sdk-release.qiniushawn.top/H264-flv.flv",
+                "url": "http://demovideos.qiniushawn.top/H264-flv.flv",
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -466,24 +466,8 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "https://sdk-release.qiniushawn.top/10701032_194625-hd%20%281%29.mp4",
+                "url": "http://demovideos.qiniushawn.top/10701032_194625-hd%20%281%29.mp4",
                 "quality": 1080,
-                "isSelected": 1,
-                "backupUrl": "",
-                "referer": ""
-                
-            }
-        ]
-    },
-    {
-        "name" : "21.点播-https-mp3-纯音频",
-        "isLive": 0,
-        "streamElements": [
-            {
-                "userType": "",
-                "urlType": 1,
-                "url": "https://sdk-release.qiniushawn.top/1599039859854_9242359.mp3",
-                "quality": 0,
                 "isSelected": 1,
                 "backupUrl": "",
                 "referer": ""
@@ -498,7 +482,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "https://sdk-release.qiniushawn.top/VID_20220207_144828.mp4",
+                "url": "http://demovideos.qiniushawn.top/VID_20220207_144828.mp4",
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -514,7 +498,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "https://sdk-release.qiniushawn.top/10037108_065355-hd%20%281%29.mp4",
+                "url": "http://demovideos.qiniushawn.top/10037108_065355-hd%20%281%29.mp4",
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -530,7 +514,7 @@
             {
                 "userType": "",
                 "urlType": 1,
-                "url": "https://sdk-release.qiniushawn.top/test1.wma",
+                "url": "http://demovideos.qiniushawn.top/test1.wma",
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -546,7 +530,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "https://sdk-release.qiniushawn.top/flv.flv",
+                "url": "http://demovideos.qiniushawn.top/flv.flv",
                 "quality": 720,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -562,23 +546,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "https://sdk-release.qiniushawn.top/video1643265479033.mp4",
-                "quality": 1080,
-                "isSelected": 1,
-                "backupUrl": "",
-                "referer": ""
-                
-            }
-        ]
-    },
-    {
-        "name" : "28.点播-http-pili-直播回放-m3u8",
-        "isLive": 0,
-        "streamElements": [
-            {
-                "userType": "",
-                "urlType": 0,
-                "url": "http://pili-playback.qnsdk.com/recordings/z1.sdk-live.Hera/1673340696_1673340783.m3u8",
+                "url": "http://demovideos.qiniushawn.top/video1643265479033.mp4",
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -604,78 +572,14 @@
         ]
     },
     {
-        "name" : "30.点播-https-mp4-60fps-2K-6333kb",
-        "isLive": 0,
-        "streamElements": [
-            {
-                "userType": "",
-                "urlType": 0,
-                "url": "https://sdk-release.qiniushawn.top/2K_60_6040.mp4",
-                "quality": 1440,
-                "isSelected": 1,
-                "backupUrl": "",
-                "referer": ""
-                
-            }
-        ]
-    },
-    {
-        "name" : "31.点播-https-mp4-25fps-2K-12053kb",
-        "isLive": 0,
-        "streamElements": [
-            {
-                "userType": "",
-                "urlType": 0,
-                "url": "https://sdk-release.qiniushawn.top/2K_25_11700.mp4",
-                "quality": 1440,
-                "isSelected": 1,
-                "backupUrl": "",
-                "referer": ""
-                
-            }
-        ]
-    },
-    {
-        "name" : "32.点播-https-mp4-60fps-1080-5656kb",
-        "isLive": 0,
-        "streamElements": [
-            {
-                "userType": "",
-                "urlType": 0,
-                "url": "https://sdk-release.qiniushawn.top/1080_60_5390.mp4",
-                "quality": 1080,
-                "isSelected": 1,
-                "backupUrl": "",
-                "referer": ""
-                
-            }
-        ]
-    },
-    {
         "name" : "33.点播-https-m4s-30fps-4K-8534kb",
         "isLive": 0,
         "streamElements": [
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "https://sdk-release.qiniushawn.top/4K_3840%2A1920.m4s",
+                "url": "http://demovideos.qiniushawn.top/4K_3840%2A1920.m4s",
                 "quality": 1920,
-                "isSelected": 1,
-                "backupUrl": "",
-                "referer": ""
-                
-            }
-        ]
-    },
-    {
-        "name" : "34.点播-https-mp4-30fps-480-6秒视频",
-        "isLive": 0,
-        "streamElements": [
-            {
-                "userType": "",
-                "urlType": 0,
-                "url": "https://demo-qnrtc-files.qnsdk.com/six_second.mp4",
-                "quality": 480,
                 "isSelected": 1,
                 "backupUrl": "",
                 "referer": ""
