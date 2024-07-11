@@ -2,6 +2,7 @@
   "src": [
     "pages/Index",
     "pages/view/longVideo/QLongVideoView",
-    "pages/view/playerDefaultSetting/QPlayerDefaultSettingView"
+    "pages/view/playerDefaultSetting/QPlayerDefaultSettingView",
+    "pages/view/shortVideo/QShortVideoView"
   ]
 }

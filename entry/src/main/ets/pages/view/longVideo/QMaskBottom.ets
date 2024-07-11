@@ -189,6 +189,19 @@ export struct QMaskBottom{
   aboutToAppear(): void {
     this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mQPlayerStateChangeListenrCallBack)
     this.mPlayerContext.get_control_handler().addPlayerProgressChangeListener(this.mProgressListener)
+    // window.on('windowSizeChange', (size) => {
+    //   let viewWidth = px2vp(size.width);
+    //   let viewHeight = px2vp(size.height);
+    //
+    //   // 如果宽大于高，说明此时设置的窗口方向为横屏，相反为竖屏
+    //   if (viewWidth > viewHeight) {
+    //     // 横屏时的逻辑
+    //     this.isLandscape = true;
+    //   } else {
+    //     // 竖屏时的逻辑
+    //     this.isLandscape = false;
+    //   }
+    // })
   }
   mIsPlayingChange(){
 
@@ -206,23 +219,34 @@ export struct QMaskBottom{
     }
   }
   rotateScreen(){
-    if (this.mDeviceOrientation == window.Orientation.LANDSCAPE) {
-      this.mDeviceOrientation = window.Orientation.PORTRAIT
+    let currentOrientation = this.mDeviceOrientation
+    if (currentOrientation == window.Orientation.LANDSCAPE) {
+      currentOrientation = window.Orientation.PORTRAIT
       this.mButtonMarginValue = 4
     }else {
-      this.mDeviceOrientation = window.Orientation.LANDSCAPE
+      currentOrientation = window.Orientation.LANDSCAPE
       this.mButtonMarginValue = 12
     }
     window.getLastWindow(getContext(this) as common.UIAbilityContext).then(res =>{
-      res.setPreferredOrientation(this.mDeviceOrientation, (err)=>{
+      res.setPreferredOrientation(currentOrientation, (err)=>{
         if (err.code) {
           console.error('Failed to set window orientation. Cause: ' + JSON.stringify(err));
           return;
         }
+        this.mDeviceOrientation = currentOrientation
+        // if (this.mDeviceOrientation == window.Orientation.LANDSCAPE) {
+        //   this.mDeviceOrientation = window.Orientation.PORTRAIT
+        //   this.mButtonMarginValue = 4
+        // }else {
+        //   this.mDeviceOrientation = window.Orientation.LANDSCAPE
+        //   this.mButtonMarginValue = 12
+        // }
+
         console.info('Succeeded in setting window orientation.');
       })
     })
   }
+
 }
 @Extend(Image) function maskNormalImageStyle(){
   .fillColor($r('app.color.start_window_background'))

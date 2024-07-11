@@ -3,7 +3,7 @@ import { QPlayerView } from './QPlayerView'
 import { mediaquery, window } from '@kit.ArkUI'
 import  { QPlayerStatusView } from  "./QPlayerStatusView"
 import { QPlayerUrlListView } from './QPlayerUrlListView'
-import { QPlayerToastView } from './QPlayerToastView'
+import { QPlayerToastView } from '../../common/component/QPlayerToastView'
 import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
