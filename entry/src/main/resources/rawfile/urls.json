@@ -578,7 +578,7 @@
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "http://demovideos.qiniushawn.top/4K_3840%2A1920.m4s",
+                "url": "http://demovideos.qiniushawn.top/4K_3840_1920.m4s",
                 "quality": 1920,
                 "isSelected": 1,
                 "backupUrl": "",
@@ -780,6 +780,20 @@
                 
             }
         ]
+    },
+    {
+        "name" : "51.点播-qiniu-2023.mp4-本地文件",
+        "isLive": 0,
+        "streamElements": [
+            {
+                "userType": "",
+                "urlType": 0,
+                "url": "/data/storage/el1/bundle/qplayer2/resources/resfile/qiniu_2023_1080p.mp4",
+                "quality": 1080,
+                "isSelected": 1,
+                "backupUrl": "",
+                "referer": ""
+            }
+        ]
     }
-
 ]
