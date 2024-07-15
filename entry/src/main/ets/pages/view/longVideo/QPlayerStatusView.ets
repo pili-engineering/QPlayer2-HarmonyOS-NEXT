@@ -41,8 +41,8 @@ export  struct  QPlayerStatusView{
             case QPlayerState.STOPPED:
                stateString = "STOPPED"
                break
-            case QPlayerState.MISTAKE:
-               stateString = "MISTAKE"
+            case QPlayerState.ERROR:
+               stateString = "ERROR"
                break
             case QPlayerState.END:
                stateString = "END"
