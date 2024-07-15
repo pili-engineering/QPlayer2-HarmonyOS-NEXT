@@ -328,7 +328,6 @@ export struct QPlayerView{
     this.mPlayerContext.get_control_handler().setStartAction(this.mQPlayerSettingModel.mStartAction)
     this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel, this.mQPlayerSettingModel.mPosition)
     this.mCurrentModel = this.mMediaModel.mMediaModels[0].mMediaModel
-    this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
     if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_0_5) {
       this.mPlayerContext.get_control_handler().setSpeed(0.5)
     }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_0_75){
