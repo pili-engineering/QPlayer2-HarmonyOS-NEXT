@@ -5,6 +5,9 @@ import { QPlayerDemoMediaModel } from '../../model/longVideo/QPlayerDemoMediaMod
 import { QPlayerCreateMediaModelHelper } from './QPlayerCreateMediaModelHelper';
 import { QPlayerDemoStreamElement } from '../../model/longVideo/QPlayerDemoStreamElement';
 import map from '@hms.core.map.map';
+import {
+  QPlayerDemoShortMediaModel,
+  QPlayerDemoShortMediaModels } from '../../model/shortVideo/QPlayerDemoShortMediaModel';
 
 interface  UrlJsonElementModel{
   userType: string
@@ -22,9 +25,13 @@ interface  UrlJsonModel{
   isLive : boolean
   streamElements : Array<UrlJsonElementModel>
 }
-
+interface  ShortVideoUrlJsonModel{
+  coverImageName : string
+  isLive : boolean
+  streamElements : Array<UrlJsonElementModel>
+}
 export class QUrlJsonReadWriteHelper{
-  static read(context : Context,url_model_call_back :(url_models : Array<QPlayerDemoMediaModel>)=>void){
+  static readLongVideoUrl(context : Context,url_model_call_back :(url_models : Array<QPlayerDemoMediaModel>)=>void){
     let value = context.resourceManager.getRawFileContentSync('urls.json')
     const url_decoder = util.TextDecoder.create("utf-8")
     let url_string = url_decoder.decodeWithStream(value, { stream: false })
@@ -43,6 +50,29 @@ export class QUrlJsonReadWriteHelper{
         elements.add(inner_stream)
       })
       model.add(new QPlayerDemoMediaModel(element.name,QPlayerCreateMediaModelHelper.create(element.isLive,elements.convertToArray())))
+    })
+    url_model_call_back(model.convertToArray())
+  }
+
+  static readShortVideoUrl(context : Context,url_model_call_back :(url_models : Array<QPlayerDemoShortMediaModel>)=>void){
+    let value = context.resourceManager.getRawFileContentSync('shortVideoUrls.json')
+    const url_decoder = util.TextDecoder.create("utf-8")
+    let url_string = url_decoder.decodeWithStream(value, { stream: false })
+    let url_jsons : Array<ShortVideoUrlJsonModel> = JSON.parse(url_string)
+    let model : ArrayList<QPlayerDemoShortMediaModel> = new ArrayList()
+    url_jsons.forEach(element=>{
+      let elements : ArrayList<QPlayerDemoStreamElement> = new ArrayList()
+      element.streamElements.forEach(stream_element=>{
+        let inner_stream : QPlayerDemoStreamElement = new QPlayerDemoStreamElement(stream_element.userType,
+          stream_element.urlType.valueOf(),
+          stream_element.url,
+          stream_element.quality,
+          stream_element.isSelected,
+          stream_element.backupUrl,
+          stream_element.referer)
+        elements.add(inner_stream)
+      })
+      model.add(new QPlayerDemoShortMediaModel(element.coverImageName,QPlayerCreateMediaModelHelper.create(element.isLive,elements.convertToArray())))
     })
     url_model_call_back(model.convertToArray())
   }
