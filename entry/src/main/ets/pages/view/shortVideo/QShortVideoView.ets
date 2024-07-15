@@ -10,13 +10,15 @@ import {
   QPlayerContextFactory,
   QPlayerUrlType,
   QSurfaceRenderView} from '@qiniu/qplayer2-core'
-import { QInnerMediaModel } from '@qiniu/qplayer2-core/src/main/ets/component/player/QInnterMediaModel'
 import { bundleManager, common } from '@kit.AbilityKit'
-import { window } from '@kit.ArkUI'
+import { router, window } from '@kit.ArkUI'
 import { QPlayerToastView } from '../../common/component/QPlayerToastView'
 import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QShortVideoMaskView } from './QShortVideoMaskView'
 import { QTitleView } from '../../common/component/QTitleView'
+import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
+import { Context } from '@ohos.arkui.UIContext'
+import { QPlayerDemoShortMediaModels } from '../../model/shortVideo/QPlayerDemoShortMediaModel'
 
 @Entry
 @Component
@@ -32,6 +34,7 @@ struct QShortVideoView {
   @State mToastViewWidth : Length = '70%'
   @State mToastMarginValue : number = 0
   @State mDeviceOrientation :window.Orientation = window.Orientation.PORTRAIT
+  @State mShortVideoModels : QPlayerDemoShortMediaModels = new QPlayerDemoShortMediaModels(AppStorage.get("context") as Context)
   private mMediaItemContext : QIMediaItemContext | null = null
   private mMediaItemCommandNotAllowListener : QIMediaItemCommandNotAllowListener = {
 
@@ -45,12 +48,12 @@ struct QShortVideoView {
       this.addToastView(this.mediaStateToString(state))
       switch (state){
         case QMediaItemState.LOADING:
-          let issuccess = this.mPlayerContext.get_control_handler().playMediaItem(this.mMediaItemContext!)
-          if (issuccess) {
-            this.addToastView("播放成功")
-          }else {
+          // let issuccess = this.mPlayerContext.get_control_handler().playMediaItem(this.mMediaItemContext!)
+          // if (issuccess) {
+          //   this.addToastView("播放成功")
+          // }else {
             this.addToastView("播放失败")
-          }
+          // }
           // this.mMediaItemContext!.get_control_handler().pause()
           break
         case QMediaItemState.PAUSED:
@@ -63,6 +66,9 @@ struct QShortVideoView {
   }
   private mQPlayerStateListener : QIPlayerStateChangeListener ={
     onStateChange:(context : QIPlayerContext ,state: QPlayerState)=>{
+      if (state == QPlayerState.RELEASE) {
+        router.back()
+      }
     }
   }
   build() {
@@ -137,11 +143,18 @@ struct QShortVideoView {
     builder.addStreamElement("",QPlayerUrlType.QAUDIO_AND_VIDEO,1080,"http://demovideos.qiniushawn.top/qiniu-2023-1080p.mp4",true,"","")
     this.mMedia = builder.build(false)
 
-    let mediaItemContext : QIMediaItemContext = QPlayerContextFactory.createMediaItemContext(AppStorage.get("context") as Context, this.mMedia, 0,QLogLevel.LOG_INFO, (AppStorage.get("context") as Context).filesDir)
+    let mediaItemContext : QIMediaItemContext = QPlayerContextFactory.createMediaItemContext(AppStorage.get("context") as Context, this.mShortVideoModels.mMediaModels[0].mMediaModel, 0,QLogLevel.LOG_INFO, (AppStorage.get("context") as Context).filesDir)
     this.mMediaItemContext = mediaItemContext
     mediaItemContext.get_control_handler().addMediaItemStateListener(this.mMediaItemStateListener)
     mediaItemContext.get_control_handler().addMediaItemCommandNotAllowListener(this.mMediaItemCommandNotAllowListener)
     mediaItemContext.get_control_handler().start()
+
+    this.mPlayerContext.get_control_handler().playMediaItem(this.mMediaItemContext!)
+    this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mQPlayerStateListener)
+  }
+  onBackPress(): boolean | void {
+    this.mPlayerContext.get_control_handler().release()
+    return true
   }
   addToastView(text:String){
     this.mToastText = text
