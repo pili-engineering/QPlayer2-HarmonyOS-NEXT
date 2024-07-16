@@ -1,4 +1,4 @@
-import { PlaySpeed, QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel';
+import { Immediately, PlaySpeed, QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel';
 import dataPreferences from '@ohos.data.preferences';
 import { Context } from '@kit.AbilityKit';
 import { QBlindType, QPlayerDecoderPriority, QPlayerSeek,
@@ -18,6 +18,7 @@ export class QSettingPersistentStorageHelper{
     preferences.putSync('position', settingModel.mPosition)
     preferences.putSync('sei_enable', settingModel.mSEIEnable)
     preferences.putSync('start_action', settingModel.mStartAction)
+    preferences.putSync('immediately', settingModel.mImmediately)
     console.log(`write settingModel.mPosition : ${settingModel.mPosition}`);
     preferences.flush()
   }
@@ -34,6 +35,7 @@ export class QSettingPersistentStorageHelper{
     let position : number =  preferences.getSync('position',0) as number
     let seiEnable : number =  preferences.getSync('sei_enable',0) as number
     let startAction : QPlayerStart =  preferences.getSync('start_action',0) as QPlayerStart
+    let immediately : Immediately =  preferences.getSync('immediately',0) as Immediately
     let settingModel = new QPlayerSettingModel()
     settingModel.mSeekMode = seekValue
     settingModel.mBackgroundPlay = backgroundPlayValue
@@ -44,6 +46,7 @@ export class QSettingPersistentStorageHelper{
     settingModel.mPosition = position
     settingModel.mSEIEnable = seiEnable
     settingModel.mStartAction = startAction
+    settingModel.mImmediately = immediately
     console.log(`read settingModel.mPosition : ${settingModel.mPosition}`);
     return settingModel
   }

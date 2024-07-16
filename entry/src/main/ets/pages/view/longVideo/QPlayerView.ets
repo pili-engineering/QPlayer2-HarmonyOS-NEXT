@@ -189,6 +189,7 @@ export struct QPlayerView{
             .enabled(false)
             .visibility(this.mShootViewVisible)
             .backgroundColor('#ff000000')
+            .objectFit(ImageFit.Contain)
           Column(){
             Row() {
               // saveButton 因为 toastview（透明的） 覆盖在该按钮在上方导致该按钮无法获取点击事件，
@@ -279,7 +280,7 @@ export struct QPlayerView{
         .id("play_speed_view_relativeContainer")
 
         RelativeContainer() {
-          QMaskSwitchQualityView({mCurrentModel : this.mCurrentModel,mPlayerContext : this.mPlayerContext})
+          QMaskSwitchQualityView({mCurrentModel : this.mCurrentModel, mPlayerContext : this.mPlayerContext, mQPlayerSetting : this.mQPlayerSettingModel})
             .alignRules({
               top : {anchor : "__container__" , align : VerticalAlign.Top},
               right : {anchor : "__container__", align : HorizontalAlign.End}

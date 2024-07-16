@@ -2,6 +2,7 @@ import { QIPlayerContext, QIPlayerQualityListener, QMediaModel,
   QPlayerUrlType,
   QStreamElement } from '@qiniu/qplayer2-core'
 import List from '@ohos.util.List'
+import { Immediately, QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 
 @Component
 export struct QMaskSwitchQualityView{
@@ -9,6 +10,7 @@ export struct QMaskSwitchQualityView{
   private mCurrentElement : QStreamElement | null = null
   @Link mPlayerContext : QIPlayerContext
 
+  @Link mQPlayerSetting : QPlayerSettingModel
   @State mediaModelButtonBackgroundColorArray : Array<ResourceColor> = [
   ]
   private mQualityListener: QIPlayerQualityListener = {
@@ -50,7 +52,21 @@ export struct QMaskSwitchQualityView{
                 this.mediaModelButtonBackgroundColorArray[indexOfColor] = $r('app.color.not_selected_play_speed_button_background_color')
               }
             })
-            this.mPlayerContext.get_control_handler().switchQuality(streamElement.userType,streamElement.urlType,streamElement.quality,false)
+            switch (this.mQPlayerSetting.mImmediately){
+              case Immediately.IMMEDIATELY_TRUE :
+                this.mPlayerContext.get_control_handler().switchQuality(streamElement.userType,streamElement.urlType,streamElement.quality,true)
+                break
+              case Immediately.IMMEDIATELY_FALSE :
+                this.mPlayerContext.get_control_handler().switchQuality(streamElement.userType,streamElement.urlType,streamElement.quality,false)
+                break
+              default :
+                if (this.mCurrentModel?.isLive == false) {
+                  this.mPlayerContext.get_control_handler().switchQuality(streamElement.userType,streamElement.urlType,streamElement.quality,false)
+                }else {
+                  this.mPlayerContext.get_control_handler().switchQuality(streamElement.userType,streamElement.urlType,streamElement.quality,true)
+                }
+                break
+            }
             // this.mQPlayerSettingModel.mPlaySpeed = index as PlaySpeed
             // QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context, this.mQPlayerSettingModel)
           })

@@ -1,5 +1,5 @@
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
-import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
+import { Immediately, QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { Context } from '@ohos.abilityAccessCtrl'
 import { ArrayList } from '@kit.ArkTS'
 import App from '@system.app'
@@ -22,7 +22,8 @@ export struct QMaskSettingView{
     new innerSettingModel("后台播放",["关闭","开启"] , this.mQPlayerSettingModel.mBackgroundPlay.valueOf()),
     new innerSettingModel("渲染比例",["自动","拉伸","铺满","16:9","4:3"], this.mQPlayerSettingModel.mRenderRatio.valueOf() - 1),
     new innerSettingModel("色盲模式",["无","红色盲","绿色盲","蓝色盲"], this.mQPlayerSettingModel.mBlinderType.valueOf()),
-    new innerSettingModel("sei",["关闭","开启"], this.mQPlayerSettingModel.mSEIEnable.valueOf())
+    new innerSettingModel("sei",["关闭","开启"], this.mQPlayerSettingModel.mSEIEnable.valueOf()),
+    new innerSettingModel("清晰度切换模式",["立即切换","无缝切换","直播立即点播无缝"], this.mQPlayerSettingModel.mImmediately.valueOf()),
   ]
   private mSettingViewUnitHeight :  number = 100
   private mSettingViewUnitLineHeight :  number = 2
@@ -309,6 +310,8 @@ struct SettingViewUnit{
     }else if (title == "起播模式"){
       this.mQPlayerSetting.mStartAction = index as QPlayerStart
       this.mPlayerContext.get_control_handler().setStartAction(this.mQPlayerSetting.mStartAction)
+    }else if (title == "清晰度切换模式"){
+      this.mQPlayerSetting.mImmediately = index as Immediately
     }
     QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context, this.mQPlayerSetting)
   }

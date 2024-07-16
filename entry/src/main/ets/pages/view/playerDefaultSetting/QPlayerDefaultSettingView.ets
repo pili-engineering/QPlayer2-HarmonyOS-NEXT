@@ -1,5 +1,5 @@
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
-import { PlaySpeed, QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
+import { Immediately, PlaySpeed, QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { QTitleView } from '../../common/component/QTitleView'
 import { QPlayerSeek, QPlayerStart } from '@qiniu/qplayer2-core/qplayer2-core'
 
@@ -17,6 +17,7 @@ struct QPlayerDefaultSettingView{
     new innerSettingModel("色盲模式", this.mQPlayerSetting.mBlinderType.valueOf(),["无","红色盲","绿色盲","蓝色盲"]),
     new innerSettingModel("sei", this.mQPlayerSetting.mSEIEnable.valueOf(),["关闭","开启"]),
     new innerSettingModel("后台播放", this.mQPlayerSetting.mBackgroundPlay.valueOf(),["关闭","开启"]),
+    new innerSettingModel("清晰度切换模式", this.mQPlayerSetting.mImmediately.valueOf(),["立即切换","无缝切换","直播立即点播无缝"]),
   ]
   mUnitHeight : Number = 125
     build() {
@@ -238,6 +239,8 @@ struct settingViewUnit{
       this.mQPlayerSetting.mSEIEnable = index
     }else if (title == "起播模式"){
       this.mQPlayerSetting.mStartAction = index as QPlayerStart
+    }else if (title == "清晰度切换模式"){
+      this.mQPlayerSetting.mImmediately = index as Immediately
     }
   }
 }

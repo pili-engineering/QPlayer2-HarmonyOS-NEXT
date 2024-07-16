@@ -13,6 +13,11 @@ export enum PlaySpeed{
   SPEED_1_5,
   SPEED_2_0
 }
+export enum Immediately{
+  IMMEDIATELY_TRUE = 0,
+  IMMEDIATELY_FALSE = 1,
+  IMMEDIATELY_MIX = 2
+}
 @Observed
 export class QPlayerSettingModel{
   public mSeekMode :QPlayerSeek = QPlayerSeek.NORMAL
@@ -24,6 +29,7 @@ export class QPlayerSettingModel{
   public mPosition : number = 0
   public mSEIEnable : number = 0
   public mStartAction : QPlayerStart = QPlayerStart.PLAYING
+  public mImmediately : Immediately = Immediately.IMMEDIATELY_TRUE
   constructor() {
   }
 }
