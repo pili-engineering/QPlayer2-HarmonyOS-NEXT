@@ -198,6 +198,9 @@ export struct QMaskBottom{
     else if(this.mPlayerContext.get_control_handler().currentPlayerState == QPlayerState.COMPLETED){
       this.mPlayControlButtonImage = $r('app.media.qn_replay')
     }
+    else if (this.mPlayerContext.get_control_handler().currentPlayerState == QPlayerState.SEEKING){
+
+    }
     else {
       this.mPlayControlButtonImage = $r('app.media.qn_play')
     }
