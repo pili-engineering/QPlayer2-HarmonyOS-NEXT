@@ -428,22 +428,6 @@
         ]
     },
     {
-        "name" : "18.点播-http-m3u8-30fps",
-        "isLive": 0,
-        "streamElements": [
-            {
-                "userType": "",
-                "urlType": 0,
-                "url": "http://10008gi.playback1.z1.pili.qiniucdn.com/zhiniao-stg1/852373_E1FEB4E6C5B64D06A4B6C6962940BC6C_1.m3u8?start=1676961021&end=1676961045",
-                "quality": 760,
-                "isSelected": 1,
-                "backupUrl": "",
-                "referer": ""
-                
-            }
-        ]
-    },
-    {
         "name" : "19.点播-https-flv-30fps-H264",
         "isLive": 0,
         "streamElements": [
