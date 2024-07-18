@@ -1,12 +1,12 @@
 {
   "app": {
-    "appEnvironments": [
-      {
-        "name": "ASAN_OPTIONS",
-        "value": "log_path=/dev/asanlog/asan.log log_exe_name=true abort_on_error=0 print_cmdline=true" // 示例仅供参考，具体以实际为准
-      },
-    ],
-    "asanEnabled": true,
+//    "appEnvironments": [
+//      {
+//        "name": "ASAN_OPTIONS",
+//        "value": "log_path=/dev/asanlog/asan.log log_exe_name=true abort_on_error=0 print_cmdline=true" // 示例仅供参考，具体以实际为准
+//      },
+//    ],
+//    "asanEnabled": false,
     "bundleName": "com.qiniu.qplayer2demo",
     "vendor": "example",
     "versionCode": 1000000,
