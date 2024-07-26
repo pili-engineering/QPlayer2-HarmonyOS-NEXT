@@ -24,7 +24,7 @@
         "buildOption": {
           "arkOptions": {
             "buildProfileFields": {
-              "qplayer2_version": "1.5.0-preview3" //自定义要获取的sdk 版本信息
+              "qplayer2_version": "1.5.0-preview4" //自定义要获取的sdk 版本信息
             }
           }
         }
