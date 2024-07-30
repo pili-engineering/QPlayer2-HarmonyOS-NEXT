@@ -13,5 +13,47 @@
                 "referer": ""
             }
         ]
-    }
+    },
+    {
+    "name" : "2.直播-6666",
+    "isLive": 1,
+    "streamElements": [
+        {
+            "userType": "",
+            "urlType": 0,
+            "url": "rtmp://pili-rtmp.qnsdk.com/sdk-live/6666",
+            "quality": 1080,
+            "isSelected": 1,
+            "backupUrl": "",
+            "referer": ""
+        },
+        {
+            "userType": "",
+            "urlType": 0,
+            "url": "rtmp://pili-rtmp.qnsdk.com/sdk-live/6666@zn720p",
+            "quality": 720,
+            "isSelected": 0,
+            "backupUrl": "",
+            "referer": ""
+        },
+        {
+            "userType": "",
+            "urlType": 0,
+            "url": "rtmp://pili-rtmp.qnsdk.com/sdk-live/6666@zn480p",
+            "quality": 480,
+            "isSelected": 0,
+            "backupUrl": "",
+            "referer": ""
+        },
+        {
+            "userType": "",
+            "urlType": 0,
+            "url": "rtmp://pili-rtmp.qnsdk.com/sdk-live/6666@zn240p",
+            "quality": 240,
+            "isSelected": 0,
+            "backupUrl": "",
+            "referer": ""
+        }
+    ]
+}
 ]
