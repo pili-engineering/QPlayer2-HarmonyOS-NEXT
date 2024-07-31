@@ -1,17 +1,25 @@
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
-import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
+import { Immediately, PlaySpeed, QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { QTitleView } from '../../common/component/QTitleView'
-import { QPlayerSeek } from '@qiniu/qplayer2-core/qplayer2-core'
+import { QPlayerSeek, QPlayerStart } from '@qiniu/qplayer2-core/qplayer2-core'
 
 @Entry
 @Component
 struct QPlayerDefaultSettingView{
   @State mQPlayerSetting : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get('context') as Context)
   @State mSettingModel : Array<innerSettingModel> = [
-    new innerSettingModel("seekMode", this.mQPlayerSetting.mSeekMode.valueOf(),["关键帧","精准"]),
-    new innerSettingModel("backgroundPlay", this.mQPlayerSetting.mBackgroundPlay.valueOf(),["关闭","开启"])
+    new innerSettingModel("解码方式", this.mQPlayerSetting.mDecoderType.valueOf(),["自动","硬解","软解"]),
+    new innerSettingModel("seek模式", this.mQPlayerSetting.mSeekMode.valueOf(),["关键帧","精准"]),
+    new innerSettingModel("起播模式", this.mQPlayerSetting.mStartAction.valueOf(),["播放","暂停"]),
+    new innerSettingModel("起播位置", this.mQPlayerSetting.mPosition.valueOf(),[]),
+    new innerSettingModel("渲染比例", this.mQPlayerSetting.mRenderRatio.valueOf() - 1,["自动","拉伸","铺满","16:9","4:3"]),
+    new innerSettingModel("播放速度", this.mQPlayerSetting.mPlaySpeed.valueOf(),["0.5","0.75","1.0","1.25","1.5","2.0"]),
+    new innerSettingModel("色盲模式", this.mQPlayerSetting.mBlinderType.valueOf(),["无","红色盲","绿色盲","蓝色盲"]),
+    new innerSettingModel("sei", this.mQPlayerSetting.mSEIEnable.valueOf(),["关闭","开启"]),
+    new innerSettingModel("后台播放", this.mQPlayerSetting.mBackgroundPlay.valueOf(),["关闭","开启"]),
+    new innerSettingModel("清晰度切换模式", this.mQPlayerSetting.mImmediately.valueOf(),["立即切换","无缝切换","直播立即点播无缝"]),
   ]
-  mUnitHeight : Number = 150
+  mUnitHeight : Number = 125
     build() {
       Column() {
 
@@ -65,7 +73,21 @@ struct settingViewUnit{
             top : {anchor : "__container__", align : VerticalAlign.Top}
           })
           .id('title_' + this.mSettingModel.mTitleString)
-
+        if (this.mSettingModel.mTitleString.toString() == "起播位置"){
+          TextInput({placeholder : this.mQPlayerSetting.mPosition.valueOf() + ""})
+            .alignRules({
+              left : {anchor: "__container__",align: HorizontalAlign.Start},
+              top : {anchor : 'title_' + this.mSettingModel.mTitleString , align : VerticalAlign.Bottom}
+            })
+            .type(InputType.Number)
+            .enterKeyType(EnterKeyType.Done)
+            .onChange((value)=>{
+              this.mQPlayerSetting.mPosition = Number(value).valueOf()
+            })
+            .height(40)
+            .width('90%')
+            .id(this.mSettingModel.mTitleString.toString() + "radio_" + -1)
+        }
         ForEach(this.mSettingModel.mButtonTitleStringArray,(element:String,index:Number)=>{
           if(index.valueOf() / 3 <1){
             if (index.valueOf() % 3 == 0) {
@@ -176,11 +198,12 @@ struct settingViewUnit{
         Line()
           .alignRules({
             left: {anchor: "__container__" , align : HorizontalAlign.Start},
-            top : {anchor : this.mSettingModel.mTitleString.toString() + "radio_" + (this.mSettingModel.mButtonTitleStringArray.length.valueOf() - 1), align: VerticalAlign.Bottom}
+            bottom : {anchor : "__container__", align : VerticalAlign.Bottom}
+            // top : {anchor : this.mSettingModel.mTitleString.toString() + "radio_" + (this.mSettingModel.mButtonTitleStringArray.length.valueOf() - 1), align: VerticalAlign.Bottom}
           })
-          .width('100%')
+          .width('94%')
           .height(2)
-          .margin({top : 3})
+          .margin({top : 3, left : '3%'})
           .backgroundColor($r('app.color.default_line_color'))
           .id(this.mSettingModel.mTitleString.toString() + "line")
       }
@@ -196,18 +219,31 @@ struct settingViewUnit{
   radioClick(title:string, index : number)
   {
     this.mSettingModel.mSelectedNumber = index
-    if (title == "seekMode") {
+    if (title == "seek模式") {
       if (index == 0) {
         this.mQPlayerSetting.mSeekMode = QPlayerSeek.NORMAL
       }else {
         this.mQPlayerSetting.mSeekMode = QPlayerSeek.ACCURATE
       }
-    }else if (title == "backgroundPlay") {
+    }else if (title == "后台播放") {
         this.mQPlayerSetting.mBackgroundPlay = index
+    }else if (title == "解码方式"){
+      this.mQPlayerSetting.mDecoderType = index
+    }else if (title == "播放速度"){
+      this.mQPlayerSetting.mPlaySpeed = index as PlaySpeed
+    }else if (title == "渲染比例"){
+      this.mQPlayerSetting.mRenderRatio = index + 1
+    }else if (title == "色盲模式"){
+      this.mQPlayerSetting.mBlinderType = index
+    }else if (title == "sei"){
+      this.mQPlayerSetting.mSEIEnable = index
+    }else if (title == "起播模式"){
+      this.mQPlayerSetting.mStartAction = index as QPlayerStart
+    }else if (title == "清晰度切换模式"){
+      this.mQPlayerSetting.mImmediately = index as Immediately
     }
   }
 }
-
 @Extend(Radio) function  settingRadioStyle(){
   .width('10%')
   .height(30)

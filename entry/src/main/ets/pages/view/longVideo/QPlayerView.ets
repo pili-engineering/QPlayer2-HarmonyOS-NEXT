@@ -6,31 +6,52 @@ import {QSurfaceRenderView,QIPlayerContext,
   QLogLevel,
   QPlayerSeek,
   QIPlayerStateChangeListener,
-  QIPlayerBufferingListener
+  QIPlayerBufferingListener,
+  QMediaModel,
+  QIPlayerShootVideoListener,
+  QPlayerShootVideoType
 } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QMaskSettingView } from './QMaskSettingView'
 import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
-import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
+import { PlaySpeed, QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { common } from '@kit.AbilityKit'
+import { QMaskPlaySpeedView } from './QMaskPlaySpeedView'
+import { QMaskSwitchQualityView } from './QMaskSwitchQualityView'
+import { image } from '@kit.ImageKit'
+import { BusinessError } from '@ohos.base'
+import { photoAccessHelper } from '@kit.MediaLibraryKit'
+import fileIo from '@ohos.file.fs'
 
 @Component
 export struct QPlayerView{
-  private mQPlayerTimerCount : Number = 0
-  private mQPlayerTimerId : Number = 0
-  private mQPlayerIsTimerStart : Boolean = false
+  private mQPlayerMaskTimerCount : Number = 0
+  private mQPlayerMaskTimerId : Number = 0
+  private mQPlayerIsMaskTimerStart : Boolean = false
+
+  private mQPlayerShootTimerCount : Number = 0
+  private mQPlayerShootTimerId : Number = 0
+  private mQPlayerIsShootTimerStart : Boolean = false
+  @State mShootViewVisible : Visibility = Visibility.Hidden
   // @Link PlayerSettingViewModel: QPlayerSettingViewModel
   @State mMaskVisible : Visibility = Visibility.Visible
   @State @Watch("settingViewVisibleChange") mSettingViewVisible : Visibility = Visibility.Hidden
+  @State @Watch("playSpeedViewVisibleChange") mPlaySpeedViewVisible : Visibility = Visibility.Hidden
+  @State @Watch("playSwitchQualityVisibleChange") mSwitchQualityViewVisible : Visibility = Visibility.Hidden
   @Link @Watch("deviceOrientationChange") mDeviceOrientation : window.Orientation
   @Link mMediaModel : QPlayerDemoMediaModels
   @Link mPlayerContext : QIPlayerContext
   @Link mIsPlaying : Boolean
   @Link mIsLive : Boolean
+  @State mShootImagePixelMap : PixelMap | null = null
   @State mBufferringVisible  : Visibility = Visibility.Hidden
   @State mXComponentId : string = 'qplayer2-core-renderview'
-  @State mQPlayerSettingModel : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get("context") as Context)
+  @Link mQPlayerSettingModel : QPlayerSettingModel
+  @Link mCurrentModel : QMediaModel | null
+  @State mShootSaveButtonOptions : SaveButtonOptions = {text : SaveDescription.SAVE_IMAGE,buttonType: ButtonType.Capsule}
+  private mShootImageCallBack : (value : string)=>void = (value : string)=>{};
+  private mShootImageBuffer : ArrayBuffer | null = null
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
       if (state == QPlayerState.PLAYING) {
@@ -40,6 +61,41 @@ export struct QPlayerView{
         this.mIsPlaying = false
       }
     }
+  }
+  private mShootVideoListener : QIPlayerShootVideoListener = {
+    onShootSuccessful:(context : QIPlayerContext, imageData:Uint8Array, width:number, height:number, type: QPlayerShootVideoType) => {
+      if (type == QPlayerShootVideoType.JPEG) {
+        let buffer : ArrayBufferLike = imageData.buffer
+        let source:image.ImageSource = image.createImageSource(buffer)
+        let option : image.InitializationOptions = {size : {height : height ,width : width}}
+        let pixelMap : PixelMap = source.createPixelMapSync(option)
+        if (this.mShootImagePixelMap) {
+          this.mShootImagePixelMap.release()
+        }
+        //浅拷贝
+        this.mShootImagePixelMap = pixelMap
+        // this.shootVisibleTimeChange()
+        this.mShootViewVisible = Visibility.Visible
+        this.mShootImageBuffer = buffer as ArrayBuffer
+      }
+    },
+
+    onShootFailed:(context : QIPlayerContext) => {
+    }
+  }
+  saveImage(buffer: ArrayBuffer | string) {
+    let context = getContext(this) as common.UIAbilityContext;
+    let helper = photoAccessHelper.getPhotoAccessHelper(context);
+    helper.createAsset(photoAccessHelper.PhotoType.IMAGE, 'jpg',(error,value)=>{
+      if (error != undefined) {
+        this.mShootImageCallBack("保存失败 : " + error.message)
+        return
+      }
+      let file = fileIo.openSync(value, fileIo.OpenMode.READ_WRITE | fileIo.OpenMode.CREATE);
+      fileIo.writeSync(file.fd, buffer);
+      fileIo.closeSync(file.fd);
+      this.mShootImageCallBack("保存成功")
+    });
   }
   private mBufferingCallBack : QIPlayerBufferingListener = {
 
@@ -71,7 +127,7 @@ export struct QPlayerView{
         .gesture(
           TapGesture({count : 1})
             .onAction((event : GestureEvent)=>{
-              this.visibleTimerChange()
+              this.maskVisibleTimerChange()
             })
         )
         .id('qplayer_render_view')
@@ -90,12 +146,16 @@ export struct QPlayerView{
           .fontColor("#ff426ae5")
           .backgroundColor($r("app.color.hyaline_background_color"))
           .fontSize(30)
+
+
         QMaskView({
           mDeviceOrientation: this.mDeviceOrientation,
           mPlayerContext: this.mPlayerContext,
           mIsPlaying: this.mIsPlaying,
           mSettingViewVisible : this.mSettingViewVisible,
-          mIsLive : this.mIsLive
+          mIsLive : this.mIsLive,
+          mPlaySpeedViewVisible : this.mPlaySpeedViewVisible,
+          mSwitchQualityViewVisible : this.mSwitchQualityViewVisible
         })
           .width('100%')
           .height('100%')
@@ -109,42 +169,147 @@ export struct QPlayerView{
           .gesture(
             TapGesture({count : 1})
               .onAction((event : GestureEvent)=>{
-                this.visibleTimerChange()
+                this.maskVisibleTimerChange()
               })
           )
           .visibility(this.mMaskVisible)
           .id('mask_view')
 
+
         RelativeContainer() {
-          QMaskSettingView({mPlayerContext : this.mPlayerContext})
+          Image(this.mShootImagePixelMap)
+            .alignRules({
+              left:{anchor: "__container__" , align : HorizontalAlign.Start},
+              top : { anchor : "__container__" , align : VerticalAlign.Top},
+            })
+            .margin({left : '5%'})
+            .width('90%')
+            .height('90%')
+            .id('shoot_view')
+            .enabled(false)
+            .visibility(this.mShootViewVisible)
+            .backgroundColor('#ff000000')
+            .objectFit(ImageFit.Contain)
+          Column(){
+            Row() {
+              // saveButton 因为 toastview（透明的） 覆盖在该按钮在上方导致该按钮无法获取点击事件，
+              // 但此处用 Button 则会收到点击事件。
+              // 图库必须使用 saveButton 无法使用 Button
+              SaveButton(this.mShootSaveButtonOptions)
+                .width("20%")
+                .onClick((event: ClickEvent, result: SaveButtonOnClickResult) => {
+                  if (result == SaveButtonOnClickResult.SUCCESS) {
+                    this.mShootViewVisible = Visibility.Hidden
+                    if (this.mShootImageBuffer == null) {
+                      return
+                    }
+                    this.saveImage(this.mShootImageBuffer!)
+                  }
+                })
+              Button("取消")
+                .onClick(() => {
+                  this.mShootViewVisible = Visibility.Hidden
+                })
+                .width("20%")
+                .margin({left : "5%"})
+            }
+            .id('shoot_view_row')
+          }
+          .alignRules({
+            left: { anchor: "shoot_view", align: HorizontalAlign.Start },
+            top: { anchor: "shoot_view", align: VerticalAlign.Bottom }
+          })
+          .width('90%')
+          .height('10%')
+          .id('shoot_view_column')
+          .visibility(this.mShootViewVisible)
+          .backgroundColor($r("app.color.hyaline_background_color"))
+        }
+        .visibility(this.mShootViewVisible)
+        .height("70%")
+        .width("70%")
+        .id("shoot_view_relativeContainer")
+
+        RelativeContainer() {
+          QMaskSettingView({mPlayerContext : this.mPlayerContext, mQPlayerSettingModel: this.mQPlayerSettingModel})
             .alignRules({
               top : {anchor : "__container__" , align : VerticalAlign.Top},
               right : {anchor : "__container__", align : HorizontalAlign.End}
             })
             .visibility(this.mSettingViewVisible)
             .height("100%")
-            .width(300)
+            .width(340)
             .id("setting_view")
             .backgroundColor($r("app.color.setting_view_background_color"))
             .margin({
               right: 50
             })
+
         }
         .visibility(this.mSettingViewVisible)
         .onClick(()=>{
           this.mSettingViewVisible = Visibility.Hidden
-          this.stopTimer()
+          this.stopMaskTimer()
         })
         .height("100%")
         .width("100%")
         .id("setting_view_relativeContainer")
+
+        RelativeContainer() {
+          QMaskPlaySpeedView({mPlayerContext : this.mPlayerContext,mQPlayerSettingModel : this.mQPlayerSettingModel})
+            .alignRules({
+              top : {anchor : "__container__" , align : VerticalAlign.Top},
+              right : {anchor : "__container__", align : HorizontalAlign.End}
+            })
+            .visibility(this.mPlaySpeedViewVisible)
+            .height("100%")
+            .width(100)
+            .id("play_speed_view")
+            .backgroundColor($r("app.color.setting_view_background_color"))
+            .margin({
+              right: 50
+            })
+        }
+        .visibility(this.mPlaySpeedViewVisible)
+        .onClick(()=>{
+          this.mPlaySpeedViewVisible = Visibility.Hidden
+          this.stopMaskTimer()
+        })
+        .height("100%")
+        .width("100%")
+        .id("play_speed_view_relativeContainer")
+
+        RelativeContainer() {
+          QMaskSwitchQualityView({mCurrentModel : this.mCurrentModel, mPlayerContext : this.mPlayerContext, mQPlayerSetting : this.mQPlayerSettingModel})
+            .alignRules({
+              top : {anchor : "__container__" , align : VerticalAlign.Top},
+              right : {anchor : "__container__", align : HorizontalAlign.End}
+            })
+            .visibility(this.mSwitchQualityViewVisible)
+            .height("100%")
+            .width(100)
+            .id("switch_quality_view")
+            .backgroundColor($r("app.color.setting_view_background_color"))
+            .margin({
+              right: 50
+            })
+        }
+        .visibility(this.mSwitchQualityViewVisible)
+        .onClick(()=>{
+          this.mSwitchQualityViewVisible = Visibility.Hidden
+          this.stopMaskTimer()
+        })
+        .height("100%")
+        .width("100%")
+        .id("switch_quality_view_relativeContainer")
+
       }
     }
     .height("100%")
     .width("100%")
   }
   aboutToAppear(): void {
-    this.visibleTimerChange()
+    this.maskVisibleTimerChange()
     let mContext : Context = AppStorage.get('context') as Context
     this.mPlayerContext.init(mContext, getContext(this) as common.UIAbilityContext)
     this.mPlayerContext.get_control_handler().setSeekMode(this.mQPlayerSettingModel.mSeekMode)
@@ -154,16 +319,34 @@ export struct QPlayerView{
       this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
     }
     this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateCallBack)
-    this.mPlayerContext.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingCallBack)
-    this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel,0)
-    this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
 
-  }
-  settingDefault(){
+    this.mPlayerContext.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingCallBack)
+    this.mPlayerContext.get_control_handler().addPlayerShootVideoListener(this.mShootVideoListener)
+    this.mPlayerContext.get_control_handler().setDecoderType(this.mQPlayerSettingModel.mDecoderType)
+    this.mPlayerContext.get_control_handler().setSEIEnable(this.mQPlayerSettingModel.mSEIEnable == 0 ? false : true)
+    this.mPlayerContext.get_render_handler().setRenderRatio(this.mQPlayerSettingModel.mRenderRatio)
+    this.mPlayerContext.get_render_handler().setBlindType(this.mQPlayerSettingModel.mBlinderType)
+    this.mPlayerContext.get_control_handler().setStartAction(this.mQPlayerSettingModel.mStartAction)
+    this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel, this.mQPlayerSettingModel.mPosition)
+    this.mCurrentModel = this.mMediaModel.mMediaModels[0].mMediaModel
+    if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_0_5) {
+      this.mPlayerContext.get_control_handler().setSpeed(0.5)
+    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_0_75){
+      this.mPlayerContext.get_control_handler().setSpeed(0.75)
+    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_1_0){
+      this.mPlayerContext.get_control_handler().setSpeed(1.0)
+    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_1_25){
+      this.mPlayerContext.get_control_handler().setSpeed(1.25)
+    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_1_5){
+      this.mPlayerContext.get_control_handler().setSpeed(1.5)
+    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_2_0){
+      this.mPlayerContext.get_control_handler().setSpeed(2.0)
+    }
   }
   deviceOrientationChange(){
     if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {
       this.mSettingViewVisible = Visibility.Hidden
+      this.mPlaySpeedViewVisible = Visibility.Hidden
     }
   }
   maskShowAndHide() {
@@ -179,28 +362,60 @@ export struct QPlayerView{
       this.mMaskVisible = Visibility.Hidden
     }
   }
-  stopTimer(){
-    clearInterval(this.mQPlayerTimerId.valueOf())
-    this.mQPlayerTimerCount = 0
-    this.mQPlayerIsTimerStart = false
+  playSpeedViewVisibleChange(){
+    if (this.mPlaySpeedViewVisible == Visibility.Visible) {
+      this.mMaskVisible = Visibility.Hidden
+    }
+  }
+  playSwitchQualityVisibleChange(){
+    if (this.mSwitchQualityViewVisible == Visibility.Visible) {
+      this.mMaskVisible = Visibility.Hidden
+    }
+  }
+  // shootVisibleTimeChange(){
+  //   if (this.mQPlayerIsShootTimerStart == true){
+  //     this.mQPlayerShootTimerCount = 0
+  //   }else {
+  //     this.mShootViewVisible = Visibility.Visible
+  //     this.mQPlayerIsShootTimerStart = true;
+  //     this.mQPlayerShootTimerId = setInterval(() => {
+  //       this.mQPlayerShootTimerCount = this.mQPlayerShootTimerCount.valueOf() + 1
+  //       if (this.mQPlayerShootTimerCount.valueOf() == 7) {
+  //         this.stopShootViewTimer()
+  //       }
+  //     }, 700)
+  //   }
+  // }
+  // stopShootViewTimer(){
+  //   clearInterval(this.mQPlayerShootTimerId.valueOf())
+  //   this.mShootImagePixelMap?.release()
+  //   this.mShootImagePixelMap = null
+  //   this.mQPlayerShootTimerCount = 0
+  //   this.mQPlayerIsShootTimerStart = false
+  //   this.mShootViewVisible = Visibility.Hidden
+  // }
+  stopMaskTimer(){
+    clearInterval(this.mQPlayerMaskTimerId.valueOf())
+    this.mQPlayerMaskTimerCount = 0
+    this.mQPlayerIsMaskTimerStart = false
     this.mMaskVisible = Visibility.Hidden
   }
-  visibleTimerChange(){
-    if(this.mQPlayerIsTimerStart){
-      this.stopTimer()
+  maskVisibleTimerChange(){
+    if(this.mQPlayerIsMaskTimerStart){
+      this.stopMaskTimer()
     }else {
       this.mMaskVisible = Visibility.Visible
-      this.mQPlayerIsTimerStart = true
-      this.mQPlayerTimerId = setInterval(()=>{
-        this.mQPlayerTimerCount = this.mQPlayerTimerCount.valueOf() + 1
-        if (this.mQPlayerTimerCount.valueOf() == 10) {
-          this.stopTimer()
+      this.mQPlayerIsMaskTimerStart = true
+      this.mQPlayerMaskTimerId = setInterval(()=>{
+        this.mQPlayerMaskTimerCount = this.mQPlayerMaskTimerCount.valueOf() + 1
+        if (this.mQPlayerMaskTimerCount.valueOf() == 10) {
+          this.stopMaskTimer()
         }
       },1000)
     }
   }
   onDoubleClick(){
-    this.mQPlayerTimerCount = 0;
+    this.mQPlayerMaskTimerCount = 0;
     if (this.mIsPlaying == true) {
       this.mPlayerContext.get_control_handler().pauseRender()
     }else {

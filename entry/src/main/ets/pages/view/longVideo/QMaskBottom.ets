@@ -1,6 +1,7 @@
 import { window } from '@kit.ArkUI'
 import {
-  QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener } from '@qiniu/qplayer2-core/qplayer2-core'
+  QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener,
+  QPlayerUrlType } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QTimestampHelper } from '../../common/helper/QTimestampHelper'
 import { common } from '@kit.AbilityKit'
@@ -18,6 +19,7 @@ export struct QMaskBottom{
   @Link mDeviceOrientation : window.Orientation
   @Link mPlayerContext : QIPlayerContext
   @Link mIsLive : Boolean
+  @State mButtonMarginValue : number = 4
   private mIsSeeking : boolean = false
   private mProgressListener : QIPlayerProgressListener = {
     onProgressChanged:(context:QIPlayerContext,  progress:number, duration:number) => {
@@ -45,11 +47,6 @@ export struct QMaskBottom{
       }
     }
   }
-//   private mAudioListener : QIPlayerAudioListener = {
-//   onMuteChanged:(context :QIPlayerContext , isMute:boolean)=>{
-//     this.mIsMute = isMute
-//   }
-// }
   build(){
     Row({space: 5}) {
       RelativeContainer() {
@@ -62,7 +59,7 @@ export struct QMaskBottom{
           top: { anchor: "__container__", align: VerticalAlign.Top },
           bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
         })
-        .margin({ left: 2 })
+        .margin({right : this.mButtonMarginValue/2, left: this.mButtonMarginValue/2 })
         .onClick(() => {
           if (this.mIsPlaying) {
             this.mIsPlaying = false
@@ -83,6 +80,7 @@ export struct QMaskBottom{
           Image($r('app.media.qn_stop'))
             .maskNormalImageStyle()
         }
+        .margin({right : this.mButtonMarginValue/2, left: this.mButtonMarginValue/2 })
         .alignRules({
           left: { anchor: "play_button", align: HorizontalAlign.End },
           top: { anchor: "__container__", align: VerticalAlign.Top },
@@ -103,6 +101,7 @@ export struct QMaskBottom{
             top: { anchor: "__container__", align: VerticalAlign.Top },
             bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
           })
+          .margin({right : this.mButtonMarginValue/2, left: this.mButtonMarginValue/2 })
           .id('progress_text')
 
         Slider({ max: this.mDuration/1000, min: 0, value: this.mProgress/1000})
@@ -117,7 +116,6 @@ export struct QMaskBottom{
           .enabled(!this.mIsLive)
           .onChange((value,mode) => {
 
-            // this.mProgressViewModel.setProgress(value)
             if (mode == SliderChangeMode.Begin) {
               this.mIsSeeking = true
             }
@@ -125,7 +123,6 @@ export struct QMaskBottom{
               this.mPlayerContext.get_control_handler().seek(value * 1000)
             }
           })
-
           .id('progress_slider')
 
         Text(this.mDurationTextString.valueOf())
@@ -134,6 +131,7 @@ export struct QMaskBottom{
             top: { anchor: "__container__", align: VerticalAlign.Top },
             bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
           })
+          .margin({right : this.mButtonMarginValue/2, left: this.mButtonMarginValue/2 })
           .width($r('app.float.long_video_bottom_view_progress_text_width'))
           .fontSize(10)
           .fontColor($r('app.color.long_video_mask_font_color'))
@@ -143,6 +141,7 @@ export struct QMaskBottom{
         //   Image(this.mMuteControlButtonImage)
         //     .maskNormalImageStyle()
         // }
+        // .margin({right : this.mButtonMarginValue/2, left: this.mButtonMarginValue/2 })
         // .horizontalMaskButtonStyle()
         // .onClick(() => {
         //   if (!this.mIsMute) {
@@ -164,7 +163,6 @@ export struct QMaskBottom{
         // })
         // .id("mute_button")
 
-
         Button() {
           Image($r('app.media.qn_full_screen'))
             .maskNormalImageStyle()
@@ -174,6 +172,7 @@ export struct QMaskBottom{
           top: { anchor: "__container__", align: VerticalAlign.Top },
           bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
         })
+        .margin({right : this.mButtonMarginValue/2, left: this.mButtonMarginValue/2 })
         .horizontalMaskButtonStyle()
         .id('full_screen_button')
         .onClick(()=>{
@@ -190,7 +189,6 @@ export struct QMaskBottom{
   aboutToAppear(): void {
     this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mQPlayerStateChangeListenrCallBack)
     this.mPlayerContext.get_control_handler().addPlayerProgressChangeListener(this.mProgressListener)
-    // this.mPlayerContext.get_control_handler().addPlayerAudioListener(this.mAudioListener)
   }
   mIsPlayingChange(){
 
@@ -200,6 +198,9 @@ export struct QMaskBottom{
     else if(this.mPlayerContext.get_control_handler().currentPlayerState == QPlayerState.COMPLETED){
       this.mPlayControlButtonImage = $r('app.media.qn_replay')
     }
+    else if (this.mPlayerContext.get_control_handler().currentPlayerState == QPlayerState.SEEKING){
+
+    }
     else {
       this.mPlayControlButtonImage = $r('app.media.qn_play')
     }
@@ -207,8 +208,10 @@ export struct QMaskBottom{
   rotateScreen(){
     if (this.mDeviceOrientation == window.Orientation.LANDSCAPE) {
       this.mDeviceOrientation = window.Orientation.PORTRAIT
+      this.mButtonMarginValue = 4
     }else {
       this.mDeviceOrientation = window.Orientation.LANDSCAPE
+      this.mButtonMarginValue = 12
     }
     window.getLastWindow(getContext(this) as common.UIAbilityContext).then(res =>{
       res.setPreferredOrientation(this.mDeviceOrientation, (err)=>{

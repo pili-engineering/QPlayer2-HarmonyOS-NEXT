@@ -8,18 +8,22 @@ import { QMaskBottom } from './QMaskBottom'
 
 @Component
 export struct QMaskView{
-  // @Link PlayerSettingViewModel: QPlayerSettingViewModel
   @Link @Watch("orientationChange") mDeviceOrientation : window.Orientation
   @State mPortraitShow : Visibility = Visibility.Hidden
   @Link mPlayerContext : QIPlayerContext
   @Link mIsPlaying : Boolean
   @State mIsBack : Boolean = false
+  @State mBackMargin : Margin = {top : 0 , left : 0}
   @Link mIsLive : Boolean
   @Link mSettingViewVisible : Visibility
+  @Link mPlaySpeedViewVisible : Visibility
+  @Link mSwitchQualityViewVisible : Visibility
+  @State mBottomMarginValue : number = 0
+  private  mSpeedButtonTitle : string = "倍速"
+  private  mSwitchQualityButtonTitle : string = "清晰度"
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
-      if (state == QPlayerState.RELEASE) {
-        console.log(`qplayerstate : release`);
+      if (state == QPlayerState.END) {
         router.back()
       }
     }
@@ -34,6 +38,7 @@ export struct QMaskView{
         .type(ButtonType.Normal)
         .width($r('app.float.long_video_back_button_width'))
         .height($r('app.float.long_video_back_button_height'))
+        .margin(this.mBackMargin)
         .alignRules({
           left:{anchor: "__container__" , align : HorizontalAlign.Start},
           top : { anchor : "__container__" , align : VerticalAlign.Top}
@@ -76,6 +81,62 @@ export struct QMaskView{
         .backgroundColor('#00000000')
         .id('setting_view_button')
 
+
+        Button(){
+          Image($r('app.media.qn_shoot'))
+            .maskNormalImageStyle()
+        }
+        .type(ButtonType.Normal)
+        .width(40)
+        .height(30)
+        .alignRules({
+          right:{anchor: "__container__" , align : HorizontalAlign.End},
+          top : { anchor : "setting_view_button" , align : VerticalAlign.Bottom}
+        })
+        .margin({right : 30,top : 100})
+        .visibility(this.mPortraitShow)
+        .onClick(()=>{
+          this.mPlayerContext.get_control_handler().shootVideo()
+        })
+        .backgroundColor('#00000000')
+        .id('shoot_view_button')
+
+
+        Button(this.mSpeedButtonTitle)
+        .type(ButtonType.Normal)
+        .width(60)
+        .height(40)
+        .alignRules({
+          right:{anchor: "setting_view_button" , align : HorizontalAlign.Start},
+          top : { anchor : "__container__" , align : VerticalAlign.Top}
+        })
+        .margin({right : 20,top : 0})
+        .visibility(this.mPortraitShow)
+        .onClick(()=>{
+          this.mPlaySpeedViewVisible = Visibility.Visible
+        })
+        .backgroundColor($r('app.color.hyaline_background_color'))
+        .fontColor("#ffffffff")
+        .id('setting_play_speed_button')
+
+        Button(this.mSwitchQualityButtonTitle)
+          .type(ButtonType.Normal)
+          .width(100)
+          .height(40)
+          .alignRules({
+            right:{anchor: "setting_play_speed_button" , align : HorizontalAlign.Start},
+            top : { anchor : "__container__" , align : VerticalAlign.Top}
+          })
+          .margin({right : 20,top : 0})
+          .visibility(this.mPortraitShow)
+          .onClick(()=>{
+            this.mSwitchQualityViewVisible = Visibility.Visible
+          })
+          .backgroundColor($r('app.color.hyaline_background_color'))
+          .fontColor("#ffffffff")
+          .fontSize(15)
+          .id('switch_quality_button')
+
         QMaskBottom({mDeviceOrientation : this.mDeviceOrientation,
                      mPlayerContext : this.mPlayerContext ,
                      mIsPlaying : this.mIsPlaying,
@@ -86,6 +147,7 @@ export struct QMaskView{
             left : {anchor : "__container__" , align : HorizontalAlign.Start},
             right : {anchor : "__container__" , align : HorizontalAlign.End}
           })
+          .margin({bottom: this.mBottomMarginValue})
           .backgroundColor('#00000000')
           .id('mask_bottom_view')
 
@@ -102,9 +164,13 @@ export struct QMaskView{
   orientationChange(){
     if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {
       this.mPortraitShow = Visibility.Hidden
+      this.mBottomMarginValue = 0
+      this.mBackMargin = {top : 0 , left : 0}
     }
     else {
       this.mPortraitShow = Visibility.Visible
+      this.mBottomMarginValue = 30
+      this.mBackMargin = {top : 20 , left : 20}
     }
   }
 

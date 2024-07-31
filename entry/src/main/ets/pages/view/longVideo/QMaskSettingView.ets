@@ -1,18 +1,29 @@
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
-import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
+import { Immediately, QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { Context } from '@ohos.abilityAccessCtrl'
 import { ArrayList } from '@kit.ArkTS'
 import App from '@system.app'
-import { QIPlayerContext, QPlayerSeek } from '@qiniu/qplayer2-core/qplayer2-core'
+import {
+  QBlindType,
+  QIPlayerContext, QPlayerDecoderPriority, QPlayerSeek,
+  QPlayerStart,
+  QRenderRatio } from '@qiniu/qplayer2-core/qplayer2-core'
 
 @Component
 export struct QMaskSettingView{
-  @State mQPlayerSettingModel : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get("context") as Context)
+  @Link mQPlayerSettingModel : QPlayerSettingModel
   @State mInnerSettingModel : innerSettingModel[] = [
     new innerSettingModel("切换下集生效",[], 0),
+    new innerSettingModel("解码方式",["自动","硬解","软解"] , this.mQPlayerSettingModel.mDecoderType.valueOf()),
+    new innerSettingModel("起播模式",["播放","暂停"], this.mQPlayerSettingModel.mStartAction.valueOf()),
     new innerSettingModel("立即生效",[], 0),
-    new innerSettingModel("seekMode",["关键帧","精准"], this.mQPlayerSettingModel.mSeekMode.valueOf()),
-    new innerSettingModel("backgroundPlay",["关闭","开启"] , this.mQPlayerSettingModel.mBackgroundPlay.valueOf())
+    new innerSettingModel("起播位置",[], this.mQPlayerSettingModel.mPosition.valueOf()),
+    new innerSettingModel("seek模式",["关键帧","精准"], this.mQPlayerSettingModel.mSeekMode.valueOf()),
+    new innerSettingModel("后台播放",["关闭","开启"] , this.mQPlayerSettingModel.mBackgroundPlay.valueOf()),
+    new innerSettingModel("渲染比例",["自动","拉伸","铺满","16:9","4:3"], this.mQPlayerSettingModel.mRenderRatio.valueOf() - 1),
+    new innerSettingModel("色盲模式",["无","红色盲","绿色盲","蓝色盲"], this.mQPlayerSettingModel.mBlinderType.valueOf()),
+    new innerSettingModel("sei",["关闭","开启"], this.mQPlayerSettingModel.mSEIEnable.valueOf()),
+    new innerSettingModel("清晰度切换模式",["立即切换","无缝切换","直播立即点播无缝"], this.mQPlayerSettingModel.mImmediately.valueOf()),
   ]
   private mSettingViewUnitHeight :  number = 100
   private mSettingViewUnitLineHeight :  number = 2
@@ -44,14 +55,34 @@ export struct QMaskSettingView{
               }
             } else {
               if (element.mRadioButtonNameArray.length == 0) {
-                SettingViewUnit({mSettingModel : element, mQPlayerSetting : this.mQPlayerSettingModel, mPlayerContext : this.mPlayerContext})
-                  .height(this.mSettingViewUnitHeight / 2.8)
-                  .width("100%")
-                  .alignRules({
-                    top: { anchor: element.mTitle + "_line_" + index.toString(), align: VerticalAlign.Bottom },
-                    left: { anchor: "__container__", align: HorizontalAlign.Start }
+                if (element.mTitle.toString() == "起播位置") {
+                  SettingViewUnit({
+                    mSettingModel: element,
+                    mQPlayerSetting: this.mQPlayerSettingModel,
+                    mPlayerContext: this.mPlayerContext
                   })
-                  .id(element.mTitle + "_unit_" + index.toString())
+                    .height(this.mSettingViewUnitHeight)
+                    .width("100%")
+                    .alignRules({
+                      top: { anchor: element.mTitle + "_line_" + index.toString(), align: VerticalAlign.Bottom },
+                      left: { anchor: "__container__", align: HorizontalAlign.Start }
+                    })
+                    .id(element.mTitle + "_unit_" + index.toString())
+
+                } else {
+                  SettingViewUnit({
+                    mSettingModel: element,
+                    mQPlayerSetting: this.mQPlayerSettingModel,
+                    mPlayerContext: this.mPlayerContext
+                  })
+                    .height(this.mSettingViewUnitHeight / 2.8)
+                    .width("100%")
+                    .alignRules({
+                      top: { anchor: element.mTitle + "_line_" + index.toString(), align: VerticalAlign.Bottom },
+                      left: { anchor: "__container__", align: HorizontalAlign.Start }
+                    })
+                    .id(element.mTitle + "_unit_" + index.toString())
+                }
               }
               else {
                 SettingViewUnit({ mSettingModel: element, mQPlayerSetting: this.mQPlayerSettingModel , mPlayerContext : this.mPlayerContext})
@@ -114,8 +145,25 @@ struct SettingViewUnit{
             top : {anchor : "__container__", align : VerticalAlign.Top}
           })
           .id('title_' + this.mSettingModel.mTitle)
+        if (this.mSettingModel.mTitle.toString() == "起播位置"){
 
-        ForEach(this.mSettingModel.mRadioButtonNameArray,(element:String,index:Number)=>{
+          TextInput({placeholder : this.mQPlayerSetting.mPosition.valueOf() + ""})
+            .alignRules({
+              left : {anchor: "__container__",align: HorizontalAlign.Start},
+              top : {anchor : 'title_' + this.mSettingModel.mTitle , align : VerticalAlign.Bottom}
+            })
+            .backgroundColor($r('app.color.white'))
+            .type(InputType.Number)
+            .enterKeyType(EnterKeyType.Done)
+            .onChange((value)=>{
+              this.mQPlayerSetting.mPosition = Number(value).valueOf()
+              QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context , this.mQPlayerSetting)
+            })
+            .height(40)
+            .width('90%')
+            .id(this.mSettingModel.mTitle.toString() + "radio_" + -1)
+        }
+          ForEach(this.mSettingModel.mRadioButtonNameArray,(element:String,index:Number)=>{
           if(index.valueOf() / 4 <1){
             if (index.valueOf() % 4 == 0) {
               Radio({group:this.mSettingModel.mTitle.toString(), value:element.toString()})
@@ -233,20 +281,37 @@ struct SettingViewUnit{
   radioClick(title:string, index : number)
   {
     this.mSettingModel.mIsSelectedIndex = index
-    if (title == "seekMode") {
+    if (title == "seek模式") {
       if (index == 0) {
         this.mQPlayerSetting.mSeekMode = QPlayerSeek.NORMAL
       }else {
         this.mQPlayerSetting.mSeekMode = QPlayerSeek.ACCURATE
       }
       this.mPlayerContext.get_control_handler().setSeekMode(this.mQPlayerSetting.mSeekMode)
-    }else if (title == "backgroundPlay"){
+    }else if (title == "后台播放"){
       this.mQPlayerSetting.mBackgroundPlay = index
       if (this.mQPlayerSetting.mBackgroundPlay == 0) {
         this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(false)
       }else {
         this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
       }
+    }else if (title == "解码方式"){
+      this.mQPlayerSetting.mDecoderType = index as QPlayerDecoderPriority
+      this.mPlayerContext.get_control_handler().setDecoderType(this.mQPlayerSetting.mDecoderType)
+    }else if (title == "渲染比例"){
+      this.mQPlayerSetting.mRenderRatio = (index + 1) as QRenderRatio
+      this.mPlayerContext.get_render_handler().setRenderRatio(this.mQPlayerSetting.mRenderRatio)
+    }else if (title == "色盲模式"){
+      this.mQPlayerSetting.mBlinderType = index as QBlindType
+      this.mPlayerContext.get_render_handler().setBlindType(this.mQPlayerSetting.mBlinderType)
+    }else if (title == "sei"){
+      this.mQPlayerSetting.mSEIEnable = index
+      this.mPlayerContext.get_control_handler().setSEIEnable(this.mQPlayerSetting.mSEIEnable == 0 ? false : true)
+    }else if (title == "起播模式"){
+      this.mQPlayerSetting.mStartAction = index as QPlayerStart
+      this.mPlayerContext.get_control_handler().setStartAction(this.mQPlayerSetting.mStartAction)
+    }else if (title == "清晰度切换模式"){
+      this.mQPlayerSetting.mImmediately = index as Immediately
     }
     QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context, this.mQPlayerSetting)
   }

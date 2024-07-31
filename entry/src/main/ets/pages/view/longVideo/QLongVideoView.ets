@@ -18,8 +18,21 @@ import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
   QIPlayerMediaNetworkListener,
   QPlayerOpenError,
   QPlayerUrlType,
-  QIPlayerSeekListener} from '@qiniu/qplayer2-core/qplayer2-core'
+  QIPlayerSeekListener,
+  QIPlayerSpeedListener,
+  QIPlayerVideoDecodeListener,
+  QIPlayerQualityListener,
+  QMediaModel,
+  QIPlayerSEIDataListener,
+  QIPlayerShootVideoListener,
+  QPlayerShootVideoType,
+  QIPlayerVideoFrameSizeChangeListener} from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
+import { QPlayerDecoderType } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerDecoderType'
+import { util } from '@kit.ArkTS'
+import utils from '@arkts.utils'
+import { QDecimalToHexHelper } from '../../common/Helper/QDecimalToHexHelper'
+import { image } from '@kit.ImageKit'
 
 
 @Entry
@@ -38,12 +51,41 @@ struct QLongVideoView {
   @State mToastText : String = ''
   @State mIsPlaying : Boolean = false
   @State mIsLive : Boolean = false
+  @State mToastMarginValue : number = 0
+  @State mToastViewWidth : Length = '70%'
+  @State mCurrentModel : QMediaModel | null = null
   @State mPlayerContext : QIPlayerContext = QPlayerContextFactory.createPlayerContext(
     QLogLevel.LOG_INFO,
     (AppStorage.get("context") as Context).filesDir,
     bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).versionName,
     "")
 
+  private mQualityListener: QIPlayerQualityListener = {
+    onQualitySwitchStart:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {
+
+      this.addToastView(`开始切换清晰度：new : ${newQuality.valueOf()} old : ${oldQuality.valueOf()}`)
+    },
+
+    onQualitySwitchComplete:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {
+      this.addToastView(`切换清晰度成功：new : ${newQuality.valueOf()} old : ${oldQuality.valueOf()}`)
+      },
+
+    onQualitySwitchCanceled:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {
+
+      this.addToastView(`取消切换清晰度：new : ${newQuality.valueOf()} old : ${oldQuality.valueOf()}`)
+    },
+
+    onQualitySwitchFailed:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {
+
+      this.addToastView(`切换清晰度失败：new : ${newQuality.valueOf()} old : ${oldQuality.valueOf()}`)
+      },
+
+    onQualitySwitchRetryLater:(context : QIPlayerContext ,  usertype: string , urlType: QPlayerUrlType ) => {
+
+      this.addToastView(`不可重复切换清晰度`)
+    }
+
+  }
   private mAuthenticationListener : QIPlayerAuthenticationListener = {
     onAuthenticationFailed:(context: QIPlayerContext, error:QPlayerAuthenticationErrorType)=>{
       this.addToastView(`鉴权失败：${error.valueOf()}`)
@@ -53,16 +95,37 @@ struct QLongVideoView {
       this.addToastView("鉴权成功")
     }
   }
+  private mShootVideoListener : QIPlayerShootVideoListener = {
+    onShootSuccessful:(context : QIPlayerContext, imageData:Uint8Array, width:number, height:number, type: QPlayerShootVideoType) => {
+      if (type == QPlayerShootVideoType.JPEG) {
+        this.addToastView("截图成功 格式 jpeg")
+      }else {
+        this.addToastView("截图成功 格式 none")
+      }
+    },
+
+    onShootFailed:(context : QIPlayerContext) => {
+      this.addToastView("截图失败")
+    }
+  }
   private mBiteRateListener : QIPlayerBiteRateListener = {
     onBiteRateChanged:(context:QIPlayerContext, bitrate:number)=>{}
   }
   private mBufferingListener : QIPlayerBufferingListener = {
     onBufferingStart:(context:QIPlayerContext)=>{
-      this.addToastView("start buffer")
+      // this.addToastView("start buffer")
     },
 
-    onBufferingEnd:(context: QIPlayerContext)=>{
-      this.addToastView("end buffer")}
+    onBufferingEnd:(context: QIPlayerContext)=> {
+      // this.addToastView("end buffer")
+    }
+  }
+  private mVideoFrameSizeChangedListener : QIPlayerVideoFrameSizeChangeListener ={
+
+    onVideoFrameSizeChanged:(context : QIPlayerContext, width: number, height:number ) => {
+
+      this.addToastView("推流宽高变化 : width " + width + "height : " + height)
+    }
   }
   private mCommandNotAllowListener : QIPlayerCommandNotAllowListener = {
     onCommandNotAllow:(context:QIPlayerContext, commandName:string, state:QPlayerState)=>{}
@@ -70,6 +133,36 @@ struct QLongVideoView {
   private mFormatListener : QIPlayerFormatListener = {
     onFormatNotSupport:(context:QIPlayerContext)=>{
       this.addToastView("onFormatNotSupport")
+    }
+  }
+  private mPlaySpeed : QIPlayerSpeedListener = {
+    onSpeedChanged:(context : QIPlayerContext, speed:number)=>{
+      this.addToastView(`播放速度 : ${speed}`)
+    }
+  }
+  private mSEIListener: QIPlayerSEIDataListener = {
+
+    onSEIData:(context:QIPlayerContext, data:Uint8Array)=> {
+      let seiData = data
+      let uuid :Uint8Array
+      if (data.byteLength > 16) {
+        let uuid :Uint8Array = seiData.slice(0,16)
+        seiData = seiData.slice(16,seiData.length)
+        let uuidStr : string = ""
+        uuid.forEach((value : number , index : number) =>{
+          let secondValue = value % 16
+          let firstValue = (value - secondValue) / 16
+          uuidStr += QDecimalToHexHelper.decimalToHex(firstValue)
+          uuidStr += QDecimalToHexHelper.decimalToHex(secondValue)
+          if (index == 3 || index == 5 || index == 7 || index == 9) {
+            uuidStr += "-"
+          }
+        })
+        this.addToastView(uuidStr)
+      }
+      const textDecoder = util.TextDecoder.create("utf-8")
+      let seiStr : string =  textDecoder.decodeWithStream(seiData, { stream: false })
+      this.addToastView(seiStr.toString())
     }
   }
 
@@ -95,6 +188,32 @@ struct QLongVideoView {
 
     onSeekFailed:(context : QIPlayerContext) => {
       this.addToastView(`seek 失败`)
+    }
+  }
+
+  private mDecoderTypeListener : QIPlayerVideoDecodeListener = {
+    onVideoDecodeByType:(context : QIPlayerContext , Type: QPlayerDecoderType) => {
+      switch (Type){
+        case QPlayerDecoderType.NONE:
+          this.addToastView(`解码方式 : NONE`)
+          break
+        case QPlayerDecoderType.HARDWARE:
+          this.addToastView(`解码方式 : 硬解`)
+          break
+        case QPlayerDecoderType.SOFTWARE:
+          this.addToastView(`解码方式 : 软解`)
+          break
+        default :
+          this.addToastView(`解码方式 : 未知`)
+          break
+      }
+  },
+
+    onDecodeFailed:(context : QIPlayerContext , retry: boolean) => {
+      this.addToastView(`解码失败 ： retry ${retry}`)
+    },
+    onNotSupportCodecFormat:(context : QIPlayerContext , codec: number) => {
+      this.addToastView(`解码格式不支持 ： codec ${codec}`)
     }
   }
 
@@ -127,7 +246,12 @@ struct QLongVideoView {
           mMediaModel : this.mMediaModel,
           mPlayerContext : this.mPlayerContext,
           mIsPlaying : this.mIsPlaying,
-          mIsLive : this.mIsLive
+          mIsLive : this.mIsLive,
+          mQPlayerSettingModel : this.mQPlayerSetting,
+          mCurrentModel : this.mCurrentModel,
+          mShootImageCallBack : (value)=>{
+            this.addToastView(value)
+          }
         })
           .alignRules({
             left: { anchor: "__container__", align: HorizontalAlign.Start },
@@ -153,7 +277,9 @@ struct QLongVideoView {
             mMediaModel : this.mMediaModel,
             mPlayerContext : this.mPlayerContext,
             mIsPlaying : this.mIsPlaying,
-            mIsLive : this.mIsLive
+            mIsLive : this.mIsLive,
+            mQPlayerSettingModel : this.mQPlayerSetting,
+            mCurrentModel : this.mCurrentModel
           })
             .backgroundColor($r('app.color.long_video_url_list_view_background_color'))
             .width('100%')
@@ -167,14 +293,15 @@ struct QLongVideoView {
 
           QPlayerToastView({mToastText : this.mToastText, mDeviceOrientation : this.mDeviceOrientation})
             .backgroundColor($r('app.color.hyaline_background_color'))
-            .width('70%')
+            .width(this.mToastViewWidth)
             .height('70%')
             .alignRules({
               left:{anchor : "__container__", align : HorizontalAlign.Start},
               bottom : {anchor : "__container__", align : VerticalAlign.Bottom}
             })
             .margin({
-              left: 5
+              left: 5,
+              bottom : this.mToastMarginValue
             })
             .id("qplayer_toast_view")
             .enabled(false)
@@ -231,7 +358,8 @@ struct QLongVideoView {
       this.mQPlayerViewFrameTop = "__container__"
       this.mQPlayerViewFrameTopAlign = VerticalAlign.Top
       windowStage.getMainWindowSync().setWindowBackgroundColor("#ff000000")
-
+      this.mToastMarginValue = 50
+      this.mToastViewWidth = '35%'
     }
     //竖屏
     else if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {
@@ -243,6 +371,8 @@ struct QLongVideoView {
       this.mQPlayerViewFrameTop = "title_view_row"
       this.mQPlayerViewFrameTopAlign = VerticalAlign.Bottom
       windowStage.getMainWindowSync().setWindowBackgroundColor("#ffffffff")
+      this.mToastMarginValue = 0
+      this.mToastViewWidth = '70%'
     }
   }
 
@@ -254,6 +384,12 @@ struct QLongVideoView {
     this.mPlayerContext.get_control_handler().addPlayerAuthenticationListener(this.mAuthenticationListener)
     this.mPlayerContext.get_control_handler().addPlayerFormatListener(this.mFormatListener)
     this.mPlayerContext.get_control_handler().addPlayerSeekListener(this.mSeekListener)
+    this.mPlayerContext.get_control_handler().addPlayerVideoDecodeTypeListener(this.mDecoderTypeListener)
+    this.mPlayerContext.get_control_handler().addPlayerSpeedChangeListener(this.mPlaySpeed)
+    this.mPlayerContext.get_control_handler().addPlayerQualityListener(this.mQualityListener)
+    this.mPlayerContext.get_control_handler().addPlayerSEIDataListener(this.mSEIListener)
+    this.mPlayerContext.get_control_handler().addPlayerShootVideoListener(this.mShootVideoListener)
+    this.mPlayerContext.get_control_handler().addPlayerVideoFrameSizeChangeListener(this.mVideoFrameSizeChangedListener)
   }
   //弹出toast，文本为text
   addToastView(text:String){

@@ -19,7 +19,16 @@
   ],
   "targets": [
     {
-      "name": "demo"
+      "name": "demo",
+      "config": {
+        "buildOption": {
+          "arkOptions": {
+            "buildProfileFields": {
+              "qplayer2_version": "1.5.0-preview4" //自定义要获取的sdk 版本信息
+            }
+          }
+        }
+      }
     },
     {
       "name": "ohosTest",

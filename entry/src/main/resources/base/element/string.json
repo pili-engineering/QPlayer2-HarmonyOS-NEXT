@@ -11,6 +11,10 @@
     {
       "name": "EntryAbility_label",
       "value": "QPlayer2demo"
+    },
+    {
+      "name": "reason",
+      "value": "保存截图内容到相册"
     }
   ]
 }

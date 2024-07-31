@@ -1,50 +1,59 @@
 [
     {
-        "name" : "1.点播-qiniu-2023.mp4",
+        "name" : "1.点播-qiniu-2023.mp4-本地文件",
         "isLive": 0,
         "streamElements": [
             {
                 "userType": "",
                 "urlType": 0,
-                "url": "http://demovideos.qiniushawn.top/qiniu-2023-1080p.mp4",
+                "url": "/data/storage/el1/bundle/qplayer2/resources/resfile/qiniu_2023_1080p.mp4",
                 "quality": 1080,
                 "isSelected": 1,
                 "backupUrl": "",
                 "referer": ""
-                
             }
         ]
     },
     {
-        "name" : "5.点播-纯音频-音频卡顿-wav",
-        "isLive": 0,
-        "streamElements": [
-            {
-                "userType": "",
-                "urlType": 1,
-                "url": "https://mdy-picture.tos-cn-beijing.volces.com/2023%2F09%2F04%2F0599764572694a0c929ca79efcc988b0.wav",
-                "quality": 0,
-                "isSelected": 1,
-                "backupUrl": "",
-                "referer": ""
-                
-            }
-        ]
-    },
-    {
-        "name" : "9.点播-https-mp4-25fps-端口443",
-        "isLive": 0,
-        "streamElements": [
-            {
-                "userType": "",
-                "urlType": 0,
-                "url": "https://img.qunliao.info:443/4oEGX68t_9505974551.mp4",
-                "quality": 360,
-                "isSelected": 1,
-                "backupUrl": "",
-                "referer": ""
-                
-            }
-        ]
-    }
+    "name" : "2.直播-6666",
+    "isLive": 1,
+    "streamElements": [
+        {
+            "userType": "",
+            "urlType": 0,
+            "url": "rtmp://pili-rtmp.qnsdk.com/sdk-live/6666",
+            "quality": 1080,
+            "isSelected": 1,
+            "backupUrl": "",
+            "referer": ""
+        },
+        {
+            "userType": "",
+            "urlType": 0,
+            "url": "rtmp://pili-rtmp.qnsdk.com/sdk-live/6666@zn720p",
+            "quality": 720,
+            "isSelected": 0,
+            "backupUrl": "",
+            "referer": ""
+        },
+        {
+            "userType": "",
+            "urlType": 0,
+            "url": "rtmp://pili-rtmp.qnsdk.com/sdk-live/6666@zn480p",
+            "quality": 480,
+            "isSelected": 0,
+            "backupUrl": "",
+            "referer": ""
+        },
+        {
+            "userType": "",
+            "urlType": 0,
+            "url": "rtmp://pili-rtmp.qnsdk.com/sdk-live/6666@zn240p",
+            "quality": 240,
+            "isSelected": 0,
+            "backupUrl": "",
+            "referer": ""
+        }
+    ]
+}
 ]

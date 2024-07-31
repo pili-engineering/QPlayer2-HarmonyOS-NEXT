@@ -1,6 +1,7 @@
 import { QIPlayerContext, QMediaModel } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerDemoMediaModel, QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QPlayerDemoStreamElement } from '../../model/longVideo/QPlayerDemoStreamElement'
+import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 
 
 class InnerSubtitleElement{
@@ -26,6 +27,8 @@ export struct QPlayerUrlListView{
   @Link mPlayerContext : QIPlayerContext
   @Link mIsPlaying : Boolean
   @Link mIsLive : Boolean
+  @Link mQPlayerSettingModel : QPlayerSettingModel
+  @Link mCurrentModel : QMediaModel | null
   @State @Watch('currentMediaModelIdChange') mCurrentPlayerMediaModelId : Number  = 0
   build() {
     Column(){
@@ -73,8 +76,8 @@ export struct QPlayerUrlListView{
     if (this.mCurrentPlayerMediaModelId == -1) {
       return
     }
-    this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel,0)
-
+    this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel, this.mQPlayerSettingModel.mPosition)
+    this.mCurrentModel = this.mMediaModel.mMediaModels[this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel
     this.mIsLive = this.mMediaModel.mMediaModels[this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel.isLive
   }
 }
