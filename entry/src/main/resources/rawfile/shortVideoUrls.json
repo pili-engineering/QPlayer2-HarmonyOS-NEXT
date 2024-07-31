@@ -136,7 +136,6 @@
     ]
   },
   {
-
     "isLive": 0,
     "coverImageName":"翻跟斗",
     "streamElements": [
@@ -144,23 +143,6 @@
         "userType": "",
         "urlType": 0,
         "url": "http://demovideos.qiniushawn.top/shortvideo/翻跟斗.mp4",
-        "quality": 360,
-        "isSelected": 1,
-        "backupUrl": "",
-        "referer": ""
-
-      }
-    ]
-  },
-  {
-
-    "isLive": 0,
-    "coverImageName":"迪斯尼",
-    "streamElements": [
-      {
-        "userType": "",
-        "urlType": 0,
-        "url": "http://demovideos.qiniushawn.top/shortvideo/迪斯尼.mp4",
         "quality": 360,
         "isSelected": 1,
         "backupUrl": "",

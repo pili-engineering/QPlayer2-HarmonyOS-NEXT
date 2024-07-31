@@ -1,11 +1,14 @@
+import { QIPlayerContext } from '@qiniu/qplayer2-core'
 import { QShortVideoMaskBottom } from './QShortVideoMaskBottom'
 
 @Component
 export struct QShortVideoMaskView{
+
+  public mPlayerContext : QIPlayerContext | null = null
   build() {
     Column() {
       RelativeContainer() {
-        QShortVideoMaskBottom()
+        QShortVideoMaskBottom({mPlayerContext : this.mPlayerContext})
           .height($r('app.float.long_video_bottom_view_height'))
           .alignRules({
             bottom : {anchor : "__container__" , align : VerticalAlign.Bottom},

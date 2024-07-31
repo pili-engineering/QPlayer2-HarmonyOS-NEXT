@@ -7,7 +7,7 @@ export class QPlayerDemoShortMediaModels{
   public mMediaModels : Array<QPlayerDemoShortMediaModel> = new Array()
   constructor(context :Context) {
     QUrlJsonReadWriteHelper.readShortVideoUrl(context,(url_models)=>{
-      this.mMediaModels = url_models
+      // this.mMediaModels = url_models
     })
   }
 }

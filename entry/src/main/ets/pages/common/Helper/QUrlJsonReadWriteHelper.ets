@@ -8,6 +8,7 @@ import map from '@hms.core.map.map';
 import {
   QPlayerDemoShortMediaModel,
   QPlayerDemoShortMediaModels } from '../../model/shortVideo/QPlayerDemoShortMediaModel';
+import { QNPlayItem } from '../../model/shortVideo/manager/QNPlayItem';
 
 interface  UrlJsonElementModel{
   userType: string
@@ -54,13 +55,13 @@ export class QUrlJsonReadWriteHelper{
     url_model_call_back(model.convertToArray())
   }
 
-  static readShortVideoUrl(context : Context,url_model_call_back :(url_models : Array<QPlayerDemoShortMediaModel>)=>void){
+  static readShortVideoUrl(context : Context,url_model_call_back :(url_models : ArrayList<QNPlayItem>)=>void){
     let value = context.resourceManager.getRawFileContentSync('shortVideoUrls.json')
     const url_decoder = util.TextDecoder.create("utf-8")
     let url_string = url_decoder.decodeWithStream(value, { stream: false })
     let url_jsons : Array<ShortVideoUrlJsonModel> = JSON.parse(url_string)
-    let model : ArrayList<QPlayerDemoShortMediaModel> = new ArrayList()
-    url_jsons.forEach(element=>{
+    let model : ArrayList<QNPlayItem> = new ArrayList()
+    url_jsons.forEach((element,value)=>{
       let elements : ArrayList<QPlayerDemoStreamElement> = new ArrayList()
       element.streamElements.forEach(stream_element=>{
         let inner_stream : QPlayerDemoStreamElement = new QPlayerDemoStreamElement(stream_element.userType,
@@ -72,8 +73,8 @@ export class QUrlJsonReadWriteHelper{
           stream_element.referer)
         elements.add(inner_stream)
       })
-      model.add(new QPlayerDemoShortMediaModel(element.coverImageName,QPlayerCreateMediaModelHelper.create(element.isLive,elements.convertToArray())))
+      model.add(new QNPlayItem(value,QPlayerCreateMediaModelHelper.create(element.isLive,elements.convertToArray()),element.coverImageName))
     })
-    url_model_call_back(model.convertToArray())
+    url_model_call_back(model)
   }
 }

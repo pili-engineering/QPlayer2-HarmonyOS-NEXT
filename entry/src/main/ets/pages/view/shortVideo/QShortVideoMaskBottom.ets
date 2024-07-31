@@ -15,7 +15,7 @@ export struct QShortVideoMaskBottom{
   @State mProgress : number = 0
   @State mDuration : number = 0
   // @Link mDeviceOrientation : window.Orientation
-  // @Link mPlayerContext : QIPlayerContext
+  public  mPlayerContext : QIPlayerContext | null = null
   @State mIsLive : Boolean = false
   @State mButtonMarginValue : number = 4
   private mIsSeeking : boolean = false
@@ -42,6 +42,8 @@ export struct QShortVideoMaskBottom{
       if (state == QPlayerState.PLAYING) {
         this.mIsPlaying = true
         this.mIsSeeking = false
+      }else {
+        this.mIsPlaying = false
       }
     }
   }
@@ -59,17 +61,17 @@ export struct QShortVideoMaskBottom{
         })
         .margin({right : this.mButtonMarginValue/2, left: this.mButtonMarginValue/2 })
         .onClick(() => {
-          // if (this.mIsPlaying) {
-          //   this.mIsPlaying = false
-          //   this.mPlayerContext.get_control_handler().pauseRender()
-          // }
-          // else if(this.mPlayerContext.get_control_handler().currentPlayerState == QPlayerState.COMPLETED) {
-          //   this.mPlayerContext.get_control_handler().seek(0)
-          // }
-          // else {
-          //   this.mIsPlaying = true
-          //   this.mPlayerContext.get_control_handler().resumeRender()
-          // }
+          if (this.mIsPlaying) {
+            this.mIsPlaying = false
+            this.mPlayerContext?.get_control_handler().pauseRender()
+          }
+          else if(this.mPlayerContext?.get_control_handler().currentPlayerState == QPlayerState.COMPLETED) {
+            this.mPlayerContext?.get_control_handler().seek(0)
+          }
+          else {
+            this.mIsPlaying = true
+            this.mPlayerContext?.get_control_handler().resumeRender()
+          }
         })
         .horizontalMaskButtonStyle()
         .id("play_button")
@@ -85,7 +87,7 @@ export struct QShortVideoMaskBottom{
           bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
         })
         .onClick(()=>{
-          // this.mPlayerContext.get_control_handler().stop()
+          this.mPlayerContext?.get_control_handler().stop()
         })
         .horizontalMaskButtonStyle()
         .id("stop_button")
@@ -118,7 +120,7 @@ export struct QShortVideoMaskBottom{
               this.mIsSeeking = true
             }
             else if (mode == SliderChangeMode.End || mode == SliderChangeMode.Click){
-              // this.mPlayerContext.get_control_handler().seek(value * 1000)
+              this.mPlayerContext?.get_control_handler().seek(value * 1000)
             }
           })
           .id('progress_slider')
@@ -185,8 +187,8 @@ export struct QShortVideoMaskBottom{
     .justifyContent(FlexAlign.Start)
   }
   aboutToAppear(): void {
-    // this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mQPlayerStateChangeListenrCallBack)
-    // this.mPlayerContext.get_control_handler().addPlayerProgressChangeListener(this.mProgressListener)
+    this.mPlayerContext?.get_control_handler().addPlayerStateListener(this.mQPlayerStateChangeListenrCallBack)
+    this.mPlayerContext?.get_control_handler().addPlayerProgressChangeListener(this.mProgressListener)
     // window.on('windowSizeChange', (size) => {
     //   let viewWidth = px2vp(size.width);
     //   let viewHeight = px2vp(size.height);
@@ -206,9 +208,12 @@ export struct QShortVideoMaskBottom{
     if (this.mIsPlaying) {
       this.mPlayControlButtonImage = $r('app.media.qn_pause')
     }
-    // else if(this.mPlayerContext.get_control_handler().currentPlayerState == QPlayerState.COMPLETED){
-    //   this.mPlayControlButtonImage = $r('app.media.qn_replay')
-    // }
+    else if(this.mPlayerContext?.get_control_handler().currentPlayerState == QPlayerState.COMPLETED){
+      this.mPlayControlButtonImage = $r('app.media.qn_replay')
+    }
+    else if(this.mPlayerContext?.get_control_handler().currentPlayerState == QPlayerState.SEEKING){
+
+    }
     else {
       this.mPlayControlButtonImage = $r('app.media.qn_play')
     }
