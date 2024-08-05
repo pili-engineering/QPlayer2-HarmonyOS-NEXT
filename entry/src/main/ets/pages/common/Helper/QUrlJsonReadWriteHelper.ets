@@ -4,10 +4,6 @@ import { ArrayList, util } from '@kit.ArkTS';
 import { QPlayerDemoMediaModel } from '../../model/longVideo/QPlayerDemoMediaModel';
 import { QPlayerCreateMediaModelHelper } from './QPlayerCreateMediaModelHelper';
 import { QPlayerDemoStreamElement } from '../../model/longVideo/QPlayerDemoStreamElement';
-import map from '@hms.core.map.map';
-import {
-  QPlayerDemoShortMediaModel,
-  QPlayerDemoShortMediaModels } from '../../model/shortVideo/QPlayerDemoShortMediaModel';
 import { QNPlayItem } from '../../model/shortVideo/manager/QNPlayItem';
 
 interface  UrlJsonElementModel{
