@@ -4,7 +4,7 @@ import { common } from '@kit.AbilityKit'
 import {
   QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
-import { QMaskBottom } from './QMaskBottom'
+import { QMaskBottom } from './QMaskButton'
 
 @Component
 export struct QMaskView{

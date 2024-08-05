@@ -127,7 +127,7 @@ export struct QMaskBottom{
 
         Text(this.mDurationTextString.valueOf())
           .alignRules({
-            right: { anchor: "full_screen_button", align: HorizontalAlign.Start },
+            right: { anchor: "mute_button", align: HorizontalAlign.Start },
             top: { anchor: "__container__", align: VerticalAlign.Top },
             bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
           })
@@ -137,31 +137,31 @@ export struct QMaskBottom{
           .fontColor($r('app.color.long_video_mask_font_color'))
           .id('duration_text')
 
-        // Button() {
-        //   Image(this.mMuteControlButtonImage)
-        //     .maskNormalImageStyle()
-        // }
-        // .margin({right : this.mButtonMarginValue/2, left: this.mButtonMarginValue/2 })
-        // .horizontalMaskButtonStyle()
-        // .onClick(() => {
-        //   if (!this.mIsMute) {
-        //     this.mIsMute = true
-        //     this.mMuteControlButtonImage = $r('app.media.qn_mute')
-        //     this.mPlayerContext.get_control_handler().setMute(true)
-        //   }
-        //   else {
-        //     this.mIsMute = false
-        //     this.mMuteControlButtonImage = $r('app.media.qn_not_mute')
-        //     this.mPlayerContext.get_control_handler().setMute(false)
-        //   }
-        // })
-        // .alignRules({
-        //   // left: { anchor: "progress_text", align: HorizontalAlign.End },
-        //   right: { anchor: "full_screen_button", align: HorizontalAlign.Start },
-        //   top: { anchor: "__container__", align: VerticalAlign.Top },
-        //   bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
-        // })
-        // .id("mute_button")
+        Button() {
+          Image(this.mMuteControlButtonImage)
+            .maskNormalImageStyle()
+        }
+        .margin({right : this.mButtonMarginValue/2, left: this.mButtonMarginValue/2 })
+        .horizontalMaskButtonStyle()
+        .onClick(() => {
+          if (!this.mIsMute) {
+            this.mIsMute = true
+            this.mMuteControlButtonImage = $r('app.media.qn_mute')
+            this.mPlayerContext.get_control_handler().setMute(true)
+          }
+          else {
+            this.mIsMute = false
+            this.mMuteControlButtonImage = $r('app.media.qn_not_mute')
+            this.mPlayerContext.get_control_handler().setMute(false)
+          }
+        })
+        .alignRules({
+          // left: { anchor: "progress_text", align: HorizontalAlign.End },
+          right: { anchor: "full_screen_button", align: HorizontalAlign.Start },
+          top: { anchor: "__container__", align: VerticalAlign.Top },
+          bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
+        })
+        .id("mute_button")
 
         Button() {
           Image($r('app.media.qn_full_screen'))
