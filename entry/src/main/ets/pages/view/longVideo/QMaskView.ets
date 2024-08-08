@@ -4,7 +4,7 @@ import { common } from '@kit.AbilityKit'
 import {
   QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
-import { QMaskBottom } from './QMaskButton'
+import { QMaskBottomView } from './QMaskBottomView'
 
 @Component
 export struct QMaskView{
@@ -137,7 +137,7 @@ export struct QMaskView{
           .fontSize(15)
           .id('switch_quality_button')
 
-        QMaskBottom({mDeviceOrientation : this.mDeviceOrientation,
+        QMaskBottomView({mDeviceOrientation : this.mDeviceOrientation,
                      mPlayerContext : this.mPlayerContext ,
                      mIsPlaying : this.mIsPlaying,
                     mIsLive : this.mIsLive})
