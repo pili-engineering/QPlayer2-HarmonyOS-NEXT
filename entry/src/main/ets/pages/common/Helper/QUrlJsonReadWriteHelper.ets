@@ -14,8 +14,10 @@ interface  UrlJsonElementModel{
   isSelected: boolean
   backupUrl: string
   referer: string
-  mp4QNDrmComKey : string
-  mp4QNDrmFileKey : string
+  hlsDrmKey?:string
+  mp4DrmKey? :string
+  mp4QNDrmComKey? : string
+  mp4QNDrmFileKey? : string
 }
 interface  UrlJsonModel{
   name : string
@@ -43,7 +45,11 @@ export class QUrlJsonReadWriteHelper{
           stream_element.quality,
           stream_element.isSelected,
           stream_element.backupUrl,
-          stream_element.referer)
+          stream_element.referer,
+          stream_element.hlsDrmKey?stream_element.hlsDrmKey : "",
+          stream_element.mp4DrmKey?stream_element.mp4DrmKey : "",
+          stream_element.mp4QNDrmComKey?stream_element.mp4QNDrmComKey : "",
+          stream_element.mp4QNDrmFileKey?stream_element.mp4QNDrmFileKey : "")
         elements.add(inner_stream)
       })
       model.add(new QPlayerDemoMediaModel(element.name,QPlayerCreateMediaModelHelper.create(element.isLive,elements.convertToArray())))
@@ -51,7 +57,7 @@ export class QUrlJsonReadWriteHelper{
     url_model_call_back(model.convertToArray())
   }
 
-  static readShortVideoUrl(context : Context,url_model_call_back :(url_models : ArrayList<QNPlayItem>)=>void){
+  static readShortVideoUrl(context : Context, url_model_call_back :(url_models : ArrayList<QNPlayItem>)=>void){
     let value = context.resourceManager.getRawFileContentSync('shortVideoUrls.json')
     const url_decoder = util.TextDecoder.create("utf-8")
     let url_string = url_decoder.decodeWithStream(value, { stream: false })
@@ -66,7 +72,8 @@ export class QUrlJsonReadWriteHelper{
           stream_element.quality,
           stream_element.isSelected,
           stream_element.backupUrl,
-          stream_element.referer)
+          stream_element.referer,
+          "","","","")
         elements.add(inner_stream)
       })
       model.add(new QNPlayItem(value,QPlayerCreateMediaModelHelper.create(element.isLive,elements.convertToArray()),element.coverImageName))
