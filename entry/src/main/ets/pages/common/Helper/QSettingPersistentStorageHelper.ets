@@ -47,7 +47,6 @@ export class QSettingPersistentStorageHelper{
     settingModel.mSEIEnable = seiEnable
     settingModel.mStartAction = startAction
     settingModel.mImmediately = immediately
-    console.log(`read settingModel.mPosition : ${settingModel.mPosition}`);
     return settingModel
   }
 

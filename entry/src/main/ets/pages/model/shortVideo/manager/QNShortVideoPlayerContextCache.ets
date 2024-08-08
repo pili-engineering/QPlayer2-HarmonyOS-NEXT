@@ -36,7 +36,6 @@ export class QNShortVideoPlayerContextCache{
     if (playItem != null) {
         let item : QIMediaItemContext | undefined = this.mMediaItemContextManager.fetchMediaItemContextById(playItem.mItemId)
         if (item != undefined) {
-          console.log(`down playMediaItem`)
           playerDown?.get_control_handler().playMediaItem(item!)
         }
     }
@@ -44,10 +43,8 @@ export class QNShortVideoPlayerContextCache{
     if (playItemUp != null) {
       let itemUp : QIMediaItemContext | undefined = this.mMediaItemContextManager.fetchMediaItemContextById(playItemUp.mItemId)
       if (itemUp != undefined) {
-        console.log(`up playMediaItem`)
         playerUp?.get_control_handler().playMediaItem(itemUp!)
       }else {
-        console.log(`up not playMediaItem`)
         playerUp?.get_control_handler().playMediaModel(playItemUp.mMediaModel,0)
       }
     }
