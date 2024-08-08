@@ -5,7 +5,7 @@ import { QTimestampHelper } from '../../common/helper/QTimestampHelper'
 import { common } from '@kit.AbilityKit'
 
 @Component
-export struct QShortVideoMaskBottom{
+export struct QShortVideoMaskBottomView{
   @State mPlayControlButtonImage:Resource = $r('app.media.qn_play')
   @State mMuteControlButtonImage:Resource = $r('app.media.qn_not_mute')
   @State @Watch('mIsPlayingChange') mIsPlaying : Boolean = false
