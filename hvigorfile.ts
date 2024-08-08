@@ -11,10 +11,16 @@ hvigor.nodesEvaluated(() => {
     let currentTime = date.toLocaleString('zh-cn');
 
     appJson5.app.vendor = currentTime;
+    appJson5.app.versionName = "{1.5.0_preview4}";
 
-    appContext.setAppJsonOpt(appJson5);
+    if (appContext.getBuildMode() === 'debug') {
+        appJson5.app.asanEnabled = true;
+    } else {
+        appJson5.app.asanEnabled = false;
+    }
+
+    appContext.setAppJsonOpt(appJson5)
 });
-
 export default {
     system: appTasks,  /* Built-in plugin of Hvigor. It cannot be modified. */
     plugins:[]         /* Custom plugin to extend the functionality of Hvigor. */
