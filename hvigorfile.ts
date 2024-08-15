@@ -11,14 +11,13 @@ hvigor.nodesEvaluated(() => {
     let currentTime = date.toLocaleString('zh-cn');
 
     appJson5.app.vendor = currentTime;
-    appJson5.app.versionName = "{1.5.0_preview4}";
+    appJson5.app.versionName = "{1.5.0_beta1}";
 
     if (appContext.getBuildMode() === 'debug') {
         appJson5.app.asanEnabled = true;
     } else {
         appJson5.app.asanEnabled = false;
     }
-
     appContext.setAppJsonOpt(appJson5)
 });
 export default {
