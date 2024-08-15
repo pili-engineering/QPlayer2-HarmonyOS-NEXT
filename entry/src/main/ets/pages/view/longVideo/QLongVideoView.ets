@@ -319,6 +319,8 @@ struct QLongVideoView {
   }
 
   aboutToAppear(): void {
+    let mContext : Context = AppStorage.get('context') as Context
+    this.mPlayerContext.init(mContext, getContext(this) as common.UIAbilityContext)
     this.listener.on('change', (mediaQueryResult:mediaquery.MediaQueryResult) => { this.onPortrait(mediaQueryResult) });
     this.addAllQPlayerListeners()
   }

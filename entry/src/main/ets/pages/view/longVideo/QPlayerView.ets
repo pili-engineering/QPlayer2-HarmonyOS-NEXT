@@ -9,7 +9,13 @@ import {QSurfaceRenderView,QIPlayerContext,
   QIPlayerBufferingListener,
   QMediaModel,
   QIPlayerShootVideoListener,
-  QPlayerShootVideoType
+  QPlayerShootVideoType,
+  QIPlayerVideoDataListener,
+  QIPlayerAudioDataListener,
+  QSampleFormat,
+  QChannelLayout,
+  QVideoType,
+  QIPlayerRenderListener
 } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QMaskSettingView } from './QMaskSettingView'
@@ -29,12 +35,7 @@ export struct QPlayerView{
   private mQPlayerMaskTimerCount : Number = 0
   private mQPlayerMaskTimerId : Number = 0
   private mQPlayerIsMaskTimerStart : Boolean = false
-
-  private mQPlayerShootTimerCount : Number = 0
-  private mQPlayerShootTimerId : Number = 0
-  private mQPlayerIsShootTimerStart : Boolean = false
   @State mShootViewVisible : Visibility = Visibility.Hidden
-  // @Link PlayerSettingViewModel: QPlayerSettingViewModel
   @State mMaskVisible : Visibility = Visibility.Visible
   @State @Watch("settingViewVisibleChange") mSettingViewVisible : Visibility = Visibility.Hidden
   @State @Watch("playSpeedViewVisibleChange") mPlaySpeedViewVisible : Visibility = Visibility.Hidden
@@ -52,14 +53,36 @@ export struct QPlayerView{
   @State mShootSaveButtonOptions : SaveButtonOptions = {text : SaveDescription.SAVE_IMAGE,buttonType: ButtonType.Capsule}
   private mShootImageCallBack : (value : string)=>void = (value : string)=>{};
   private mShootImageBuffer : ArrayBuffer | null = null
+  private mVideoDataSaveFileName : string = "/videoOrAudioDataFile/video"
+  @State mVideoDataSaveTimes : number = 0
+  private mAudioDataSaveFileName : string = "/videoOrAudioDataFile/audio"
+  @State mAudioDataSaveTimes : number = 0
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
+
       if (state == QPlayerState.PLAYING) {
         this.mIsPlaying = true
       }
       else {
         this.mIsPlaying = false
       }
+    }
+  }
+  private mFirstFrameListener : QIPlayerRenderListener = {
+
+    onFirstFrameRendered:(context : QIPlayerContext, elapsedTime:number) => {
+      let pathDir = (AppStorage.get("context") as Context).filesDir + this.mVideoDataSaveFileName;
+      if (fileIo.accessSync(pathDir + ".yuv")) {
+        fileIo.unlinkSync(pathDir + ".yuv")
+      }else if (fileIo.accessSync(pathDir + ".rgba")){
+        fileIo.unlinkSync(pathDir + ".rgba")
+      }
+      this.mVideoDataSaveTimes = 0
+      pathDir = (AppStorage.get("context") as Context).filesDir + this.mAudioDataSaveFileName;
+      if (fileIo.accessSync(pathDir + ".raw")){
+        fileIo.unlinkSync(pathDir + ".raw")
+      }
+      this.mAudioDataSaveTimes = 0
     }
   }
   private mShootVideoListener : QIPlayerShootVideoListener = {
@@ -74,7 +97,6 @@ export struct QPlayerView{
         }
         //浅拷贝
         this.mShootImagePixelMap = pixelMap
-        // this.shootVisibleTimeChange()
         this.mShootViewVisible = Visibility.Visible
         this.mShootImageBuffer = buffer as ArrayBuffer
       }
@@ -82,6 +104,65 @@ export struct QPlayerView{
 
     onShootFailed:(context : QIPlayerContext) => {
     }
+  }
+
+  private mVideoDataListener : QIPlayerVideoDataListener = {
+    onVideoData:(context : QIPlayerContext, width: number, height: number, videoType: QVideoType, buffer: Uint8Array) => {
+      if (videoType == QVideoType.NV12 || videoType == QVideoType.YUV_420P) {
+        if (this.mVideoDataSaveTimes == 100) {
+          return
+        }else {
+          this.mVideoDataSaveTimes ++
+        }
+        let fileName= this.mVideoDataSaveFileName +".yuv";
+        let pathDir = (AppStorage.get("context") as Context).filesDir;
+        let fileStr:string=pathDir+fileName;
+        let destFile = fileIo.openSync(fileStr, fileIo.OpenMode.READ_WRITE | fileIo.OpenMode.CREATE|fileIo.OpenMode.APPEND);//若不存在则创建,追加写入
+        // 写入至目的文件
+        let buf:ArrayBufferLike= buffer.buffer;
+        if (buffer.length > 0) {
+          fileIo.writeSync(destFile.fd, buf);
+        }
+        fileIo.closeSync(destFile); // 关闭文件
+      }
+      else if (videoType == QVideoType.RGBA){
+        if (this.mVideoDataSaveTimes == 100) {
+          return
+        }else {
+          this.mVideoDataSaveTimes ++
+        }
+        let fileName= this.mVideoDataSaveFileName +".rgba";
+        let pathDir = (AppStorage.get("context") as Context).filesDir;
+        let fileStr:string=pathDir+fileName;
+        let destFile = fileIo.openSync(fileStr, fileIo.OpenMode.READ_WRITE | fileIo.OpenMode.CREATE|fileIo.OpenMode.APPEND);//若不存在则创建,追加写入
+        // 写入至目的文件
+        let buf:ArrayBufferLike= buffer.buffer;
+        if (buffer.length > 0) {
+          fileIo.writeSync(destFile.fd, buf);
+        }
+        fileIo.closeSync(destFile); // 关闭文件
+      }
+    }
+  }
+  private mAudioDataListener : QIPlayerAudioDataListener = {
+    onAudioData:(context : QIPlayerContext, sampleRate: number, format:QSampleFormat, channelNum: number, channelLayout: QChannelLayout, data:Uint8Array)=>{
+      if (this.mAudioDataSaveTimes == 100) {
+        return
+      }else {
+        this.mAudioDataSaveTimes ++
+      }
+      let fileName= this.mAudioDataSaveFileName +".raw";
+      let pathDir = (AppStorage.get("context") as Context).filesDir;
+      let fileStr:string=pathDir+fileName;
+      let destFile = fileIo.openSync(fileStr, fileIo.OpenMode.READ_WRITE | fileIo.OpenMode.CREATE|fileIo.OpenMode.APPEND);//若不存在则创建,追加写入
+      // 写入至目的文件
+      let buf:ArrayBufferLike= data.buffer;
+      if (data.length > 0) {
+        fileIo.writeSync(destFile.fd, buf);
+      }
+      fileIo.closeSync(destFile); // 关闭文件
+    }
+
   }
   saveImage(buffer: ArrayBuffer | string) {
     let context = getContext(this) as common.UIAbilityContext;
@@ -131,7 +212,6 @@ export struct QPlayerView{
             })
         )
         .id('qplayer_render_view')
-
         Text("Bufferring .......")
           .width('100%')
           .height('100%')
@@ -310,8 +390,6 @@ export struct QPlayerView{
   }
   aboutToAppear(): void {
     this.maskVisibleTimerChange()
-    let mContext : Context = AppStorage.get('context') as Context
-    this.mPlayerContext.init(mContext, getContext(this) as common.UIAbilityContext)
     this.mPlayerContext.get_control_handler().setSeekMode(this.mQPlayerSettingModel.mSeekMode)
     if (this.mQPlayerSettingModel.mBackgroundPlay == 0) {
       this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(false)
@@ -327,6 +405,20 @@ export struct QPlayerView{
     this.mPlayerContext.get_render_handler().setRenderRatio(this.mQPlayerSettingModel.mRenderRatio)
     this.mPlayerContext.get_render_handler().setBlindType(this.mQPlayerSettingModel.mBlinderType)
     this.mPlayerContext.get_control_handler().setStartAction(this.mQPlayerSettingModel.mStartAction)
+    this.mPlayerContext.get_control_handler().addPlayerVideoDataListener(this.mVideoDataListener)
+    this.mPlayerContext.get_control_handler().addPlayerAudioDataListener(this.mAudioDataListener)
+    this.mPlayerContext.get_render_handler().addPlayerRenderListener(this.mFirstFrameListener)
+
+    //此处开启音视频回调，会将音视频数据存储到沙河目录的 videoOrAudioDataFile 下的 video.yuv / video.rgba 和 audio.raw
+    //每次切集会删除保存的音视频回调数据，并重新保存当前视频的前一百帧数据
+    //具体的实现方式见 mAudioDataListener 和 mVideoDataListener 以及 mFirstFrameListener 的 文件操作
+    // this.mPlayerContext.get_control_handler().setVideoDataEnable(true)
+    // this.mPlayerContext.get_control_handler().setAudioDataEnable(true)
+    // this.mPlayerContext.get_control_handler().setVideoDataType(QVideoType.RGBA)
+    if (!fileIo.accessSync((AppStorage.get("context") as Context).filesDir + "/videoOrAudioDataFile")){
+      fileIo.mkdirSync((AppStorage.get("context") as Context).filesDir + "/videoOrAudioDataFile")
+    }
+    this.mVideoDataSaveTimes = 0
     this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel, this.mQPlayerSettingModel.mPosition)
     this.mCurrentModel = this.mMediaModel.mMediaModels[0].mMediaModel
     if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_0_5) {
@@ -372,28 +464,7 @@ export struct QPlayerView{
       this.mMaskVisible = Visibility.Hidden
     }
   }
-  // shootVisibleTimeChange(){
-  //   if (this.mQPlayerIsShootTimerStart == true){
-  //     this.mQPlayerShootTimerCount = 0
-  //   }else {
-  //     this.mShootViewVisible = Visibility.Visible
-  //     this.mQPlayerIsShootTimerStart = true;
-  //     this.mQPlayerShootTimerId = setInterval(() => {
-  //       this.mQPlayerShootTimerCount = this.mQPlayerShootTimerCount.valueOf() + 1
-  //       if (this.mQPlayerShootTimerCount.valueOf() == 7) {
-  //         this.stopShootViewTimer()
-  //       }
-  //     }, 700)
-  //   }
-  // }
-  // stopShootViewTimer(){
-  //   clearInterval(this.mQPlayerShootTimerId.valueOf())
-  //   this.mShootImagePixelMap?.release()
-  //   this.mShootImagePixelMap = null
-  //   this.mQPlayerShootTimerCount = 0
-  //   this.mQPlayerIsShootTimerStart = false
-  //   this.mShootViewVisible = Visibility.Hidden
-  // }
+
   stopMaskTimer(){
     clearInterval(this.mQPlayerMaskTimerId.valueOf())
     this.mQPlayerMaskTimerCount = 0
