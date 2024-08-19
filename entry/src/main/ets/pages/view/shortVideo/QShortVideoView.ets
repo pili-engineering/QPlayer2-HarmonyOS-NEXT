@@ -3,6 +3,7 @@ import {
   QIMediaItemContext,
   QIMediaItemStateChangeListener,
   QIPlayerContext,
+  QIPlayerRenderListener,
   QIPlayerStateChangeListener,
   QLogLevel,
   QMediaItemState,
@@ -21,6 +22,7 @@ import { Context } from '@ohos.arkui.UIContext'
 import { QShortVideoDataSource } from '../../model/shortVideo/QShortVideoDataSource'
 import { QNPlayItemManager } from '../../model/shortVideo/manager/QNPlayItemManager'
 import { QNShortVideoPlayerContextCache } from '../../model/shortVideo/manager/QNShortVideoPlayerContextCache'
+import { ArrayList } from '@kit.ArkTS'
 
 @Entry
 @Component
@@ -35,6 +37,9 @@ struct QShortVideoView {
   @State mDeviceOrientation :window.Orientation = window.Orientation.PORTRAIT
   private swiperController: SwiperController = new SwiperController()
   private mPlayItemManager : QNPlayItemManager = new QNPlayItemManager()
+  private mCoverImage : ArrayList<ResourceStr> = new ArrayList<ResourceStr>()
+  @State mShowCoverImage : ArrayList<ResourceStr> = new ArrayList<ResourceStr>()
+  @State mShowCoverImageVisible : ArrayList<Visibility> = new ArrayList<Visibility>()
   private mShortVideoPlayerViewCache : QNShortVideoPlayerContextCache = new QNShortVideoPlayerContextCache(this.mPlayItemManager, (AppStorage.get("context") as Context).filesDir)
   @State mQShortVideoDataSource : QShortVideoDataSource = new QShortVideoDataSource([
     QPlayerContextFactory.createPlayerContext(
@@ -83,6 +88,20 @@ struct QShortVideoView {
       }
     }
   }
+  private mQPlayerRenderListener : QIPlayerRenderListener ={
+    onFirstFrameRendered:(context : QIPlayerContext, elapsedTime:number) => {
+      if (context == this.mQShortVideoDataSource.getData(this.mCurrentViewNumber)) {
+        this.mShowCoverImageVisible[(this.mCurrentNumber) % this.mQShortVideoDataSource.totalCount()] = Visibility.Hidden
+
+        if (this.mCurrentNumber-1 >= 0) {
+          this.mShowCoverImageVisible[(this.mCurrentNumber-1) % this.mQShortVideoDataSource.totalCount()] = Visibility.Visible
+        }
+        this.mShowCoverImageVisible[(this.mCurrentNumber+1) % this.mQShortVideoDataSource.totalCount()] = Visibility.Visible
+      }else {
+
+      }
+    }
+  }
   @State mCurrentNumber : number = 0
   private mCurrentViewNumber : number = 0
   build() {
@@ -118,6 +137,17 @@ struct QShortVideoView {
                   bottom : {anchor : "__container__", align : VerticalAlign.Bottom}
                 })
                 .id("qplayer_short_video_QSurfaceRenderView")
+              Image(this.mShowCoverImage[value])
+                .height("100%")
+                .width("100%")
+                .alignRules({
+                  left:{anchor : "__container__", align : HorizontalAlign.Start},
+                  bottom : {anchor : "__container__", align : VerticalAlign.Bottom}
+                })
+                .margin({top : 8})
+                .objectFit(ImageFit.Auto)
+                .visibility(this.mShowCoverImageVisible[value])
+                .id("qplayer_short_video_image")
               QShortVideoMaskView({mPlayerContext : item})
                 .alignRules({
                   left:{anchor : "__container__", align : HorizontalAlign.Start},
@@ -142,6 +172,7 @@ struct QShortVideoView {
           .onAppear(()=>{
             this.mShortVideoPlayerViewCache.playMediaItemContextById(0,this.mQShortVideoDataSource.getData(0))
             this.mShortVideoPlayerViewCache.changePosition(0,this.mQShortVideoDataSource.getData(1),null)
+            this.mQShortVideoDataSource.getData(0)?.get_render_handler().addPlayerRenderListener(this.mQPlayerRenderListener)
             this.mQShortVideoDataSource.getData(0)?.get_control_handler().addPlayerStateListener(this.mQPlayerStateListener)
           })
           .onChange((value : number)=>{
@@ -162,12 +193,20 @@ struct QShortVideoView {
               this.mCurrentNumber --
             }
             this.mCurrentViewNumber = value
-            this.mPlayerContext = this.mQShortVideoDataSource.getData(value)
-            this.mQShortVideoDataSource.getData((value - 1)%this.mQShortVideoDataSource.totalCount())?.get_control_handler().removePlayerStateListener(this.mQPlayerStateListener)
-            this.mQShortVideoDataSource.getData((value + 1)%this.mQShortVideoDataSource.totalCount())?.get_control_handler().removePlayerStateListener(this.mQPlayerStateListener)
-            this.mQShortVideoDataSource.getData(value)?.get_control_handler().addPlayerStateListener(this.mQPlayerStateListener)
-            this.mShortVideoPlayerViewCache.changePosition(this.mCurrentNumber,this.mQShortVideoDataSource.getData((value + 1)%this.mQShortVideoDataSource.totalCount()),this.mQShortVideoDataSource.getData((value - 1)%this.mQShortVideoDataSource.totalCount()))
-            this.mQShortVideoDataSource.getData(value)?.get_control_handler().resumeRender()
+            if (this.mCurrentNumber-1 >= 0) {
+              this.mShowCoverImage[(this.mCurrentNumber-1) % this.mQShortVideoDataSource.totalCount()] = this.mCoverImage[this.mCurrentNumber-1]
+            }
+            this.mShowCoverImage[(this.mCurrentNumber+1) % this.mQShortVideoDataSource.totalCount()] = this.mCoverImage[this.mCurrentNumber + 1]
+            this.mShowCoverImage[(this.mCurrentNumber) % this.mQShortVideoDataSource.totalCount()] = this.mCoverImage[this.mCurrentNumber]
+            this.mPlayerContext = this.mQShortVideoDataSource.getData(this.mCurrentNumber%this.mQShortVideoDataSource.totalCount())
+            this.mQShortVideoDataSource.getData((this.mCurrentNumber - 1)%this.mQShortVideoDataSource.totalCount())?.get_control_handler().removePlayerStateListener(this.mQPlayerStateListener)
+            this.mQShortVideoDataSource.getData((this.mCurrentNumber + 1)%this.mQShortVideoDataSource.totalCount())?.get_control_handler().removePlayerStateListener(this.mQPlayerStateListener)
+            this.mQShortVideoDataSource.getData((this.mCurrentNumber + 1)%this.mQShortVideoDataSource.totalCount())?.get_render_handler().addPlayerRenderListener(this.mQPlayerRenderListener)
+            this.mQShortVideoDataSource.getData((this.mCurrentNumber + 1)%this.mQShortVideoDataSource.totalCount())?.get_render_handler().addPlayerRenderListener(this.mQPlayerRenderListener)
+            this.mQShortVideoDataSource.getData(this.mCurrentNumber%this.mQShortVideoDataSource.totalCount())?.get_control_handler().addPlayerStateListener(this.mQPlayerStateListener)
+            this.mQShortVideoDataSource.getData(this.mCurrentNumber%this.mQShortVideoDataSource.totalCount())?.get_render_handler().addPlayerRenderListener(this.mQPlayerRenderListener)
+            this.mShortVideoPlayerViewCache.changePosition(this.mCurrentNumber,this.mQShortVideoDataSource.getData((this.mCurrentNumber + 1)%this.mQShortVideoDataSource.totalCount()),this.mQShortVideoDataSource.getData((this.mCurrentNumber - 1)%this.mQShortVideoDataSource.totalCount()))
+            this.mQShortVideoDataSource.getData(this.mCurrentNumber%this.mQShortVideoDataSource.totalCount())?.get_control_handler().resumeRender()
         })
           .height("100%")
           .width("100%")
@@ -197,6 +236,16 @@ struct QShortVideoView {
     .backgroundColor("#ff000000")
   }
   aboutToAppear(): void {
+    for (let index = 0 ; index < this.mPlayItemManager.count() ; index ++){
+      this.mCoverImage.add($r(`app.media.${this.mPlayItemManager.getOrNullById(index)?.mCoverUrl}`))
+    }
+    this.mShowCoverImage.add(this.mCoverImage[0])
+    this.mShowCoverImage.add(this.mCoverImage[1])
+    this.mShowCoverImage.add(this.mCoverImage[2])
+
+    this.mShowCoverImageVisible.add(Visibility.Visible)
+    this.mShowCoverImageVisible.add(Visibility.Visible)
+    this.mShowCoverImageVisible.add(Visibility.Visible)
   }
   onBackPress(): boolean | void {
     this.mShortVideoPlayerViewCache.stop()

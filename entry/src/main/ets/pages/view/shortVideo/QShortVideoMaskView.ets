@@ -1,6 +1,7 @@
 import { QIPlayerContext } from '@qiniu/qplayer2-core'
 import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QShortVideoMaskBottomView } from './QShortVideoMaskBottomView'
+import { QShortVideoStatusView } from './QShortVideoStatusView'
 
 @Component
 export struct QShortVideoMaskView{
@@ -9,8 +10,20 @@ export struct QShortVideoMaskView{
   build() {
     Column() {
       RelativeContainer() {
+
+        QShortVideoStatusView({mPlayerContext : this.mPlayerContext})
+          .height("150vp")
+          .alignRules({
+            top : {anchor : "__container__" , align : VerticalAlign.Top},
+            left : {anchor : "__container__" , align : HorizontalAlign.Start},
+            right : {anchor : "__container__" , align : HorizontalAlign.End}
+          })
+          .margin({top: 60})
+          .backgroundColor('#00000000')
+          .id('short_video_mask_status_view')
+
         QShortVideoMaskBottomView({mPlayerContext : this.mPlayerContext})
-          .height($r('app.float.long_video_bottom_view_height'))
+          .height("40vp")
           .alignRules({
             bottom : {anchor : "__container__" , align : VerticalAlign.Bottom},
             left : {anchor : "__container__" , align : HorizontalAlign.Start},

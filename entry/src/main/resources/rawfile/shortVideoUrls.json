@@ -36,7 +36,7 @@
   {
 
     "isLive": 0,
-    "coverImageName":"兔子",
+    "coverImageName":"rabbit",
     "streamElements": [
       {
         "userType": "",
@@ -53,7 +53,7 @@
   {
 
     "isLive": 0,
-    "coverImageName":"喷泉",
+    "coverImageName":"fountain",
     "streamElements": [
       {
         "userType": "",
@@ -70,7 +70,7 @@
   {
 
     "isLive": 0,
-    "coverImageName":"桃花",
+    "coverImageName":"peachBlossom",
     "streamElements": [
       {
         "userType": "",
@@ -87,7 +87,7 @@
   {
 
     "isLive": 0,
-    "coverImageName":"特效",
+    "coverImageName":"specialEffects",
     "streamElements": [
       {
         "userType": "",
@@ -104,7 +104,7 @@
   {
 
     "isLive": 0,
-    "coverImageName":"狗",
+    "coverImageName":"dog",
     "streamElements": [
       {
         "userType": "",
@@ -121,7 +121,7 @@
   {
 
     "isLive": 0,
-    "coverImageName":"猫",
+    "coverImageName":"cat",
     "streamElements": [
       {
         "userType": "",
@@ -137,7 +137,7 @@
   },
   {
     "isLive": 0,
-    "coverImageName":"翻跟斗",
+    "coverImageName":"somersault",
     "streamElements": [
       {
         "userType": "",
