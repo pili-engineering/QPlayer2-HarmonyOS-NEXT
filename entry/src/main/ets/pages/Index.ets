@@ -11,14 +11,12 @@ import { App } from '@kit.ArkUI';
 @Entry
 @Component
 struct Index {
-  private currentOrientation = window.Orientation.PORTRAIT
   @State color : ResourceColor = "#ff9d0808"
   @State installTime : string = new Date(bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).installTime).toLocaleString()
   @State updataTime : string = new Date(bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).updateTime).toLocaleString()
   build() {
     Row() {
       Column({space:20}) {
-
         Button("长视频")
           .width('70%')
           .height($r('app.float.index_button_height'))
