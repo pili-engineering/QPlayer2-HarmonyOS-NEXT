@@ -26,7 +26,8 @@ import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
   QIPlayerSEIDataListener,
   QIPlayerShootVideoListener,
   QPlayerShootVideoType,
-  QIPlayerVideoFrameSizeChangeListener} from '@qiniu/qplayer2-core/qplayer2-core'
+  QIPlayerVideoFrameSizeChangeListener,
+  QIPlayerAudioListener} from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QPlayerDecoderType } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerDecoderType'
 import { util } from '@kit.ArkTS'
@@ -118,6 +119,16 @@ struct QLongVideoView {
 
     onBufferingEnd:(context: QIPlayerContext)=> {
       // this.addToastView("end buffer")
+    }
+  }
+  private mAudioMuteListener : QIPlayerAudioListener ={
+
+    onMuteChanged:(context :QIPlayerContext , isMute:boolean)=>{
+      if (isMute) {
+        this.addToastView("开启静音")
+      }else {
+        this.addToastView("关闭静音")
+      }
     }
   }
   private mVideoFrameSizeChangedListener : QIPlayerVideoFrameSizeChangeListener ={
@@ -226,9 +237,6 @@ struct QLongVideoView {
             .width("100%")
             .height("100%")
             .id("title_view")
-            .onClick(()=>{
-              this.addToastView("测试")
-            })
         }
         .justifyContent(FlexAlign.Center)
         .width("100%")
@@ -389,6 +397,7 @@ struct QLongVideoView {
     this.mPlayerContext.get_control_handler().addPlayerVideoDecodeTypeListener(this.mDecoderTypeListener)
     this.mPlayerContext.get_control_handler().addPlayerSpeedChangeListener(this.mPlaySpeed)
     this.mPlayerContext.get_control_handler().addPlayerQualityListener(this.mQualityListener)
+    this.mPlayerContext.get_control_handler().addPlayerAudioListener(this.mAudioMuteListener)
     this.mPlayerContext.get_control_handler().addPlayerSEIDataListener(this.mSEIListener)
     this.mPlayerContext.get_control_handler().addPlayerShootVideoListener(this.mShootVideoListener)
     this.mPlayerContext.get_control_handler().addPlayerVideoFrameSizeChangeListener(this.mVideoFrameSizeChangedListener)
