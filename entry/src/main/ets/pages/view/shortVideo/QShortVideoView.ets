@@ -34,6 +34,7 @@ struct QShortVideoView {
   @State mToastText : String = ''
   @State mToastViewWidth : Length = '70%'
   @State mToastMarginValue : number = 0
+  @State mSwiperUp : boolean = false
   @State mDeviceOrientation :window.Orientation = window.Orientation.PORTRAIT
   private swiperController: SwiperController = new SwiperController()
   private mPlayItemManager : QNPlayItemManager = new QNPlayItemManager()
@@ -92,11 +93,6 @@ struct QShortVideoView {
     onFirstFrameRendered:(context : QIPlayerContext, elapsedTime:number) => {
       if (context == this.mQShortVideoDataSource.getData(this.mCurrentViewNumber)) {
         this.mShowCoverImageVisible[(this.mCurrentNumber) % this.mQShortVideoDataSource.totalCount()] = Visibility.Hidden
-
-        if (this.mCurrentNumber-1 >= 0) {
-          this.mShowCoverImageVisible[(this.mCurrentNumber-1) % this.mQShortVideoDataSource.totalCount()] = Visibility.Visible
-        }
-        this.mShowCoverImageVisible[(this.mCurrentNumber+1) % this.mQShortVideoDataSource.totalCount()] = Visibility.Visible
       }else {
 
       }
@@ -164,7 +160,9 @@ struct QShortVideoView {
           .autoPlay(false)
           .interval(4000)
           // .loop(true)
-          .loop(this.mCurrentNumber != 0 && this.mPlayItemManager.count()-this.mCurrentNumber > 3)
+          // .loop(this.mCurrentNumber != 0 && (this.mPlayItemManager.count()-this.mCurrentNumber > 3 || this.mSwiperUp))
+
+          .loop(this.mCurrentNumber != 0 && this.mPlayItemManager.count()-1 != this.mCurrentNumber)
           .duration(100)
           .itemSpace(10)
           .vertical(true)
@@ -185,19 +183,27 @@ struct QShortVideoView {
               if (this.mPlayItemManager.count() <= this.mCurrentNumber) {
                 return
               }
+              this.mSwiperUp = false
               this.mCurrentNumber ++
             }else {
               if (this.mCurrentNumber == 0) {
                 return
               }
+              this.mSwiperUp = true
               this.mCurrentNumber --
             }
             this.mCurrentViewNumber = value
             if (this.mCurrentNumber-1 >= 0) {
               this.mShowCoverImage[(this.mCurrentNumber-1) % this.mQShortVideoDataSource.totalCount()] = this.mCoverImage[this.mCurrentNumber-1]
             }
-            this.mShowCoverImage[(this.mCurrentNumber+1) % this.mQShortVideoDataSource.totalCount()] = this.mCoverImage[this.mCurrentNumber + 1]
+            if (this.mCurrentNumber+1 < this.mCoverImage.length) {
+              this.mShowCoverImage[(this.mCurrentNumber+1) % this.mQShortVideoDataSource.totalCount()] = this.mCoverImage[this.mCurrentNumber + 1]
+            }
             this.mShowCoverImage[(this.mCurrentNumber) % this.mQShortVideoDataSource.totalCount()] = this.mCoverImage[this.mCurrentNumber]
+
+            for (let index = 0; index < this.mShowCoverImageVisible.length; index++) {
+              this.mShowCoverImageVisible[index] = Visibility.Visible;
+            }
             this.mPlayerContext = this.mQShortVideoDataSource.getData(this.mCurrentNumber%this.mQShortVideoDataSource.totalCount())
             this.mQShortVideoDataSource.getData((this.mCurrentNumber - 1)%this.mQShortVideoDataSource.totalCount())?.get_control_handler().removePlayerStateListener(this.mQPlayerStateListener)
             this.mQShortVideoDataSource.getData((this.mCurrentNumber + 1)%this.mQShortVideoDataSource.totalCount())?.get_control_handler().removePlayerStateListener(this.mQPlayerStateListener)
