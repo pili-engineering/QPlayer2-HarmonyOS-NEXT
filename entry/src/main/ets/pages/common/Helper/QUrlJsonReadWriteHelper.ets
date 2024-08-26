@@ -1,10 +1,11 @@
 import { Context } from '@ohos.abilityAccessCtrl';
 import fileIo from '@ohos.file.fs';
-import { ArrayList, util } from '@kit.ArkTS';
+import { ArrayList, stream, util } from '@kit.ArkTS';
 import { QPlayerDemoMediaModel } from '../../model/longVideo/QPlayerDemoMediaModel';
 import { QPlayerCreateMediaModelHelper } from './QPlayerCreateMediaModelHelper';
 import { QPlayerDemoStreamElement } from '../../model/longVideo/QPlayerDemoStreamElement';
 import { QNPlayItem } from '../../model/shortVideo/manager/QNPlayItem';
+import { QPlayerDemoSubtitleElement } from '../../model/longVideo/QPlayerDemoSubtitleElement';
 
 interface  UrlJsonElementModel{
   userType: string
@@ -19,15 +20,22 @@ interface  UrlJsonElementModel{
   mp4QNDrmComKey? : string
   mp4QNDrmFileKey? : string
 }
+interface  UrlJsonSubtitleElementModel{
+  name: string;
+  url: string;
+  isSelected: boolean;
+}
 interface  UrlJsonModel{
   name : string
   isLive : boolean
   streamElements : Array<UrlJsonElementModel>
+  subtitleElements : Array<UrlJsonSubtitleElementModel>
 }
 interface  ShortVideoUrlJsonModel{
   coverImageName : string
   isLive : boolean
   streamElements : Array<UrlJsonElementModel>
+  subtitleElements : Array<UrlJsonSubtitleElementModel>
 }
 export class QUrlJsonReadWriteHelper{
   static readLongVideoUrl(context : Context,url_model_call_back :(url_models : Array<QPlayerDemoMediaModel>)=>void){
@@ -36,23 +44,36 @@ export class QUrlJsonReadWriteHelper{
     let url_string = url_decoder.decodeWithStream(value, { stream: false })
     let url_jsons : Array<UrlJsonModel> = JSON.parse(url_string)
     let model : ArrayList<QPlayerDemoMediaModel> = new ArrayList()
-    url_jsons.forEach(element=>{
+    url_jsons.forEach(element => {
       let elements : ArrayList<QPlayerDemoStreamElement> = new ArrayList()
-      element.streamElements.forEach(stream_element=>{
-        let inner_stream : QPlayerDemoStreamElement = new QPlayerDemoStreamElement(stream_element.userType,
-          stream_element.urlType.valueOf(),
-          stream_element.url,
-          stream_element.quality,
-          stream_element.isSelected,
-          stream_element.backupUrl,
-          stream_element.referer,
-          stream_element.hlsDrmKey?stream_element.hlsDrmKey : "",
-          stream_element.mp4DrmKey?stream_element.mp4DrmKey : "",
-          stream_element.mp4QNDrmComKey?stream_element.mp4QNDrmComKey : "",
-          stream_element.mp4QNDrmFileKey?stream_element.mp4QNDrmFileKey : "")
-        elements.add(inner_stream)
+      element.streamElements.forEach(stream=>{
+        let innerStream : QPlayerDemoStreamElement = new QPlayerDemoStreamElement(stream.userType,
+          stream.urlType.valueOf(),
+          stream.url,
+          stream.quality,
+          stream.isSelected,
+          stream.backupUrl,
+          stream.referer,
+          stream.hlsDrmKey?stream.hlsDrmKey : "",
+          stream.mp4DrmKey?stream.mp4DrmKey : "",
+          stream.mp4QNDrmComKey?stream.mp4QNDrmComKey : "",
+          stream.mp4QNDrmFileKey?stream.mp4QNDrmFileKey : "")
+        elements.add(innerStream)
       })
-      model.add(new QPlayerDemoMediaModel(element.name,QPlayerCreateMediaModelHelper.create(element.isLive,elements.convertToArray())))
+      let subtitleElements : ArrayList<QPlayerDemoSubtitleElement> = new ArrayList()
+      if (element.subtitleElements == undefined){
+        element.subtitleElements = new Array()
+      }
+      element.subtitleElements.forEach(subtitle => {
+        let innerSubtitle : QPlayerDemoSubtitleElement = new QPlayerDemoSubtitleElement(
+          subtitle.name,
+          subtitle.url,
+          subtitle.isSelected
+        )
+        subtitleElements.add(innerSubtitle)
+      })
+      model.add(new QPlayerDemoMediaModel(element.name,QPlayerCreateMediaModelHelper.create(element.isLive,elements.convertToArray(),subtitleElements.convertToArray())))
+
     })
     url_model_call_back(model.convertToArray())
   }
@@ -76,7 +97,16 @@ export class QUrlJsonReadWriteHelper{
           "","","","")
         elements.add(inner_stream)
       })
-      model.add(new QNPlayItem(value,QPlayerCreateMediaModelHelper.create(element.isLive,elements.convertToArray()),element.coverImageName))
+      let subtitleElements : ArrayList<QPlayerDemoSubtitleElement> = new ArrayList()
+      element.subtitleElements.forEach(subtitle => {
+        let innerSubtitle : QPlayerDemoSubtitleElement = new QPlayerDemoSubtitleElement(
+          subtitle.name,
+          subtitle.url,
+          subtitle.isSelected
+        )
+        subtitleElements.add(innerSubtitle)
+      })
+      model.add(new QNPlayItem(value,QPlayerCreateMediaModelHelper.create(element.isLive,elements.convertToArray(),subtitleElements.convertToArray()),element.coverImageName))
     })
     url_model_call_back(model)
   }

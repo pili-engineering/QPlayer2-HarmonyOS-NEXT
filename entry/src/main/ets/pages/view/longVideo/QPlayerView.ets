@@ -16,7 +16,8 @@ import {QSurfaceRenderView,QIPlayerContext,
   QChannelLayout,
   QVideoType,
   QIPlayerRenderListener,
-  QPlayerState
+  QPlayerState,
+  QIPlayerSubtitleListener
 } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QMaskSettingView } from './QMaskSettingView'
@@ -29,6 +30,7 @@ import { image } from '@kit.ImageKit'
 import { BusinessError } from '@ohos.base'
 import { photoAccessHelper } from '@kit.MediaLibraryKit'
 import fileIo from '@ohos.file.fs'
+import { QMaskSubtitleSettingView } from './QMaskSubtitleSettingView'
 
 @Component
 export struct QPlayerView{
@@ -36,10 +38,12 @@ export struct QPlayerView{
   private mQPlayerMaskTimerId : Number = 0
   private mQPlayerIsMaskTimerStart : Boolean = false
   @State mShootViewVisible : Visibility = Visibility.Hidden
+  @State mSubtitleText : string = ""
   @State mMaskVisible : Visibility = Visibility.Visible
   @State @Watch("settingViewVisibleChange") mSettingViewVisible : Visibility = Visibility.Hidden
   @State @Watch("playSpeedViewVisibleChange") mPlaySpeedViewVisible : Visibility = Visibility.Hidden
   @State @Watch("playSwitchQualityVisibleChange") mSwitchQualityViewVisible : Visibility = Visibility.Hidden
+  @State @Watch("playSubtitleVisibleChange") mSubtitleViewVisible : Visibility = Visibility.Hidden
   @Link @Watch("deviceOrientationChange") mDeviceOrientation : window.Orientation
   @Link mMediaModel : QPlayerDemoMediaModels
   @Link mPlayerContext : QIPlayerContext
@@ -59,13 +63,36 @@ export struct QPlayerView{
   @State mAudioDataSaveTimes : number = 0
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
-
+      if (state != QPlayerState.PLAYING && state != QPlayerState.SEEKING && state != QPlayerState.PAUSED_RENDER){
+        this.mSubtitleText = ""
+      }
       if (state == QPlayerState.PLAYING) {
         this.mIsPlaying = true
       }
       else {
         this.mIsPlaying = false
       }
+    }
+  }
+  private mSubtitleListener : QIPlayerSubtitleListener = {
+
+    onSubtitleTextChange:(context : QIPlayerContext , text: string ) => {
+      this.mSubtitleText = text
+    },
+
+    onSubtitleNameChange:(context : QIPlayerContext , name: string ) => {
+    },
+
+    onSubtitleEnable:(context : QIPlayerContext , enable: boolean ) => {
+      if (enable == false) {
+        this.mSubtitleText = ""
+      }
+    },
+
+    onSubtitleLoaded:(context : QIPlayerContext , name: string , result: boolean ) => {
+    },
+
+    onSubtitleDecoded:(context : QIPlayerContext , name: string , result: boolean ) => {
     }
   }
   private mFirstFrameListener : QIPlayerRenderListener = {
@@ -227,6 +254,27 @@ export struct QPlayerView{
           .backgroundColor($r("app.color.hyaline_background_color"))
           .fontSize(30)
 
+        RelativeContainer(){
+
+          Text(this.mSubtitleText)
+            .width('100%')
+            .height('10%')
+            .textAlign(TextAlign.Center)
+            .alignRules({
+              left:{anchor: "__container__" , align : HorizontalAlign.Start},
+              bottom : { anchor : "__container__" , align : VerticalAlign.Bottom},
+            })
+            .id("subtitle_text")
+            .enabled(false)
+            .fontColor($r("app.color.white"))
+            .backgroundColor($r("app.color.hyaline_background_color"))
+            .fontSize(15)
+            .margin({bottom: 60})
+        }
+        .width('100%')
+        .height('100%')
+        .enabled(false)
+        .id("subtitle_relative_container")
 
         QMaskView({
           mDeviceOrientation: this.mDeviceOrientation,
@@ -235,7 +283,8 @@ export struct QPlayerView{
           mSettingViewVisible : this.mSettingViewVisible,
           mIsLive : this.mIsLive,
           mPlaySpeedViewVisible : this.mPlaySpeedViewVisible,
-          mSwitchQualityViewVisible : this.mSwitchQualityViewVisible
+          mSwitchQualityViewVisible : this.mSwitchQualityViewVisible,
+          mSubtitleViewVisible : this.mSubtitleViewVisible
         })
           .width('100%')
           .height('100%')
@@ -383,6 +432,29 @@ export struct QPlayerView{
         .width("100%")
         .id("switch_quality_view_relativeContainer")
 
+        RelativeContainer() {
+          QMaskSubtitleSettingView({mCurrentModel : this.mCurrentModel, mPlayerContext : this.mPlayerContext})
+            .alignRules({
+              top : {anchor : "__container__" , align : VerticalAlign.Top},
+              right : {anchor : "__container__", align : HorizontalAlign.End}
+            })
+            .visibility(this.mSubtitleViewVisible)
+            .height("100%")
+            .width(100)
+            .id("subtitle_view")
+            .backgroundColor($r("app.color.setting_view_background_color"))
+            .margin({
+              right: 50
+            })
+        }
+        .visibility(this.mSubtitleViewVisible)
+        .onClick(()=>{
+          this.mSubtitleViewVisible = Visibility.Hidden
+          this.stopMaskTimer()
+        })
+        .height("100%")
+        .width("100%")
+        .id("subtitle_view_relativeContainer")
       }
     }
     .height("100%")
@@ -408,7 +480,9 @@ export struct QPlayerView{
     this.mPlayerContext.get_control_handler().addPlayerVideoDataListener(this.mVideoDataListener)
     this.mPlayerContext.get_control_handler().addPlayerAudioDataListener(this.mAudioDataListener)
     this.mPlayerContext.get_render_handler().addPlayerRenderListener(this.mFirstFrameListener)
-
+    this.mPlayerContext.get_control_handler().addPlayerSubtitleListener(this.mSubtitleListener)
+    this.mPlayerContext.get_control_handler().setSubtitleEnable(this.mQPlayerSettingModel.mSubtitleEnable == 0 ? false : true)
+    this.mPlayerContext.get_control_handler().setSubtitle("中文")
     //此处开启音视频回调，会将音视频数据存储到沙河目录的 videoOrAudioDataFile 下的 video.yuv / video.rgba 和 audio.raw
     //每次切集会删除保存的音视频回调数据，并重新保存当前视频的前一百帧数据
     //具体的实现方式见 mAudioDataListener 和 mVideoDataListener 以及 mFirstFrameListener 的 文件操作
@@ -464,7 +538,11 @@ export struct QPlayerView{
       this.mMaskVisible = Visibility.Hidden
     }
   }
-
+  playSubtitleVisibleChange(){
+    if (this.mSubtitleViewVisible == Visibility.Visible) {
+      this.mMaskVisible = Visibility.Hidden
+    }
+  }
   stopMaskTimer(){
     clearInterval(this.mQPlayerMaskTimerId.valueOf())
     this.mQPlayerMaskTimerCount = 0

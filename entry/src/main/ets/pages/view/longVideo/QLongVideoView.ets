@@ -27,9 +27,11 @@ import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
   QIPlayerShootVideoListener,
   QPlayerShootVideoType,
   QIPlayerVideoFrameSizeChangeListener,
-  QIPlayerAudioListener} from '@qiniu/qplayer2-core/qplayer2-core'
-import { QPlayerState } from '@qiniu/qplayer2-core/qplayer2-core'
-import { QPlayerDecoderType } from '@qiniu/qplayer2-core/qplayer2-core'
+  QIPlayerAudioListener,
+  QIPlayerSubtitleListener} from '@qiniu/qplayer2-core/qplayer2-core'
+import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
+import { QPlayerDecoderType } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerDecoderType'
+
 import { util } from '@kit.ArkTS'
 import utils from '@arkts.utils'
 import { QDecimalToHexHelper } from '../../common/Helper/QDecimalToHexHelper'
@@ -149,6 +151,32 @@ struct QLongVideoView {
   private mPlaySpeed : QIPlayerSpeedListener = {
     onSpeedChanged:(context : QIPlayerContext, speed:number)=>{
       this.addToastView(`播放速度 : ${speed}`)
+    }
+  }
+  private mSubtitleCallBack : QIPlayerSubtitleListener = {
+
+    onSubtitleTextChange:(context : QIPlayerContext , text: string ) => {
+    },
+
+    onSubtitleNameChange:(context : QIPlayerContext , name: string ) => {
+      this.addToastView(`字幕名称 : ${name}`)
+
+    },
+
+    onSubtitleEnable:(context : QIPlayerContext , enable: boolean ) => {
+      if (enable) {
+        this.addToastView(`字幕开启`)
+      }else {
+        this.addToastView(`字幕关闭`)
+      }
+    },
+
+    onSubtitleLoaded:(context : QIPlayerContext , name: string , result: boolean ) => {
+      this.addToastView(`字幕加载 : ${name} result : ${result}`)
+    },
+
+    onSubtitleDecoded:(context : QIPlayerContext , name: string , result: boolean ) => {
+      this.addToastView(`字幕解码 : ${name} result : ${result}`)
     }
   }
   private mSEIListener: QIPlayerSEIDataListener = {
@@ -400,6 +428,7 @@ struct QLongVideoView {
     this.mPlayerContext.get_control_handler().addPlayerAudioListener(this.mAudioMuteListener)
     this.mPlayerContext.get_control_handler().addPlayerSEIDataListener(this.mSEIListener)
     this.mPlayerContext.get_control_handler().addPlayerShootVideoListener(this.mShootVideoListener)
+    this.mPlayerContext.get_control_handler().addPlayerSubtitleListener(this.mSubtitleCallBack)
     this.mPlayerContext.get_control_handler().addPlayerVideoFrameSizeChangeListener(this.mVideoFrameSizeChangedListener)
   }
   //弹出toast，文本为text

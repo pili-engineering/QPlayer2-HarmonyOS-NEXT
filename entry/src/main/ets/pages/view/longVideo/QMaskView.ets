@@ -17,9 +17,11 @@ export struct QMaskView{
   @Link mSettingViewVisible : Visibility
   @Link mPlaySpeedViewVisible : Visibility
   @Link mSwitchQualityViewVisible : Visibility
+  @Link mSubtitleViewVisible : Visibility
   @State mBottomMarginValue : number = 0
   private  mSpeedButtonTitle : string = "倍速"
   private  mSwitchQualityButtonTitle : string = "清晰度"
+  private  mSubtitleButtonTitle : string = "字幕设置"
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
       if (state == QPlayerState.END) {
@@ -100,7 +102,6 @@ export struct QMaskView{
         .backgroundColor('#00000000')
         .id('shoot_view_button')
 
-
         Button(this.mSpeedButtonTitle)
         .type(ButtonType.Normal)
         .width(60)
@@ -135,6 +136,25 @@ export struct QMaskView{
           .fontColor("#ffffffff")
           .fontSize(15)
           .id('switch_quality_button')
+
+
+        Button(this.mSubtitleButtonTitle)
+          .type(ButtonType.Normal)
+          .width(100)
+          .height(40)
+          .alignRules({
+            right:{anchor: "switch_quality_button" , align : HorizontalAlign.Start},
+            top : { anchor : "__container__" , align : VerticalAlign.Top}
+          })
+          .margin({right : 20,top : 0})
+          .visibility(this.mPortraitShow)
+          .onClick(()=>{
+            this.mSubtitleViewVisible = Visibility.Visible
+          })
+          .backgroundColor($r('app.color.hyaline_background_color'))
+          .fontColor("#ffffffff")
+          .fontSize(15)
+          .id('setting_play_subtitle_button')
 
         QMaskBottomView({mDeviceOrientation : this.mDeviceOrientation,
                      mPlayerContext : this.mPlayerContext ,

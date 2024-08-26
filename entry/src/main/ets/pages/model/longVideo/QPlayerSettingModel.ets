@@ -30,6 +30,7 @@ export class QPlayerSettingModel{
   public mSEIEnable : number = 0
   public mStartAction : QPlayerStart = QPlayerStart.PLAYING
   public mImmediately : Immediately = Immediately.IMMEDIATELY_TRUE
+  public mSubtitleEnable : number = 0
   constructor() {
   }
 }

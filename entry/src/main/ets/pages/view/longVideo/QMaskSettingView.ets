@@ -23,6 +23,7 @@ export struct QMaskSettingView{
     new innerSettingModel("渲染比例",["自动","拉伸","铺满","16:9","4:3"], this.mQPlayerSettingModel.mRenderRatio.valueOf() - 1),
     new innerSettingModel("色盲模式",["无","红色盲","绿色盲","蓝色盲"], this.mQPlayerSettingModel.mBlinderType.valueOf()),
     new innerSettingModel("sei",["关闭","开启"], this.mQPlayerSettingModel.mSEIEnable.valueOf()),
+    new innerSettingModel("字幕",["关闭","开启"], this.mQPlayerSettingModel.mSubtitleEnable.valueOf()),
     new innerSettingModel("清晰度切换模式",["立即切换","无缝切换","直播立即点播无缝"], this.mQPlayerSettingModel.mImmediately.valueOf()),
   ]
   private mSettingViewUnitHeight :  number = 100
@@ -312,6 +313,9 @@ struct SettingViewUnit{
       this.mPlayerContext.get_control_handler().setStartAction(this.mQPlayerSetting.mStartAction)
     }else if (title == "清晰度切换模式"){
       this.mQPlayerSetting.mImmediately = index as Immediately
+    }else if (title == "字幕"){
+      this.mQPlayerSetting.mSubtitleEnable = index
+      this.mPlayerContext.get_control_handler().setSubtitleEnable(this.mQPlayerSetting.mSubtitleEnable == 0 ? false : true)
     }
     QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context, this.mQPlayerSetting)
   }
