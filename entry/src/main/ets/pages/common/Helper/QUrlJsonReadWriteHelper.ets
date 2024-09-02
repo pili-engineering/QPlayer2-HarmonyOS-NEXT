@@ -98,14 +98,16 @@ export class QUrlJsonReadWriteHelper{
         elements.add(inner_stream)
       })
       let subtitleElements : ArrayList<QPlayerDemoSubtitleElement> = new ArrayList()
-      element.subtitleElements.forEach(subtitle => {
-        let innerSubtitle : QPlayerDemoSubtitleElement = new QPlayerDemoSubtitleElement(
-          subtitle.name,
-          subtitle.url,
-          subtitle.isSelected
-        )
-        subtitleElements.add(innerSubtitle)
-      })
+      if (element.subtitleElements != undefined){
+        element.subtitleElements.forEach(subtitle => {
+          let innerSubtitle : QPlayerDemoSubtitleElement = new QPlayerDemoSubtitleElement(
+            subtitle.name,
+            subtitle.url,
+            subtitle.isSelected
+          )
+          subtitleElements.add(innerSubtitle)
+        })
+      }
       model.add(new QNPlayItem(value,QPlayerCreateMediaModelHelper.create(element.isLive,elements.convertToArray(),subtitleElements.convertToArray()),element.coverImageName))
     })
     url_model_call_back(model)
