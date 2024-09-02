@@ -233,6 +233,12 @@ export struct QPlayerView{
             })
         )
         .gesture(
+          PanGesture()
+            .onActionUpdate((event : GestureEvent)=>{
+              console.log("event x : " + event.offsetX + " y : " + event.offsetY)
+            })
+        )
+        .gesture(
           TapGesture({count : 1})
             .onAction((event : GestureEvent)=>{
               this.maskVisibleTimerChange()
@@ -482,7 +488,6 @@ export struct QPlayerView{
     this.mPlayerContext.get_render_handler().addPlayerRenderListener(this.mFirstFrameListener)
     this.mPlayerContext.get_control_handler().addPlayerSubtitleListener(this.mSubtitleListener)
     this.mPlayerContext.get_control_handler().setSubtitleEnable(this.mQPlayerSettingModel.mSubtitleEnable == 0 ? false : true)
-    this.mPlayerContext.get_control_handler().setSubtitle("中文")
     //此处开启音视频回调，会将音视频数据存储到沙河目录的 videoOrAudioDataFile 下的 video.yuv / video.rgba 和 audio.raw
     //每次切集会删除保存的音视频回调数据，并重新保存当前视频的前一百帧数据
     //具体的实现方式见 mAudioDataListener 和 mVideoDataListener 以及 mFirstFrameListener 的 文件操作
