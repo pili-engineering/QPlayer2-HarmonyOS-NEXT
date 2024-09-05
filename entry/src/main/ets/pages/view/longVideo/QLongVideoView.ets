@@ -28,8 +28,8 @@ import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
   QPlayerShootVideoType,
   QIPlayerVideoFrameSizeChangeListener,
   QIPlayerAudioListener} from '@qiniu/qplayer2-core/qplayer2-core'
-import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
-import { QPlayerDecoderType } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerDecoderType'
+import { QPlayerState } from '@qiniu/qplayer2-core/qplayer2-core'
+import { QPlayerDecoderType } from '@qiniu/qplayer2-core/qplayer2-core'
 import { util } from '@kit.ArkTS'
 import utils from '@arkts.utils'
 import { QDecimalToHexHelper } from '../../common/Helper/QDecimalToHexHelper'
@@ -54,7 +54,7 @@ struct QLongVideoView {
   @State mIsLive : Boolean = false
   @State mToastMarginValue : number = 0
   @State mToastViewWidth : Length = '70%'
-  @State mCurrentModel : QMediaModel | null = null
+  @State mCurrentModel : QMediaModel | null = this.mMediaModel.mMediaModels[0].mMediaModel
   @State mPlayerContext : QIPlayerContext = QPlayerContextFactory.createPlayerContext(
     QLogLevel.LOG_INFO,
     (AppStorage.get("context") as Context).filesDir,

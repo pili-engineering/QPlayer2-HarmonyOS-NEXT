@@ -1,8 +1,7 @@
 import { window } from '@kit.ArkUI'
 import {
   QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener,
-  QPlayerUrlType } from '@qiniu/qplayer2-core/qplayer2-core'
-import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
+  QPlayerUrlType,QPlayerState } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QTimestampHelper } from '../../common/helper/QTimestampHelper'
 import { common } from '@kit.AbilityKit'
 

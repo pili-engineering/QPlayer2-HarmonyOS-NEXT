@@ -6,7 +6,7 @@ import { QNPlayItem } from './QNPlayItem';
 import { ArrayList } from '@kit.ArkTS';
 import { QNPlayItemManager } from './QNPlayItemManager';
 import { QIMediaItemContext, QLogLevel, QMediaItemState, QMediaModel,
-  QPlayerContextFactory } from '@qiniu/qplayer2-core/';
+  QPlayerContextFactory } from '@qiniu/qplayer2-core/qplayer2-core';
 import { Context } from '@ohos.abilityAccessCtrl';
 export class QNMediaItemContextManager{
   private readonly LOAD_FORWARD_POS : number = 1

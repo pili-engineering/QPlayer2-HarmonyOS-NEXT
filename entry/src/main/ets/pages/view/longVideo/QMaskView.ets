@@ -2,8 +2,7 @@
 import { router, window } from '@kit.ArkUI'
 import { common } from '@kit.AbilityKit'
 import {
-  QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener } from '@qiniu/qplayer2-core/qplayer2-core'
-import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
+  QIPlayerContext, QIPlayerProgressListener, QIPlayerStateChangeListener,QPlayerState } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QMaskBottomView } from './QMaskBottomView'
 
 @Component

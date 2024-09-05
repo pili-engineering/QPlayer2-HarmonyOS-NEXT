@@ -1,5 +1,5 @@
 import { QIMediaItemContext, QIPlayerContext, QIPlayerStateChangeListener, QMediaItemState } from '@qiniu/qplayer2-core/'
-import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
+import { QPlayerState } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QUrlJsonReadWriteHelper } from '../../../common/Helper/QUrlJsonReadWriteHelper'
 import { QNMediaItemContextManager } from './QNMediaItemContextManager'
 import { QNPlayItem } from './QNPlayItem'

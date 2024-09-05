@@ -15,11 +15,11 @@ import {QSurfaceRenderView,QIPlayerContext,
   QSampleFormat,
   QChannelLayout,
   QVideoType,
-  QIPlayerRenderListener
+  QIPlayerRenderListener,
+  QPlayerState
 } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QMaskSettingView } from './QMaskSettingView'
-import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
 import { PlaySpeed, QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { common } from '@kit.AbilityKit'
@@ -420,7 +420,7 @@ export struct QPlayerView{
     }
     this.mVideoDataSaveTimes = 0
     this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel, this.mQPlayerSettingModel.mPosition)
-    this.mCurrentModel = this.mMediaModel.mMediaModels[0].mMediaModel
+
     if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_0_5) {
       this.mPlayerContext.get_control_handler().setSpeed(0.5)
     }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_0_75){

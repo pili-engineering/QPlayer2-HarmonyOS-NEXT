@@ -1,5 +1,5 @@
 import { QIPlayerContext } from '@qiniu/qplayer2-core'
-import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
+import { QPlayerState } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QShortVideoMaskBottomView } from './QShortVideoMaskBottomView'
 import { QShortVideoStatusView } from './QShortVideoStatusView'
 

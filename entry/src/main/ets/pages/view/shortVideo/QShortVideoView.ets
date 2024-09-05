@@ -15,7 +15,7 @@ import {
 import { bundleManager, common } from '@kit.AbilityKit'
 import { router, window } from '@kit.ArkUI'
 import { QPlayerToastView } from '../../common/component/QPlayerToastView'
-import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
+import { QPlayerState } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QShortVideoMaskView } from './QShortVideoMaskView'
 import { QTitleView } from '../../common/component/QTitleView'
 import { Context } from '@ohos.arkui.UIContext'
