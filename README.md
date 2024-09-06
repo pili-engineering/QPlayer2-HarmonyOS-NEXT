@@ -4,7 +4,7 @@
 
 Qplayer2是一款跨平台的播放器SDK,除了基础的播放器能力外，更致力于各种应用场景的对接。
 
-注：preview 版本为预览版，仅支持部分功能，其他功能将陆续开放
+注：beta 版本为测试版
 
 播放器 SDK 合规使用说明请参考[七牛 SDK 合规使用说明](https://developer.qiniu.com/pili/12616/sdk-compliance-instructions)；隐私政策说明请参考[七牛 SDK 隐私策略](https://developer.qiniu.com/pili/8027/sdk-privacy-policy)
 
@@ -15,7 +15,7 @@ Qplayer2是一款跨平台的播放器SDK,除了基础的播放器能力外，�
  Android | https://github.com/pili-engineering/QPlayer2-Android 
  IOS |https://github.com/pili-engineering/QPlayer2-IOS
  Windows | https://github.com/pili-engineering/QPlayer2-Windows 
- HarmonyOS NEXT | Last Version: 1.5.0-preview4 
+ HarmonyOS NEXT | Last Version: 1.5.0-beta1 
  Mac | 敬请期待 
  Linux | 敬请期待 
 ### qplayer2-core 功能列表
@@ -34,7 +34,11 @@ Qplayer2是一款跨平台的播放器SDK,除了基础的播放器能力外，�
 | SEI数据回调           | 所有解码方式都支持                                           |                                  |
 | 纯音频播放/纯视频播放 | 播放只有单音频流或者只有单视频流的视频                       |                                  |
 | 后台播放              | 支持设置是否开启后台播放                                     |                                  |
+| 预加载                | 提前加载点播视频，获得更好的首帧体验                         |                                  |
 | 截图                  | 自动转换成jpeg格式，可以展示在UI上，也可存放到相册           |                                  |
+| 静音播放              | 针对视频的静音，不影响系统声音                               |                                  |
+| DRM                   | 支持HLS 私有加密/通用加密 2种方式，支持 MP4 CENC-AES-CTR 加密，支持七牛私有 MP4 加密方式 |                                  |
+| 音视频数据上抛        | 适用于业务层需要获取当前播放的音视频数据的场景（比如推流等） |                                  |
 
 
 
@@ -42,8 +46,8 @@ Qplayer2是一款跨平台的播放器SDK,除了基础的播放器能力外，�
 
 | 类别     | 说明                                                 |
 | -------- | ---------------------------------------------------- |
-| 系统版本 | 版本为 NEXT.0.0.26 的 harmony-next 手机              |
-| IDE 版本 | DevEco Studio NEXT Developer Beta1 version 5.0.3.403 |
+| 系统版本 | 版本为 NEXT.0.0.60 的 harmony-next 手机              |
+| IDE 版本 | DevEco Studio NEXT Developer Beta6 version 5.0.3.706 |
 
 
 
@@ -72,7 +76,7 @@ Qplayer2是一款跨平台的播放器SDK,除了基础的播放器能力外，�
 ```awk
 {
   "dependencies": {
-    "@qiniu/qplayer2-core": "^1.5.0-preview4",  //依赖 open harmony 中心仓
+    "@qiniu/qplayer2-core": "^1.5.0-beta1",  //依赖 open harmony 中心仓
   }
 }
 ```
@@ -101,12 +105,12 @@ https://developer.qiniu.io/pili/12702/qplayer2-harmony
 
 1. demo 工程内的 长视频播放页 是基于 qplayer2-core 来实现的
 
-1. demo 下载：https://sdk-release.qnsdk.com/qplayer2-demo-v1.5.0-preview4.hap
+1. demo 下载：https://sdk-release.qnsdk.com/qplayer2-demo-v1.5.0-beta1.hap
 
 1.  电脑连接 harmony next 手机，执行下方命令安装 hap 包
 
    ```awk
-   hdc install qplayer2-demo-v1.5.0-preview4.hap
+   hdc install qplayer2-demo-v1.5.0-beta1.hap
    ```
 
    
