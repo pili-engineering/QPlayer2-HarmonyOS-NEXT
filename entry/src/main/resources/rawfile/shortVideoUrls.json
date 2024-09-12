@@ -6,7 +6,7 @@
       {
         "userType": "",
         "urlType": 0,
-        "url": "http://demovideos.qiniushawn.top/shortvideo/nike.mp4",
+        "url": "/data/storage/el1/bundle/qplayer2/resources/resfile/nike.mp4",
         "quality": 1080,
         "isSelected": 1,
         "backupUrl": "",
@@ -19,12 +19,12 @@
   {
 
     "isLive": 0,
-    "coverImageName":"super",
+    "coverImageName":"nike",
     "streamElements": [
       {
         "userType": "",
         "urlType": 0,
-        "url": "http://demovideos.qiniushawn.top/shortvideo/super.mp4",
+        "url": "/data/storage/el1/bundle/qplayer2/resources/resfile/nike.mp4",
         "quality": 1080,
         "isSelected": 1,
         "backupUrl": "",
@@ -36,12 +36,12 @@
   {
 
     "isLive": 0,
-    "coverImageName":"rabbit",
+    "coverImageName":"nike",
     "streamElements": [
       {
         "userType": "",
         "urlType": 0,
-        "url": "http://demovideos.qiniushawn.top/shortvideo/兔子.mp4",
+        "url": "/data/storage/el1/bundle/qplayer2/resources/resfile/nike.mp4",
         "quality": 960,
         "isSelected": 1,
         "backupUrl": "",
@@ -53,12 +53,12 @@
   {
 
     "isLive": 0,
-    "coverImageName":"fountain",
+    "coverImageName":"nike",
     "streamElements": [
       {
         "userType": "",
         "urlType": 0,
-        "url": "http://demovideos.qiniushawn.top/shortvideo/喷泉.mp4",
+        "url": "/data/storage/el1/bundle/qplayer2/resources/resfile/nike.mp4",
         "quality": 720,
         "isSelected": 1,
         "backupUrl": "",
@@ -70,12 +70,12 @@
   {
 
     "isLive": 0,
-    "coverImageName":"peachBlossom",
+    "coverImageName":"nike",
     "streamElements": [
       {
         "userType": "",
         "urlType": 0,
-        "url": "http://demovideos.qiniushawn.top/shortvideo/桃花.mp4",
+        "url": "/data/storage/el1/bundle/qplayer2/resources/resfile/nike.mp4",
         "quality": 0,
         "isSelected": 1,
         "backupUrl": "",
@@ -87,12 +87,12 @@
   {
 
     "isLive": 0,
-    "coverImageName":"specialEffects",
+    "coverImageName":"nike",
     "streamElements": [
       {
         "userType": "",
         "urlType": 0,
-        "url": "http://demovideos.qiniushawn.top/shortvideo/特效.mp4",
+        "url": "/data/storage/el1/bundle/qplayer2/resources/resfile/nike.mp4",
         "quality": 1080,
         "isSelected": 1,
         "backupUrl": "",
@@ -104,12 +104,12 @@
   {
 
     "isLive": 0,
-    "coverImageName":"dog",
+    "coverImageName":"nike",
     "streamElements": [
       {
         "userType": "",
         "urlType": 0,
-        "url": "http://demovideos.qiniushawn.top/shortvideo/狗.mp4",
+        "url": "/data/storage/el1/bundle/qplayer2/resources/resfile/nike.mp4",
         "quality": 360,
         "isSelected": 1,
         "backupUrl": "",
@@ -121,12 +121,12 @@
   {
 
     "isLive": 0,
-    "coverImageName":"cat",
+    "coverImageName":"nike",
     "streamElements": [
       {
         "userType": "",
         "urlType": 0,
-        "url": "http://demovideos.qiniushawn.top/shortvideo/猫.mp4",
+        "url": "/data/storage/el1/bundle/qplayer2/resources/resfile/nike.mp4",
         "quality": 360,
         "isSelected": 1,
         "backupUrl": "",
@@ -137,12 +137,12 @@
   },
   {
     "isLive": 0,
-    "coverImageName":"somersault",
+    "coverImageName":"nike",
     "streamElements": [
       {
         "userType": "",
         "urlType": 0,
-        "url": "http://demovideos.qiniushawn.top/shortvideo/翻跟斗.mp4",
+        "url": "/data/storage/el1/bundle/qplayer2/resources/resfile/nike.mp4",
         "quality": 360,
         "isSelected": 1,
         "backupUrl": "",
