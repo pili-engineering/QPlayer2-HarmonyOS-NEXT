@@ -3,7 +3,7 @@ import { QPlayerView } from './QPlayerView'
 import { mediaquery, window } from '@kit.ArkUI'
 import  { QPlayerStatusView } from  "./QPlayerStatusView"
 import { QPlayerUrlListView } from './QPlayerUrlListView'
-import { QPlayerToastView } from './QPlayerToastView'
+import { QPlayerToastView } from '../../common/component/QPlayerToastView'
 import { QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
@@ -26,9 +26,10 @@ import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
   QIPlayerSEIDataListener,
   QIPlayerShootVideoListener,
   QPlayerShootVideoType,
-  QIPlayerVideoFrameSizeChangeListener} from '@qiniu/qplayer2-core/qplayer2-core'
-import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
-import { QPlayerDecoderType } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerDecoderType'
+  QIPlayerVideoFrameSizeChangeListener,
+  QIPlayerAudioListener} from '@qiniu/qplayer2-core/qplayer2-core'
+import { QPlayerState } from '@qiniu/qplayer2-core/qplayer2-core'
+import { QPlayerDecoderType } from '@qiniu/qplayer2-core/qplayer2-core'
 import { util } from '@kit.ArkTS'
 import utils from '@arkts.utils'
 import { QDecimalToHexHelper } from '../../common/Helper/QDecimalToHexHelper'
@@ -53,7 +54,7 @@ struct QLongVideoView {
   @State mIsLive : Boolean = false
   @State mToastMarginValue : number = 0
   @State mToastViewWidth : Length = '70%'
-  @State mCurrentModel : QMediaModel | null = null
+  @State mCurrentModel : QMediaModel | null = this.mMediaModel.mMediaModels[0].mMediaModel
   @State mPlayerContext : QIPlayerContext = QPlayerContextFactory.createPlayerContext(
     QLogLevel.LOG_INFO,
     (AppStorage.get("context") as Context).filesDir,
@@ -118,6 +119,16 @@ struct QLongVideoView {
 
     onBufferingEnd:(context: QIPlayerContext)=> {
       // this.addToastView("end buffer")
+    }
+  }
+  private mAudioMuteListener : QIPlayerAudioListener ={
+
+    onMuteChanged:(context :QIPlayerContext , isMute:boolean)=>{
+      if (isMute) {
+        this.addToastView("开启静音")
+      }else {
+        this.addToastView("关闭静音")
+      }
     }
   }
   private mVideoFrameSizeChangedListener : QIPlayerVideoFrameSizeChangeListener ={
@@ -226,9 +237,6 @@ struct QLongVideoView {
             .width("100%")
             .height("100%")
             .id("title_view")
-            .onClick(()=>{
-              this.addToastView("测试")
-            })
         }
         .justifyContent(FlexAlign.Center)
         .width("100%")
@@ -319,6 +327,8 @@ struct QLongVideoView {
   }
 
   aboutToAppear(): void {
+    let mContext : Context = AppStorage.get('context') as Context
+    this.mPlayerContext.init(mContext, getContext(this) as common.UIAbilityContext)
     this.listener.on('change', (mediaQueryResult:mediaquery.MediaQueryResult) => { this.onPortrait(mediaQueryResult) });
     this.addAllQPlayerListeners()
   }
@@ -387,6 +397,7 @@ struct QLongVideoView {
     this.mPlayerContext.get_control_handler().addPlayerVideoDecodeTypeListener(this.mDecoderTypeListener)
     this.mPlayerContext.get_control_handler().addPlayerSpeedChangeListener(this.mPlaySpeed)
     this.mPlayerContext.get_control_handler().addPlayerQualityListener(this.mQualityListener)
+    this.mPlayerContext.get_control_handler().addPlayerAudioListener(this.mAudioMuteListener)
     this.mPlayerContext.get_control_handler().addPlayerSEIDataListener(this.mSEIListener)
     this.mPlayerContext.get_control_handler().addPlayerShootVideoListener(this.mShootVideoListener)
     this.mPlayerContext.get_control_handler().addPlayerVideoFrameSizeChangeListener(this.mVideoFrameSizeChangedListener)

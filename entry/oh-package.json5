@@ -6,7 +6,8 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "@qiniu/qplayer2-core": "^1.5.0-preview4"
+//    "@qiniu/qplayer2-core" : 'file:../qplayer2_core',
+//    "@qiniu/qplayer2-core": "^1.5.0-preview1"
   },
   "devDependencies": {},
   "dynamicDependencies": {}

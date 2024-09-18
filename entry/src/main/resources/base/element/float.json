@@ -41,6 +41,10 @@
       "value": "50vp"
     },
     {
+      "name": "index_label_height",
+      "value": "30vp"
+    },
+    {
       "name": "default_font_size",
       "value": "15"
     },

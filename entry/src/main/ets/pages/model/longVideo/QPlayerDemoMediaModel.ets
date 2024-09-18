@@ -5,7 +5,7 @@ import { QUrlJsonReadWriteHelper } from '../../common/helper/QUrlJsonReadWriteHe
 export class QPlayerDemoMediaModels{
   public mMediaModels : Array<QPlayerDemoMediaModel> = new Array()
   constructor(context :Context) {
-    QUrlJsonReadWriteHelper.read(context,(url_models)=>{
+    QUrlJsonReadWriteHelper.readLongVideoUrl(context,(url_models)=>{
       this.mMediaModels = url_models
     })
   }

@@ -6,7 +6,7 @@ export class  QPlayerCreateMediaModelHelper{
   static create(is_live: boolean, demo_streams: Array<QPlayerDemoStreamElement>) : QMediaModel{
     let builder : QMediaModelBuilder = new QMediaModelBuilder()
     demo_streams.forEach(element => {
-      builder.addStreamElement(element.mUserType,element.mUrlType,element.mQuality.valueOf(),element.mUrl,element.mIsSelected,element.mReferer,element.mBackupUrl)
+      builder.addStreamElement(element.userType,element.urlType,element.quality.valueOf(),element.url,element.isSelected,element.referer,element.backupUrl,element.hlsDrmKey,element.mp4DrmKey,element.mp4QNDrmComKey,element.mp4QNDrmFileKey)
     });
     return builder.build(is_live)
   }
