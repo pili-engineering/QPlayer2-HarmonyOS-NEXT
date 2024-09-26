@@ -27,9 +27,9 @@
         "type": "HarmonyOS",
         "material": {
           "certpath": "./signingConfigs/default_harmony-next_yyr3OFuy9Ij1XS1lyLo19Qx3Qy4onG7cI3lffRXF-PI=.cer",
-          "storePassword": "0000001BB3731156BF6AE10CC6D8F4120628C8F5916D0E02298BC3D6CCAC5ACD995AD8D0201112375C395E",
+          "storePassword": "0000001A6962A6E175D916BD88F90C00368323DD47A1F9FC154978065E0E22694E51990A3DF24DD15CA3",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001B6538323D23341B8A09A1A072F078196451CFCB82D32776DE7BF9A67A0926F4B5A4D640A4D17D17",
+          "keyPassword": "0000001A74EEE291E6E81E6199E7CD27ED357C24E9C091FEFAEE6F2CA8FE42FF65B066B84537FF298B69",
           "profile": "./signingConfigs/default_harmony-next_yyr3OFuy9Ij1XS1lyLo19Qx3Qy4onG7cI3lffRXF-PI=.p7b",
           "signAlg": "SHA256withECDSA",
           "storeFile": "./signingConfigs/default_harmony-next_yyr3OFuy9Ij1XS1lyLo19Qx3Qy4onG7cI3lffRXF-PI=.p12"
