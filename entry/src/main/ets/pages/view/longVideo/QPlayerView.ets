@@ -17,7 +17,8 @@ import {QSurfaceRenderView,QIPlayerContext,
   QVideoType,
   QIPlayerRenderListener,
   QPlayerState,
-  QIPlayerSubtitleListener
+  QIPlayerSubtitleListener,
+  QVideoRenderType
 } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QMaskSettingView } from './QMaskSettingView'
@@ -34,6 +35,7 @@ import { QMaskSubtitleSettingView } from './QMaskSubtitleSettingView'
 
 @Component
 export struct QPlayerView{
+  private vrFrameRate = 120
   private mQPlayerMaskTimerCount : Number = 0
   private mQPlayerMaskTimerId : Number = 0
   private mQPlayerIsMaskTimerStart : Boolean = false
@@ -61,6 +63,7 @@ export struct QPlayerView{
   @State mVideoDataSaveTimes : number = 0
   private mAudioDataSaveFileName : string = "/videoOrAudioDataFile/audio"
   @State mAudioDataSaveTimes : number = 0
+  private currentTimeNumber : number = 0;
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
       if (state != QPlayerState.PLAYING && state != QPlayerState.SEEKING && state != QPlayerState.PAUSED_RENDER){
@@ -214,6 +217,8 @@ export struct QPlayerView{
       this.mBufferringVisible = Visibility.Hidden
     }
   }
+  private mRotateX : number = 0;
+  private mRotateY : number = 0;
   build(){
     Row() {
       Stack() {
@@ -234,9 +239,27 @@ export struct QPlayerView{
         )
         .gesture(
           PanGesture()
-            .onActionUpdate((event : GestureEvent)=>{
-              console.log("event x : " + event.offsetX + " y : " + event.offsetY)
+            .onActionEnd((event : GestureEvent)=>{
+              if (this.mCurrentModel?.streamElements[0].videoRenderType == QVideoRenderType.PANORAMA_EQUIRECT_ANGULAR) {
+                this.mPlayerContext.get_render_handler().setPanoramaViewRotate(this.mRotateY - event.offsetY,this.mRotateX - event.offsetX)
+                this.mRotateX -= event.offsetX
+                this.mRotateY -= event.offsetY
+              }
             })
+            .onActionUpdate((event : GestureEvent)=>{
+              if (this.mCurrentModel?.streamElements[0].videoRenderType == QVideoRenderType.PANORAMA_EQUIRECT_ANGULAR) {
+                if ((new Date()).valueOf()-this.currentTimeNumber>1000.0/this.vrFrameRate) {
+                  this.mPlayerContext.get_render_handler().setPanoramaViewRotate(this.mRotateY - event.offsetY,this.mRotateX - event.offsetX)
+                  this.currentTimeNumber = (new Date()).valueOf()
+                }
+              }
+            })
+            .onActionStart((event : GestureEvent)=>{
+              if (this.mCurrentModel?.streamElements[0].videoRenderType == QVideoRenderType.PANORAMA_EQUIRECT_ANGULAR) {
+                this.currentTimeNumber = (new Date()).valueOf()
+              }
+            })
+
         )
         .gesture(
           TapGesture({count : 1})
@@ -305,6 +328,30 @@ export struct QPlayerView{
             TapGesture({count : 1})
               .onAction((event : GestureEvent)=>{
                 this.maskVisibleTimerChange()
+              })
+          )
+
+          .gesture(
+            PanGesture()
+              .onActionEnd((event : GestureEvent)=>{
+                if (this.mCurrentModel?.streamElements[0].videoRenderType == QVideoRenderType.PANORAMA_EQUIRECT_ANGULAR) {
+                  this.mPlayerContext.get_render_handler().setPanoramaViewRotate(this.mRotateY - event.offsetY,this.mRotateX - event.offsetX)
+                  this.mRotateX -= event.offsetX
+                  this.mRotateY -= event.offsetY
+                }
+              })
+              .onActionUpdate((event : GestureEvent)=>{
+                if (this.mCurrentModel?.streamElements[0].videoRenderType == QVideoRenderType.PANORAMA_EQUIRECT_ANGULAR) {
+                  if ((new Date()).valueOf()-this.currentTimeNumber>1000.0/this.vrFrameRate) {
+                    this.mPlayerContext.get_render_handler().setPanoramaViewRotate(this.mRotateY - event.offsetY,this.mRotateX - event.offsetX)
+                    this.currentTimeNumber = (new Date()).valueOf()
+                  }
+                }
+              })
+              .onActionStart((event : GestureEvent)=>{
+                if (this.mCurrentModel?.streamElements[0].videoRenderType == QVideoRenderType.PANORAMA_EQUIRECT_ANGULAR) {
+                  this.currentTimeNumber = (new Date()).valueOf()
+                }
               })
           )
           .visibility(this.mMaskVisible)

@@ -6,6 +6,7 @@ import { QPlayerCreateMediaModelHelper } from './QPlayerCreateMediaModelHelper';
 import { QPlayerDemoStreamElement } from '../../model/longVideo/QPlayerDemoStreamElement';
 import { QNPlayItem } from '../../model/shortVideo/manager/QNPlayItem';
 import { QPlayerDemoSubtitleElement } from '../../model/longVideo/QPlayerDemoSubtitleElement';
+import { QVideoRenderType } from '@qiniu/qplayer2-core';
 
 interface  UrlJsonElementModel{
   userType: string
@@ -15,6 +16,7 @@ interface  UrlJsonElementModel{
   isSelected: boolean
   backupUrl: string
   referer: string
+  renderType?:number
   hlsDrmKey?:string
   mp4DrmKey? :string
   mp4QNDrmComKey? : string
@@ -54,6 +56,7 @@ export class QUrlJsonReadWriteHelper{
           stream.isSelected,
           stream.backupUrl,
           stream.referer,
+          stream.renderType? stream.renderType as QVideoRenderType : QVideoRenderType.PLANE,
           stream.hlsDrmKey?stream.hlsDrmKey : "",
           stream.mp4DrmKey?stream.mp4DrmKey : "",
           stream.mp4QNDrmComKey?stream.mp4QNDrmComKey : "",
@@ -94,6 +97,7 @@ export class QUrlJsonReadWriteHelper{
           stream_element.isSelected,
           stream_element.backupUrl,
           stream_element.referer,
+          stream_element.renderType? stream_element.renderType as QVideoRenderType : QVideoRenderType.PLANE,
           "","","","")
         elements.add(inner_stream)
       })

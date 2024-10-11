@@ -1,4 +1,4 @@
-import { QPlayerUrlType } from '@qiniu/qplayer2-core/qplayer2-core'
+import { QPlayerUrlType, QVideoRenderType } from '@qiniu/qplayer2-core/qplayer2-core'
 
 export class QPlayerDemoStreamElement{
   public readonly userType : string = ""
@@ -8,6 +8,7 @@ export class QPlayerDemoStreamElement{
   public readonly isSelected : boolean = false
   public readonly backupUrl : string = ""
   public readonly referer : string = ""
+  public readonly renderType : QVideoRenderType = QVideoRenderType.PLANE
   public readonly hlsDrmKey:string = ""
   public readonly mp4DrmKey :string =""
   public readonly mp4QNDrmComKey : string =""
@@ -19,6 +20,7 @@ export class QPlayerDemoStreamElement{
     is_selected : boolean,
     backup_url : string,
     referer : string,
+    renderType : QVideoRenderType,
     hlsDrmKey : string,
     mp4DrmKey :string,
     mp4QNDrmComKey : string,
@@ -30,6 +32,7 @@ export class QPlayerDemoStreamElement{
     this.isSelected = is_selected
     this.backupUrl = backup_url
     this.referer = referer
+    this.renderType = renderType
     this.hlsDrmKey = hlsDrmKey
     this.mp4DrmKey = mp4DrmKey
     this.mp4QNDrmComKey = mp4QNDrmComKey

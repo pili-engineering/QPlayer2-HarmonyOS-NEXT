@@ -856,5 +856,21 @@
                 "referer": ""
             }
         ]
+    },
+    {
+        "name" : "53.点播-VR.mp4-VR视频",
+        "isLive": false,
+        "streamElements": [
+            {
+                "userType": "",
+                "urlType": 0,
+                "url": "http://demo-videos.qnsdk.com/VR-Panorama-Equirect-Angular-4500k.mp4",
+                "quality": 1080,
+                "isSelected": 1,
+                "backupUrl": "",
+                "referer": "",
+                "renderType" : 1
+            }
+        ]
     }
 ]
