@@ -77,6 +77,9 @@ export struct QPlayerUrlListView{
       return
     }
     this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel, this.mQPlayerSettingModel.mPosition)
+    if (this.mQPlayerSettingModel.mForceNetworkAuth != 0) {
+      this.mPlayerContext.get_control_handler().forceAuthenticationFromNetwork()
+    }
     this.mCurrentModel = this.mMediaModel.mMediaModels[this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel
     this.mIsLive = this.mMediaModel.mMediaModels[this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel.isLive
   }

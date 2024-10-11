@@ -31,6 +31,7 @@ export class QPlayerSettingModel{
   public mStartAction : QPlayerStart = QPlayerStart.PLAYING
   public mImmediately : Immediately = Immediately.IMMEDIATELY_TRUE
   public mSubtitleEnable : number = 0
+  public mForceNetworkAuth : number = 0
   constructor() {
   }
 }

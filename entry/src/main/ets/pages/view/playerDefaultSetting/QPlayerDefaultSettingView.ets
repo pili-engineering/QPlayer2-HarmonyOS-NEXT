@@ -19,6 +19,7 @@ struct QPlayerDefaultSettingView{
     new innerSettingModel("后台播放", this.mQPlayerSetting.mBackgroundPlay.valueOf(),["关闭","开启"]),
     new innerSettingModel("字幕", this.mQPlayerSetting.mSubtitleEnable.valueOf(),["关闭","开启"]),
     new innerSettingModel("清晰度切换模式", this.mQPlayerSetting.mImmediately.valueOf(),["立即切换","无缝切换","直播立即点播无缝"]),
+    new innerSettingModel("强制网络鉴权", this.mQPlayerSetting.mForceNetworkAuth.valueOf(),["关闭","开启"]),
   ]
   mUnitHeight : Number = 125
     build() {
@@ -244,6 +245,8 @@ struct settingViewUnit{
       this.mQPlayerSetting.mImmediately = index as Immediately
     }else if (title == "字幕"){
       this.mQPlayerSetting.mSubtitleEnable = index
+    }else if (title == "强制网络鉴权"){
+      this.mQPlayerSetting.mForceNetworkAuth = index
     }
   }
 }

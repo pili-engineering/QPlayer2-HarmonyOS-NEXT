@@ -20,6 +20,7 @@ export class QSettingPersistentStorageHelper{
     preferences.putSync('start_action', settingModel.mStartAction)
     preferences.putSync('immediately', settingModel.mImmediately)
     preferences.putSync('subtitle_enable', settingModel.mSubtitleEnable)
+    preferences.putSync('force_network_auth', settingModel.mForceNetworkAuth)
     console.log(`write settingModel.mPosition : ${settingModel.mPosition}`);
     preferences.flush()
   }
@@ -38,6 +39,7 @@ export class QSettingPersistentStorageHelper{
     let startAction : QPlayerStart =  preferences.getSync('start_action',0) as QPlayerStart
     let immediately : Immediately =  preferences.getSync('immediately',0) as Immediately
     let subtitleEnable : Immediately =  preferences.getSync('subtitle_enable',0) as number
+    let forceNetworkAuth : Immediately =  preferences.getSync('force_network_auth',0) as number
     let settingModel = new QPlayerSettingModel()
     settingModel.mSeekMode = seekValue
     settingModel.mBackgroundPlay = backgroundPlayValue
@@ -50,6 +52,7 @@ export class QSettingPersistentStorageHelper{
     settingModel.mStartAction = startAction
     settingModel.mImmediately = immediately
     settingModel.mSubtitleEnable = subtitleEnable
+    settingModel.mForceNetworkAuth = forceNetworkAuth
     return settingModel
   }
 

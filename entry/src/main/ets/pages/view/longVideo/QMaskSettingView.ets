@@ -25,6 +25,7 @@ export struct QMaskSettingView{
     new innerSettingModel("sei",["关闭","开启"], this.mQPlayerSettingModel.mSEIEnable.valueOf()),
     new innerSettingModel("字幕",["关闭","开启"], this.mQPlayerSettingModel.mSubtitleEnable.valueOf()),
     new innerSettingModel("清晰度切换模式",["立即切换","无缝切换","直播立即点播无缝"], this.mQPlayerSettingModel.mImmediately.valueOf()),
+    new innerSettingModel("强制网络鉴权",["关闭","开启"], this.mQPlayerSettingModel.mForceNetworkAuth.valueOf()),
   ]
   private mSettingViewUnitHeight :  number = 100
   private mSettingViewUnitLineHeight :  number = 2
@@ -316,6 +317,8 @@ struct SettingViewUnit{
     }else if (title == "字幕"){
       this.mQPlayerSetting.mSubtitleEnable = index
       this.mPlayerContext.get_control_handler().setSubtitleEnable(this.mQPlayerSetting.mSubtitleEnable == 0 ? false : true)
+    }else if (title == "强制网络鉴权"){
+      this.mQPlayerSetting.mForceNetworkAuth = index
     }
     QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context, this.mQPlayerSetting)
   }
