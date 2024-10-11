@@ -35,7 +35,7 @@ import { QMaskSubtitleSettingView } from './QMaskSubtitleSettingView'
 
 @Component
 export struct QPlayerView{
-  private vrFrameRate = 120
+  private vrFrameRate = 60
   private mQPlayerMaskTimerCount : Number = 0
   private mQPlayerMaskTimerId : Number = 0
   private mQPlayerIsMaskTimerStart : Boolean = false
