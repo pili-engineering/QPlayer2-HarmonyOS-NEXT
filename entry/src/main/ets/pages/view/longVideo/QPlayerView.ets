@@ -530,6 +530,11 @@ export struct QPlayerView{
     this.mPlayerContext.get_render_handler().setRenderRatio(this.mQPlayerSettingModel.mRenderRatio)
     this.mPlayerContext.get_render_handler().setBlindType(this.mQPlayerSettingModel.mBlinderType)
     this.mPlayerContext.get_control_handler().setStartAction(this.mQPlayerSettingModel.mStartAction)
+    this.mPlayerContext.get_render_handler().setMirrorType(this.mQPlayerSettingModel.mMirrorType)
+    if (this.mQPlayerSettingModel.mForceNetworkAuth != 0) {
+      this.mPlayerContext.get_control_handler().forceAuthenticationFromNetwork()
+    }
+    this.mPlayerContext.get_render_handler().setRotation(this.mQPlayerSettingModel.mRotation)
     this.mPlayerContext.get_control_handler().addPlayerVideoDataListener(this.mVideoDataListener)
     this.mPlayerContext.get_control_handler().addPlayerAudioDataListener(this.mAudioDataListener)
     this.mPlayerContext.get_render_handler().addPlayerRenderListener(this.mFirstFrameListener)

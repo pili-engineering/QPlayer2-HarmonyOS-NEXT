@@ -1,7 +1,9 @@
 import { Immediately, PlaySpeed, QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel';
 import dataPreferences from '@ohos.data.preferences';
 import { Context } from '@kit.AbilityKit';
-import { QBlindType, QPlayerDecoderPriority, QPlayerSeek,
+import { QBlindType, QPlayerDecoderPriority,
+  QPlayerMirror,
+  QPlayerSeek,
   QPlayerStart,
   QRenderRatio } from '@qiniu/qplayer2-core/qplayer2-core';
 
@@ -21,6 +23,8 @@ export class QSettingPersistentStorageHelper{
     preferences.putSync('immediately', settingModel.mImmediately)
     preferences.putSync('subtitle_enable', settingModel.mSubtitleEnable)
     preferences.putSync('force_network_auth', settingModel.mForceNetworkAuth)
+    preferences.putSync('mirror_type', settingModel.mMirrorType)
+    preferences.putSync('rotation', settingModel.mRotation)
     console.log(`write settingModel.mPosition : ${settingModel.mPosition}`);
     preferences.flush()
   }
@@ -40,6 +44,8 @@ export class QSettingPersistentStorageHelper{
     let immediately : Immediately =  preferences.getSync('immediately',0) as Immediately
     let subtitleEnable : Immediately =  preferences.getSync('subtitle_enable',0) as number
     let forceNetworkAuth : Immediately =  preferences.getSync('force_network_auth',0) as number
+    let mirrorType : QPlayerMirror =  preferences.getSync('mirror_type',0) as QPlayerMirror
+    let rotation : QPlayerMirror =  preferences.getSync('rotation',0) as number
     let settingModel = new QPlayerSettingModel()
     settingModel.mSeekMode = seekValue
     settingModel.mBackgroundPlay = backgroundPlayValue
@@ -53,6 +59,8 @@ export class QSettingPersistentStorageHelper{
     settingModel.mImmediately = immediately
     settingModel.mSubtitleEnable = subtitleEnable
     settingModel.mForceNetworkAuth = forceNetworkAuth
+    settingModel.mMirrorType = mirrorType
+    settingModel.mRotation = rotation
     return settingModel
   }
 

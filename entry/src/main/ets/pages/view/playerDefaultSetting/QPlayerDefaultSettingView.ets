@@ -1,7 +1,7 @@
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
 import { Immediately, PlaySpeed, QPlayerSettingModel } from '../../model/longVideo/QPlayerSettingModel'
 import { QTitleView } from '../../common/component/QTitleView'
-import { QPlayerSeek, QPlayerStart } from '@qiniu/qplayer2-core/qplayer2-core'
+import { QPlayerMirror, QPlayerSeek, QPlayerStart } from '@qiniu/qplayer2-core/qplayer2-core'
 
 @Entry
 @Component
@@ -20,6 +20,7 @@ struct QPlayerDefaultSettingView{
     new innerSettingModel("字幕", this.mQPlayerSetting.mSubtitleEnable.valueOf(),["关闭","开启"]),
     new innerSettingModel("清晰度切换模式", this.mQPlayerSetting.mImmediately.valueOf(),["立即切换","无缝切换","直播立即点播无缝"]),
     new innerSettingModel("强制网络鉴权", this.mQPlayerSetting.mForceNetworkAuth.valueOf(),["关闭","开启"]),
+    new innerSettingModel("镜像", this.mQPlayerSetting.mMirrorType.valueOf(),["无","横向镜像","垂直镜像","横向和垂直都镜像"]),
   ]
   mUnitHeight : Number = 125
     build() {
@@ -247,6 +248,8 @@ struct settingViewUnit{
       this.mQPlayerSetting.mSubtitleEnable = index
     }else if (title == "强制网络鉴权"){
       this.mQPlayerSetting.mForceNetworkAuth = index
+    }else if (title == "镜像"){
+      this.mQPlayerSetting.mMirrorType = index as QPlayerMirror
     }
   }
 }

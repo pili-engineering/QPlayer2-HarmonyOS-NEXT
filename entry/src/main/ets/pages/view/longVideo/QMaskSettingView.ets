@@ -5,7 +5,9 @@ import { ArrayList } from '@kit.ArkTS'
 import App from '@system.app'
 import {
   QBlindType,
-  QIPlayerContext, QPlayerDecoderPriority, QPlayerSeek,
+  QIPlayerContext, QPlayerDecoderPriority,
+  QPlayerMirror,
+  QPlayerSeek,
   QPlayerStart,
   QRenderRatio } from '@qiniu/qplayer2-core/qplayer2-core'
 
@@ -26,6 +28,8 @@ export struct QMaskSettingView{
     new innerSettingModel("字幕",["关闭","开启"], this.mQPlayerSettingModel.mSubtitleEnable.valueOf()),
     new innerSettingModel("清晰度切换模式",["立即切换","无缝切换","直播立即点播无缝"], this.mQPlayerSettingModel.mImmediately.valueOf()),
     new innerSettingModel("强制网络鉴权",["关闭","开启"], this.mQPlayerSettingModel.mForceNetworkAuth.valueOf()),
+    new innerSettingModel("镜像",["无","横向镜像","垂直镜像","横向和垂直都镜像"], this.mQPlayerSettingModel.mMirrorType.valueOf()),
+    new innerSettingModel("旋转角度",[], this.mQPlayerSettingModel.mPosition.valueOf()),
   ]
   private mSettingViewUnitHeight :  number = 100
   private mSettingViewUnitLineHeight :  number = 2
@@ -57,7 +61,7 @@ export struct QMaskSettingView{
               }
             } else {
               if (element.mRadioButtonNameArray.length == 0) {
-                if (element.mTitle.toString() == "起播位置") {
+                if (element.mTitle.toString() == "起播位置" || element.mTitle.toString() == "旋转角度") {
                   SettingViewUnit({
                     mSettingModel: element,
                     mQPlayerSetting: this.mQPlayerSettingModel,
@@ -160,6 +164,23 @@ struct SettingViewUnit{
             .onChange((value)=>{
               this.mQPlayerSetting.mPosition = Number(value).valueOf()
               QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context , this.mQPlayerSetting)
+            })
+            .height(40)
+            .width('90%')
+            .id(this.mSettingModel.mTitle.toString() + "radio_" + -1)
+        }
+        if (this.mSettingModel.mTitle.toString() == "旋转角度"){
+          Slider({ max: 360, min: 0, value: this.mQPlayerSetting.mRotation})
+            .alignRules({
+              left : {anchor: "__container__",align: HorizontalAlign.Start},
+              top : {anchor : 'title_' + this.mSettingModel.mTitle , align : VerticalAlign.Bottom}
+            })
+            .backgroundColor($r('app.color.hyaline_background_color'))
+            .trackColor($r('app.color.white'))
+            .onChange((value)=>{
+              this.mQPlayerSetting.mRotation = Number(value).valueOf()
+              QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context , this.mQPlayerSetting)
+              this.mPlayerContext.get_render_handler().setRotation(this.mQPlayerSetting.mRotation)
             })
             .height(40)
             .width('90%')
@@ -319,6 +340,9 @@ struct SettingViewUnit{
       this.mPlayerContext.get_control_handler().setSubtitleEnable(this.mQPlayerSetting.mSubtitleEnable == 0 ? false : true)
     }else if (title == "强制网络鉴权"){
       this.mQPlayerSetting.mForceNetworkAuth = index
+    }else if (title == "镜像"){
+      this.mQPlayerSetting.mMirrorType = index as QPlayerMirror
+      this.mPlayerContext.get_render_handler().setMirrorType(this.mQPlayerSetting.mMirrorType)
     }
     QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context, this.mQPlayerSetting)
   }
