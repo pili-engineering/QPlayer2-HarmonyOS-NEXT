@@ -30,6 +30,7 @@ export struct QMaskSettingView{
     new innerSettingModel("强制网络鉴权",["关闭","开启"], this.mQPlayerSettingModel.mForceNetworkAuth.valueOf()),
     new innerSettingModel("镜像",["无","横向镜像","垂直镜像","横向和垂直都镜像"], this.mQPlayerSettingModel.mMirrorType.valueOf()),
     new innerSettingModel("旋转角度",[], this.mQPlayerSettingModel.mPosition.valueOf()),
+    new innerSettingModel("缩放",[], this.mQPlayerSettingModel.mScale.valueOf()),
   ]
   private mSettingViewUnitHeight :  number = 100
   private mSettingViewUnitLineHeight :  number = 2
@@ -61,7 +62,7 @@ export struct QMaskSettingView{
               }
             } else {
               if (element.mRadioButtonNameArray.length == 0) {
-                if (element.mTitle.toString() == "起播位置" || element.mTitle.toString() == "旋转角度") {
+                if (element.mTitle.toString() == "起播位置" || element.mTitle.toString() == "旋转角度"|| element.mTitle.toString() == "缩放") {
                   SettingViewUnit({
                     mSettingModel: element,
                     mQPlayerSetting: this.mQPlayerSettingModel,
@@ -182,6 +183,26 @@ struct SettingViewUnit{
               QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context , this.mQPlayerSetting)
               this.mPlayerContext.get_render_handler().setRotation(this.mQPlayerSetting.mRotation)
             })
+            .showTips(true,this.mQPlayerSetting.mRotation.toString())
+            .height(40)
+            .width('90%')
+            .id(this.mSettingModel.mTitle.toString() + "radio_" + -1)
+        }
+
+        if (this.mSettingModel.mTitle.toString() == "缩放"){
+          Slider({ max: 200, min: 0, value: this.mQPlayerSetting.mScale*100})
+            .alignRules({
+              left : {anchor: "__container__",align: HorizontalAlign.Start},
+              top : {anchor : 'title_' + this.mSettingModel.mTitle , align : VerticalAlign.Bottom}
+            })
+            .backgroundColor($r('app.color.hyaline_background_color'))
+            .trackColor($r('app.color.white'))
+            .onChange((value)=>{
+              this.mQPlayerSetting.mScale = Number(value/100.0).valueOf()
+              QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context , this.mQPlayerSetting)
+              this.mPlayerContext.get_render_handler().setScale(this.mQPlayerSetting.mScale)
+            })
+            .showTips(true,this.mQPlayerSetting.mScale.toString())
             .height(40)
             .width('90%')
             .id(this.mSettingModel.mTitle.toString() + "radio_" + -1)

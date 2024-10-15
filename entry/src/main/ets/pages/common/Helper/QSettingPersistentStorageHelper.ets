@@ -25,6 +25,7 @@ export class QSettingPersistentStorageHelper{
     preferences.putSync('force_network_auth', settingModel.mForceNetworkAuth)
     preferences.putSync('mirror_type', settingModel.mMirrorType)
     preferences.putSync('rotation', settingModel.mRotation)
+    preferences.putSync('scale', settingModel.mScale)
     console.log(`write settingModel.mPosition : ${settingModel.mPosition}`);
     preferences.flush()
   }
@@ -46,6 +47,7 @@ export class QSettingPersistentStorageHelper{
     let forceNetworkAuth : Immediately =  preferences.getSync('force_network_auth',0) as number
     let mirrorType : QPlayerMirror =  preferences.getSync('mirror_type',0) as QPlayerMirror
     let rotation : QPlayerMirror =  preferences.getSync('rotation',0) as number
+    let scale : QPlayerMirror =  preferences.getSync('scale',0) as number
     let settingModel = new QPlayerSettingModel()
     settingModel.mSeekMode = seekValue
     settingModel.mBackgroundPlay = backgroundPlayValue
@@ -61,6 +63,7 @@ export class QSettingPersistentStorageHelper{
     settingModel.mForceNetworkAuth = forceNetworkAuth
     settingModel.mMirrorType = mirrorType
     settingModel.mRotation = rotation
+    settingModel.mScale = scale
     return settingModel
   }
 

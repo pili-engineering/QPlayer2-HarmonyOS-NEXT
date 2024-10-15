@@ -36,6 +36,7 @@ export class QPlayerSettingModel{
   public mForceNetworkAuth : number = 0
   public mMirrorType : QPlayerMirror = QPlayerMirror.MIRROR_NONE
   public mRotation : number = 0
+  public mScale : number = 0
   constructor() {
   }
 }
