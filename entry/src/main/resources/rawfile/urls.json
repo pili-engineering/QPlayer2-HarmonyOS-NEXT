@@ -872,5 +872,21 @@
                 "renderType" : 1
             }
         ]
+    },
+    {
+        "name" : "54.点播-qiniu.mp4-无选中视频",
+        "isLive": false,
+        "streamElements": [
+            {
+                "userType": "",
+                "urlType": 0,
+                "url": "http://demovideos.qiniushawn.top/qiniu-2023-1080p.mp4",
+                "quality": 1080,
+                "isSelected": 0,
+                "backupUrl": "",
+                "referer": "",
+                "renderType" : 0
+            }
+        ]
     }
 ]
