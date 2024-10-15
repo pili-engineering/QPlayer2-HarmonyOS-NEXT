@@ -11,7 +11,7 @@ hvigor.nodesEvaluated(() => {
     let currentTime = date.toLocaleString('zh-cn');
 
     appJson5.app.vendor = currentTime;
-    appJson5.app.versionName = "{1.5.0_beta1_1}";
+    appJson5.app.versionName = "{1.5.0}";
 
     if (appContext.getBuildMode() === 'debug') {
         appJson5.app.asanEnabled = true;
