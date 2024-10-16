@@ -47,7 +47,7 @@ export class QSettingPersistentStorageHelper{
     let forceNetworkAuth : Immediately =  preferences.getSync('force_network_auth',0) as number
     let mirrorType : QPlayerMirror =  preferences.getSync('mirror_type',0) as QPlayerMirror
     let rotation : QPlayerMirror =  preferences.getSync('rotation',0) as number
-    let scale : QPlayerMirror =  preferences.getSync('scale',0) as number
+    let scale : number =  preferences.getSync('scale',1) as number
     let settingModel = new QPlayerSettingModel()
     settingModel.mSeekMode = seekValue
     settingModel.mBackgroundPlay = backgroundPlayValue
