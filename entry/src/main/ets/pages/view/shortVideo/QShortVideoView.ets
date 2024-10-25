@@ -82,10 +82,15 @@ struct QShortVideoView {
       }
     }
   }
+  private releaseCount = 0;
   private mQPlayerStateListener : QIPlayerStateChangeListener ={
     onStateChange:(context : QIPlayerContext ,state: QPlayerState)=>{
       if (state == QPlayerState.RELEASE) {
-        router.back()
+        this.releaseCount ++;
+        if (this.releaseCount == 3) {
+          router.back()
+        }
+        console.log("this.releasecount :" + this.releaseCount.toString());
       }
     }
   }
@@ -256,6 +261,8 @@ struct QShortVideoView {
   onBackPress(): boolean | void {
     this.mShortVideoPlayerViewCache.stop()
     for (let index = 0; index < this.mQShortVideoDataSource.totalCount(); index++) {
+      console.log("index releasecount : " + index.toString());
+      this.mQShortVideoDataSource.getData(index)?.get_control_handler().addPlayerStateListener(this.mQPlayerStateListener)
       this.mQShortVideoDataSource.getData(index)?.get_control_handler().release();
     }
     this.mPlayerContext?.get_control_handler().release()
