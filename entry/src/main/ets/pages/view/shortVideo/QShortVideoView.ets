@@ -85,7 +85,7 @@ struct QShortVideoView {
   private releaseCount = 0;
   private mQPlayerStateListener : QIPlayerStateChangeListener ={
     onStateChange:(context : QIPlayerContext ,state: QPlayerState)=>{
-      if (state == QPlayerState.RELEASE) {
+      if (state == QPlayerState.END) {
         this.releaseCount ++;
         if (this.releaseCount == 3) {
           router.back()
@@ -176,7 +176,7 @@ struct QShortVideoView {
             this.mShortVideoPlayerViewCache.playMediaItemContextById(0,this.mQShortVideoDataSource.getData(0))
             this.mShortVideoPlayerViewCache.changePosition(0,this.mQShortVideoDataSource.getData(1),null)
             this.mQShortVideoDataSource.getData(0)?.get_render_handler().addPlayerRenderListener(this.mQPlayerRenderListener)
-            this.mQShortVideoDataSource.getData(0)?.get_control_handler().addPlayerStateListener(this.mQPlayerStateListener)
+            // this.mQShortVideoDataSource.getData(0)?.get_control_handler().addPlayerStateListener(this.mQPlayerStateListener)
           })
           .onChange((value : number)=>{
             console.log(`Swiper value : ${value} currentNumber : ${this.mCurrentNumber} loop : ${this.mCurrentNumber != 0 && this.mPlayItemManager.count()-this.mCurrentNumber > 3}`)
