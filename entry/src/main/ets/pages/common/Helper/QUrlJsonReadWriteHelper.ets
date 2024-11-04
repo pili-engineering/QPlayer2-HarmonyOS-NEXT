@@ -40,7 +40,7 @@ interface  ShortVideoUrlJsonModel{
   subtitleElements : Array<UrlJsonSubtitleElementModel>
 }
 export class QUrlJsonReadWriteHelper{
-  static readLongVideoUrl(context : Context,url_model_call_back :(url_models : Array<QPlayerDemoMediaModel>)=>void){
+  static readLongVideoUrl(context : Context,url_model_call_back :(url_models : ArrayList<QPlayerDemoMediaModel>)=>void){
     let value = context.resourceManager.getRawFileContentSync('urls.json')
     const url_decoder = util.TextDecoder.create("utf-8")
     let url_string = url_decoder.decodeWithStream(value, { stream: false })
@@ -78,7 +78,7 @@ export class QUrlJsonReadWriteHelper{
       model.add(new QPlayerDemoMediaModel(element.name,QPlayerCreateMediaModelHelper.create(element.isLive,elements.convertToArray(),subtitleElements.convertToArray())))
 
     })
-    url_model_call_back(model.convertToArray())
+    url_model_call_back(model)
   }
 
   static readShortVideoUrl(context : Context, url_model_call_back :(url_models : ArrayList<QNPlayItem>)=>void){

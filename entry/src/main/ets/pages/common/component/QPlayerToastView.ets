@@ -11,7 +11,6 @@ class InnerToastModel{
   public  mViewShow : Visibility = Visibility.Visible
   private mViewTimerId : Number = 0
   private mViewTimeCount : Number = 5
-  private mCallBack :()=>void
   constructor(view_id : Number,width : Length, height: Length , text : String,bottom: String, call_back : ()=>void, align? : VerticalAlign ) {
     this.mViewWidth = width
     this.mViewHeight = height
@@ -19,7 +18,6 @@ class InnerToastModel{
     this.mViewAlign = align? align:VerticalAlign.Top
     this.mViewBottom = bottom
     this.mViewId = view_id
-    this.mCallBack = call_back
 
     this.mViewTimerId = setInterval(()=>{
       this.mViewTimeCount = this.mViewTimeCount.valueOf() - 1

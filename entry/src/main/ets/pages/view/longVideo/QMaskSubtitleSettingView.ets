@@ -7,7 +7,7 @@ import { List } from '@kit.ArkTS'
 export struct QMaskSubtitleSettingView {
   @Link mCurrentModel: QMediaModel | null
   private mCurrentElement: QSubtitleElement | null = null
-  @Link mPlayerContext: QIPlayerContext
+  @Link mPlayerContext: QIPlayerContext | null
   @State mediaModelButtonBackgroundColorArray: Array<ResourceColor> = []
   private mSubtitleListener : QIPlayerSubtitleListener = {
 
@@ -31,7 +31,7 @@ export struct QMaskSubtitleSettingView {
   }
   build() {
     Column() {
-      ForEach(this.mCurrentModel!.subtitleElements, (streamElement: QSubtitleElement, index: number) => {
+      ForEach(this.mCurrentModel?.subtitleElements, (streamElement: QSubtitleElement, index: number) => {
         Button(streamElement.name)
           .backgroundColor($r('app.color.hyaline_background_color'))
           .margin({ top: 10 })
@@ -48,9 +48,9 @@ export struct QMaskSubtitleSettingView {
                   $r('app.color.not_selected_play_speed_button_background_color')
               }
             })
-            // this.mPlayerContext.get_control_handler().setSubtitle(streamElement.name)
+            // this.mPlayerContext?.get_control_handler().setSubtitle(streamElement.name)
 
-            this.mPlayerContext.get_control_handler().setSubtitle(streamElement.name)
+            this.mPlayerContext?.get_control_handler().setSubtitle(streamElement.name)
             this.subtitleNameChange(streamElement.name)
             // this.mQPlayerSettingModel.mPlaySpeed = index as PlaySpeed
             // QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context, this.mQPlayerSettingModel)
@@ -64,7 +64,7 @@ export struct QMaskSubtitleSettingView {
 
   aboutToAppear(): void {
     let colorList: List<ResourceColor> = new List()
-    this.mPlayerContext.get_control_handler().addPlayerSubtitleListener(this.mSubtitleListener)
+    this.mPlayerContext?.get_control_handler().addPlayerSubtitleListener(this.mSubtitleListener)
     this.mCurrentModel!.subtitleElements.forEach((subtitleElement: QSubtitleElement, value: number) => {
       if (subtitleElement.isSelected) {
         colorList.add($r('app.color.selected_play_speed_button_background_color'))

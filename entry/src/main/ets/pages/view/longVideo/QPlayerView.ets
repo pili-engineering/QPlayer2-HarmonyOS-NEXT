@@ -47,14 +47,14 @@ export struct QPlayerView{
   @State @Watch("playSwitchQualityVisibleChange") mSwitchQualityViewVisible : Visibility = Visibility.Hidden
   @State @Watch("playSubtitleVisibleChange") mSubtitleViewVisible : Visibility = Visibility.Hidden
   @Link @Watch("deviceOrientationChange") mDeviceOrientation : window.Orientation
-  @Link mMediaModel : QPlayerDemoMediaModels
-  @Link mPlayerContext : QIPlayerContext
+  @Link mMediaModel : QPlayerDemoMediaModels | null
+  @Link mPlayerContext : QIPlayerContext | null
   @Link mIsPlaying : Boolean
   @Link mIsLive : Boolean
   @State mShootImagePixelMap : PixelMap | null = null
   @State mBufferringVisible  : Visibility = Visibility.Hidden
   @State mXComponentId : string = 'qplayer2-core-renderview'
-  @Link mQPlayerSettingModel : QPlayerSettingModel
+  @Link mQPlayerSettingModel : QPlayerSettingModel | null
   @Link mCurrentModel : QMediaModel | null
   @State mShootSaveButtonOptions : SaveButtonOptions = {text : SaveDescription.SAVE_IMAGE,buttonType: ButtonType.Capsule}
   private mShootImageCallBack : (value : string)=>void = (value : string)=>{};
@@ -241,7 +241,7 @@ export struct QPlayerView{
           PanGesture()
             .onActionEnd((event : GestureEvent)=>{
               if (this.mCurrentModel?.streamElements[0].videoRenderType == QVideoRenderType.PANORAMA_EQUIRECT_ANGULAR) {
-                this.mPlayerContext.get_render_handler().setPanoramaViewRotate(this.mRotateY - event.offsetY,this.mRotateX - event.offsetX)
+                this.mPlayerContext?.get_render_handler().setPanoramaViewRotate(this.mRotateY - event.offsetY,this.mRotateX - event.offsetX)
                 this.mRotateX -= event.offsetX
                 this.mRotateY -= event.offsetY
               }
@@ -249,7 +249,7 @@ export struct QPlayerView{
             .onActionUpdate((event : GestureEvent)=>{
               if (this.mCurrentModel?.streamElements[0].videoRenderType == QVideoRenderType.PANORAMA_EQUIRECT_ANGULAR) {
                 if ((new Date()).valueOf()-this.currentTimeNumber>1000.0/this.vrFrameRate) {
-                  this.mPlayerContext.get_render_handler().setPanoramaViewRotate(this.mRotateY - event.offsetY,this.mRotateX - event.offsetX)
+                  this.mPlayerContext?.get_render_handler().setPanoramaViewRotate(this.mRotateY - event.offsetY,this.mRotateX - event.offsetX)
                   this.currentTimeNumber = (new Date()).valueOf()
                 }
               }
@@ -335,7 +335,7 @@ export struct QPlayerView{
             PanGesture()
               .onActionEnd((event : GestureEvent)=>{
                 if (this.mCurrentModel?.streamElements[0].videoRenderType == QVideoRenderType.PANORAMA_EQUIRECT_ANGULAR) {
-                  this.mPlayerContext.get_render_handler().setPanoramaViewRotate(this.mRotateY - event.offsetY,this.mRotateX - event.offsetX)
+                  this.mPlayerContext?.get_render_handler().setPanoramaViewRotate(this.mRotateY - event.offsetY,this.mRotateX - event.offsetX)
                   this.mRotateX -= event.offsetX
                   this.mRotateY -= event.offsetY
                 }
@@ -343,7 +343,7 @@ export struct QPlayerView{
               .onActionUpdate((event : GestureEvent)=>{
                 if (this.mCurrentModel?.streamElements[0].videoRenderType == QVideoRenderType.PANORAMA_EQUIRECT_ANGULAR) {
                   if ((new Date()).valueOf()-this.currentTimeNumber>1000.0/this.vrFrameRate) {
-                    this.mPlayerContext.get_render_handler().setPanoramaViewRotate(this.mRotateY - event.offsetY,this.mRotateX - event.offsetX)
+                    this.mPlayerContext?.get_render_handler().setPanoramaViewRotate(this.mRotateY - event.offsetY,this.mRotateX - event.offsetX)
                     this.currentTimeNumber = (new Date()).valueOf()
                   }
                 }
@@ -515,56 +515,56 @@ export struct QPlayerView{
   }
   aboutToAppear(): void {
     this.maskVisibleTimerChange()
-    this.mPlayerContext.get_control_handler().setSeekMode(this.mQPlayerSettingModel.mSeekMode)
-    if (this.mQPlayerSettingModel.mBackgroundPlay == 0) {
-      this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(false)
+    this.mPlayerContext?.get_control_handler().setSeekMode(this.mQPlayerSettingModel!.mSeekMode)
+    if (this.mQPlayerSettingModel?.mBackgroundPlay == 0) {
+      this.mPlayerContext?.get_control_handler().setBackgroundPlayEnable(false)
     }else {
-      this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
+      this.mPlayerContext?.get_control_handler().setBackgroundPlayEnable(true)
     }
-    this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateCallBack)
+    this.mPlayerContext?.get_control_handler().addPlayerStateListener(this.mStateCallBack)
 
-    this.mPlayerContext.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingCallBack)
-    this.mPlayerContext.get_control_handler().addPlayerShootVideoListener(this.mShootVideoListener)
-    this.mPlayerContext.get_control_handler().setDecoderType(this.mQPlayerSettingModel.mDecoderType)
-    this.mPlayerContext.get_control_handler().setSEIEnable(this.mQPlayerSettingModel.mSEIEnable == 0 ? false : true)
-    this.mPlayerContext.get_render_handler().setRenderRatio(this.mQPlayerSettingModel.mRenderRatio)
-    this.mPlayerContext.get_render_handler().setBlindType(this.mQPlayerSettingModel.mBlinderType)
-    this.mPlayerContext.get_control_handler().setStartAction(this.mQPlayerSettingModel.mStartAction)
-    this.mPlayerContext.get_render_handler().setMirrorType(this.mQPlayerSettingModel.mMirrorType)
-    if (this.mQPlayerSettingModel.mForceNetworkAuth != 0) {
-      this.mPlayerContext.get_control_handler().forceAuthenticationFromNetwork()
+    this.mPlayerContext?.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingCallBack)
+    this.mPlayerContext?.get_control_handler().addPlayerShootVideoListener(this.mShootVideoListener)
+    this.mPlayerContext?.get_control_handler().setDecoderType(this.mQPlayerSettingModel!.mDecoderType)
+    this.mPlayerContext?.get_control_handler().setSEIEnable(this.mQPlayerSettingModel!.mSEIEnable == 0 ? false : true)
+    this.mPlayerContext?.get_render_handler().setRenderRatio(this.mQPlayerSettingModel!.mRenderRatio)
+    this.mPlayerContext?.get_render_handler().setBlindType(this.mQPlayerSettingModel!.mBlinderType)
+    this.mPlayerContext?.get_control_handler().setStartAction(this.mQPlayerSettingModel!.mStartAction)
+    this.mPlayerContext?.get_render_handler().setMirrorType(this.mQPlayerSettingModel!.mMirrorType)
+    if (this.mQPlayerSettingModel?.mForceNetworkAuth != 0) {
+      this.mPlayerContext?.get_control_handler().forceAuthenticationFromNetwork()
     }
-    this.mPlayerContext.get_render_handler().setRotation(this.mQPlayerSettingModel.mRotation)
-    this.mPlayerContext.get_render_handler().setScale(this.mQPlayerSettingModel.mScale)
-    this.mPlayerContext.get_control_handler().addPlayerVideoDataListener(this.mVideoDataListener)
-    this.mPlayerContext.get_control_handler().addPlayerAudioDataListener(this.mAudioDataListener)
-    this.mPlayerContext.get_render_handler().addPlayerRenderListener(this.mFirstFrameListener)
-    this.mPlayerContext.get_control_handler().addPlayerSubtitleListener(this.mSubtitleListener)
-    this.mPlayerContext.get_control_handler().setSubtitleEnable(this.mQPlayerSettingModel.mSubtitleEnable == 0 ? false : true)
+    this.mPlayerContext?.get_render_handler().setRotation(this.mQPlayerSettingModel!.mRotation)
+    this.mPlayerContext?.get_render_handler().setScale(this.mQPlayerSettingModel!.mScale)
+    this.mPlayerContext?.get_control_handler().addPlayerVideoDataListener(this.mVideoDataListener)
+    this.mPlayerContext?.get_control_handler().addPlayerAudioDataListener(this.mAudioDataListener)
+    this.mPlayerContext?.get_render_handler().addPlayerRenderListener(this.mFirstFrameListener)
+    this.mPlayerContext?.get_control_handler().addPlayerSubtitleListener(this.mSubtitleListener)
+    this.mPlayerContext?.get_control_handler().setSubtitleEnable(this.mQPlayerSettingModel?.mSubtitleEnable == 0 ? false : true)
     //此处开启音视频回调，会将音视频数据存储到沙河目录的 videoOrAudioDataFile 下的 video.yuv / video.rgba 和 audio.raw
     //每次切集会删除保存的音视频回调数据，并重新保存当前视频的前一百帧数据
     //具体的实现方式见 mAudioDataListener 和 mVideoDataListener 以及 mFirstFrameListener 的 文件操作
-    // this.mPlayerContext.get_control_handler().setVideoDataEnable(true)
-    // this.mPlayerContext.get_control_handler().setAudioDataEnable(true)
-    // this.mPlayerContext.get_control_handler().setVideoDataType(QVideoType.RGBA)
+    // this.mPlayerContext?.get_control_handler().setVideoDataEnable(true)
+    // this.mPlayerContext?.get_control_handler().setAudioDataEnable(true)
+    // this.mPlayerContext?.get_control_handler().setVideoDataType(QVideoType.RGBA)
     if (!fileIo.accessSync((AppStorage.get("context") as Context).filesDir + "/videoOrAudioDataFile")){
       fileIo.mkdirSync((AppStorage.get("context") as Context).filesDir + "/videoOrAudioDataFile")
     }
     this.mVideoDataSaveTimes = 0
-    this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel, this.mQPlayerSettingModel.mPosition)
+    this.mPlayerContext?.get_control_handler().playMediaModel(this.mMediaModel!.mMediaModels![0].mMediaModel, this.mQPlayerSettingModel!.mPosition)
 
-    if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_0_5) {
-      this.mPlayerContext.get_control_handler().setSpeed(0.5)
-    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_0_75){
-      this.mPlayerContext.get_control_handler().setSpeed(0.75)
-    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_1_0){
-      this.mPlayerContext.get_control_handler().setSpeed(1.0)
-    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_1_25){
-      this.mPlayerContext.get_control_handler().setSpeed(1.25)
-    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_1_5){
-      this.mPlayerContext.get_control_handler().setSpeed(1.5)
-    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_2_0){
-      this.mPlayerContext.get_control_handler().setSpeed(2.0)
+    if (this.mQPlayerSettingModel?.mPlaySpeed == PlaySpeed.SPEED_0_5) {
+      this.mPlayerContext?.get_control_handler().setSpeed(0.5)
+    }else if (this.mQPlayerSettingModel?.mPlaySpeed == PlaySpeed.SPEED_0_75){
+      this.mPlayerContext?.get_control_handler().setSpeed(0.75)
+    }else if (this.mQPlayerSettingModel?.mPlaySpeed == PlaySpeed.SPEED_1_0){
+      this.mPlayerContext?.get_control_handler().setSpeed(1.0)
+    }else if (this.mQPlayerSettingModel?.mPlaySpeed == PlaySpeed.SPEED_1_25){
+      this.mPlayerContext?.get_control_handler().setSpeed(1.25)
+    }else if (this.mQPlayerSettingModel?.mPlaySpeed == PlaySpeed.SPEED_1_5){
+      this.mPlayerContext?.get_control_handler().setSpeed(1.5)
+    }else if (this.mQPlayerSettingModel?.mPlaySpeed == PlaySpeed.SPEED_2_0){
+      this.mPlayerContext?.get_control_handler().setSpeed(2.0)
     }
   }
   deviceOrientationChange(){
@@ -624,9 +624,9 @@ export struct QPlayerView{
   onDoubleClick(){
     this.mQPlayerMaskTimerCount = 0;
     if (this.mIsPlaying == true) {
-      this.mPlayerContext.get_control_handler().pauseRender()
+      this.mPlayerContext?.get_control_handler().pauseRender()
     }else {
-      this.mPlayerContext.get_control_handler().resumeRender()
+      this.mPlayerContext?.get_control_handler().resumeRender()
     }
   }
 }
