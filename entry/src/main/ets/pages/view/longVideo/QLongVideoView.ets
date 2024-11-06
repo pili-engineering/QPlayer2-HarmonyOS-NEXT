@@ -372,6 +372,7 @@ struct QLongVideoView {
   }
   aboutToDisappear(): void {
     let windowStage : window.WindowStage = AppStorage.get("windowStage") as window.WindowStage
+    this.listener.off('change');
 
     try {
       windowStage.getMainWindowSync().setWindowBackgroundColor("#ffffffff")

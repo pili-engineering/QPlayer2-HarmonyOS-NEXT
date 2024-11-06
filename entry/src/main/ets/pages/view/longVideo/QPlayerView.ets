@@ -75,6 +75,9 @@ export struct QPlayerView{
       else {
         this.mIsPlaying = false
       }
+      if (state == QPlayerState.END) {
+        this.stopMaskTimer()
+      }
     }
   }
   private mSubtitleListener : QIPlayerSubtitleListener = {

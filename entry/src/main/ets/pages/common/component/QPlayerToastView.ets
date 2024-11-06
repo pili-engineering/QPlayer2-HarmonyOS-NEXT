@@ -1,4 +1,5 @@
 import { window } from '@kit.ArkUI'
+import { ArrayList } from '@kit.ArkTS'
 
 @Observed
 class InnerToastModel{
@@ -38,7 +39,7 @@ class InnerToastModel{
 export struct QPlayerToastView{
   private mTextCount = 0
   @Link @Watch('textChange') mToastText : String
-  @State @Watch('arrayChange') mInnerToastModelArray : Array<InnerToastModel> = [
+  @State @Watch('arrayChange') mInnerToastModelArray : Array<InnerToastModel> | null= [
 
   ]
   @Link @Watch('deviceOrientationChange') mDeviceOrientation : window.Orientation
@@ -78,19 +79,19 @@ export struct QPlayerToastView{
     let new_toast_model : InnerToastModel
     if(this.mDeviceOrientation == window.Orientation.PORTRAIT){
       new_toast_model = new InnerToastModel(this.mTextCount.valueOf(),'100%','5%',this.mToastText.toString(),"__container__",()=>{
-        this.mInnerToastModelArray.shift()
+        this.mInnerToastModelArray?.shift()
       })
     }else {
       new_toast_model = new InnerToastModel(this.mTextCount.valueOf(),'100%','10%',this.mToastText.toString(),"__container__",()=>{
-        this.mInnerToastModelArray.shift()
+        this.mInnerToastModelArray?.shift()
       })
     }
     this.mTextCount ++
-    this.mInnerToastModelArray.push(new_toast_model)
+    this.mInnerToastModelArray?.push(new_toast_model)
   }
   arrayChange(name:String){
-    let count : Number = this.mTextCount.valueOf() - this.mInnerToastModelArray.length.valueOf()
-    this.mInnerToastModelArray.forEach(element => {
+    let count : Number = this.mTextCount.valueOf() - this.mInnerToastModelArray!.length.valueOf()
+    this.mInnerToastModelArray?.forEach(element => {
       if (count.valueOf() +1 == this.mTextCount.valueOf()) {
         element.mViewBottom = "__container__"
         element.mViewAlign = VerticalAlign.Bottom
@@ -102,7 +103,7 @@ export struct QPlayerToastView{
     });
   }
   deviceOrientationChange(name : String){
-    this.mInnerToastModelArray.forEach(element => {
+    this.mInnerToastModelArray?.forEach(element => {
        element.stopTimer()
     });
     this.mInnerToastModelArray = []
