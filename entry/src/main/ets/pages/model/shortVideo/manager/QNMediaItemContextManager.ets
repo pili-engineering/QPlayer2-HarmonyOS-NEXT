@@ -58,7 +58,7 @@ export class QNMediaItemContextManager{
       }
     }
     if (mediaItem == undefined) {
-      mediaItem = QPlayerContextFactory.createMediaItemContext(AppStorage.get("context") as Context, mediaModel, startPos, logLevel, localStorageDir)
+      mediaItem = QPlayerContextFactory.createMediaItemContext(mediaModel, startPos, logLevel, localStorageDir)
       mediaItem.get_control_handler().start()
       this.mMediaItemContextMap.set(itemId, mediaItem)
       console.error(`${this.TAG} load::mediaitem id = ${itemId}`)

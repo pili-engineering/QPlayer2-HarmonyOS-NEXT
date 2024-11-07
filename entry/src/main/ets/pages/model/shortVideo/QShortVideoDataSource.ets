@@ -9,7 +9,6 @@ export class QShortVideoDataSource implements IDataSource{
 
   constructor(list: (QIPlayerContext | null)[]) {
     list.forEach((context : QIPlayerContext | null)=>{
-      context?.init(AppStorage.get("context") as Context, AppStorage.get("context") as common.UIAbilityContext)
       context?.get_control_handler().setStartAction(QPlayerStart.PAUSE)
     })
     this.list = list

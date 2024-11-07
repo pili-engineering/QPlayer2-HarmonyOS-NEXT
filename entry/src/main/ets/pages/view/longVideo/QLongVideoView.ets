@@ -62,7 +62,7 @@ struct QLongVideoView {
     QLogLevel.LOG_INFO,
     (AppStorage.get("context") as Context).filesDir,
     bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).versionName,
-    "")
+    "", AppStorage.get("context") as common.UIAbilityContext)
 
   private mStateChange : QIPlayerStateChangeListener = {
     onStateChange:(context : QIPlayerContext , state : QPlayerState)=>{
@@ -365,7 +365,6 @@ struct QLongVideoView {
 
   aboutToAppear(): void {
     let mContext : Context = AppStorage.get('context') as Context
-    this.mPlayerContext?.init(mContext, getContext(this) as common.UIAbilityContext)
     this.listener.on('change', (mediaQueryResult:mediaquery.MediaQueryResult) => { this.onPortrait(mediaQueryResult) });
     this.addAllQPlayerListeners()
 

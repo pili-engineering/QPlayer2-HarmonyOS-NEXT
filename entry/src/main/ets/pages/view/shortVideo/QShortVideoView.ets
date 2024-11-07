@@ -47,17 +47,17 @@ struct QShortVideoView {
       QLogLevel.LOG_INFO,
       (AppStorage.get("context") as Context).filesDir,
       bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).versionName,
-      ""),
+      "", AppStorage.get("context") as common.UIAbilityContext),
     QPlayerContextFactory.createPlayerContext(
     QLogLevel.LOG_INFO,
     (AppStorage.get("context") as Context).filesDir,
     bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).versionName,
-    ""),
+    "", AppStorage.get("context") as common.UIAbilityContext),
     QPlayerContextFactory.createPlayerContext(
     QLogLevel.LOG_INFO,
     (AppStorage.get("context") as Context).filesDir,
     bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).versionName,
-    "")
+    "", AppStorage.get("context") as common.UIAbilityContext)
   ])
   private mPlayerContext : QIPlayerContext | null = this.mQShortVideoDataSource.getData(0)
     private mMediaItemCommandNotAllowListener : QIMediaItemCommandNotAllowListener = {
