@@ -30,8 +30,8 @@ import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
   QIPlayerAudioListener,
   QIPlayerSubtitleListener,
   QIPlayerStateChangeListener} from '@qiniu/qplayer2-core/qplayer2-core'
-import { QPlayerState } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerState'
-import { QPlayerDecoderType } from '@qiniu/qplayer2-core/src/main/ets/public/enums/QPlayerDecoderType'
+import { QPlayerState } from '@qiniu/qplayer2-core/qplayer2-core'
+import { QPlayerDecoderType } from '@qiniu/qplayer2-core/qplayer2-core'
 
 import { util } from '@kit.ArkTS'
 import utils from '@arkts.utils'
