@@ -18,4 +18,10 @@
 ​    2.构造方法参数列表新增 common.UIAbilityContext
 
 6.优化内存泄漏
+7.第三方依赖库升级
+
+- 升级ffmpeg至6.1
+
+- 升级openssl至1.1.1w
+- 升级libcurl至8.5
 
