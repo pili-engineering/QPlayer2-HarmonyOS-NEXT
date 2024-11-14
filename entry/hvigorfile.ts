@@ -25,8 +25,8 @@ export function setPackage(dependenciesName : string, dependenciesValue : string
 export default {
     system: hapTasks,  /* Built-in plugin of Hvigor. It cannot be modified. */
     plugins:[
-        // setPackage("ohpm","^1.5.0-preview4","1.5.0-preview4")
+        setPackage("ohpm","^1.5.0","1.5.0")
       // setPackage("source","file:../qplayer2_core","1.5.0")
-      setPackage("local","file:./dependency/qplayer2_core.har","1.5.0")
+      // setPackage("local","file:./dependency/qplayer2_core.har","1.5.0")
     ]         /* Custom plugin to extend the functionality of Hvigor. */
 }
