@@ -11,7 +11,7 @@ export  struct  QPlayerStatusView{
    @State mPlayerFPS : String = "0fps"
    @State mPlayerDownloadSpeed : String = "0kb/s"
    @State mPlayerBufferPostion : String = "0ms"
-   @Link mPlayerContext : QIPlayerContext
+   @Link mPlayerContext : QIPlayerContext | null
    private mStateChangeListener : QIPlayerStateChangeListener ={
       onStateChange:(context : QIPlayerContext ,state: QPlayerState)=>{
          let stateString : string
@@ -129,11 +129,11 @@ export  struct  QPlayerStatusView{
       .backgroundColor($r("app.color.default_background_color"))
    }
    aboutToAppear(): void {
-      this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateChangeListener)
+      this.mPlayerContext?.get_control_handler().addPlayerStateListener(this.mStateChangeListener)
 
-      this.mPlayerContext.get_control_handler().addPlayerFPSChangeListener(this.mFPSListener)
-      this.mPlayerContext.get_control_handler().addPlayerDownloadChangeListener(this.mDownloadListener)
-      this.mPlayerContext.get_render_handler().addPlayerRenderListener(this.mRenderListener)
+      this.mPlayerContext?.get_control_handler().addPlayerFPSChangeListener(this.mFPSListener)
+      this.mPlayerContext?.get_control_handler().addPlayerDownloadChangeListener(this.mDownloadListener)
+      this.mPlayerContext?.get_render_handler().addPlayerRenderListener(this.mRenderListener)
    }
 
 }

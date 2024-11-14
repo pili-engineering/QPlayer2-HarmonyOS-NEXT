@@ -16,7 +16,9 @@ import {QSurfaceRenderView,QIPlayerContext,
   QChannelLayout,
   QVideoType,
   QIPlayerRenderListener,
-  QPlayerState
+  QPlayerState,
+  QIPlayerSubtitleListener,
+  QVideoRenderType
 } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerDemoMediaModels } from '../../model/longVideo/QPlayerDemoMediaModel'
 import { QMaskSettingView } from './QMaskSettingView'
@@ -29,26 +31,30 @@ import { image } from '@kit.ImageKit'
 import { BusinessError } from '@ohos.base'
 import { photoAccessHelper } from '@kit.MediaLibraryKit'
 import fileIo from '@ohos.file.fs'
+import { QMaskSubtitleSettingView } from './QMaskSubtitleSettingView'
 
 @Component
 export struct QPlayerView{
+  private vrFrameRate = 60
   private mQPlayerMaskTimerCount : Number = 0
   private mQPlayerMaskTimerId : Number = 0
   private mQPlayerIsMaskTimerStart : Boolean = false
   @State mShootViewVisible : Visibility = Visibility.Hidden
+  @State mSubtitleText : string = ""
   @State mMaskVisible : Visibility = Visibility.Visible
   @State @Watch("settingViewVisibleChange") mSettingViewVisible : Visibility = Visibility.Hidden
   @State @Watch("playSpeedViewVisibleChange") mPlaySpeedViewVisible : Visibility = Visibility.Hidden
   @State @Watch("playSwitchQualityVisibleChange") mSwitchQualityViewVisible : Visibility = Visibility.Hidden
+  @State @Watch("playSubtitleVisibleChange") mSubtitleViewVisible : Visibility = Visibility.Hidden
   @Link @Watch("deviceOrientationChange") mDeviceOrientation : window.Orientation
-  @Link mMediaModel : QPlayerDemoMediaModels
-  @Link mPlayerContext : QIPlayerContext
+  @Link mMediaModel : QPlayerDemoMediaModels | null
+  @Link mPlayerContext : QIPlayerContext | null
   @Link mIsPlaying : Boolean
   @Link mIsLive : Boolean
   @State mShootImagePixelMap : PixelMap | null = null
   @State mBufferringVisible  : Visibility = Visibility.Hidden
   @State mXComponentId : string = 'qplayer2-core-renderview'
-  @Link mQPlayerSettingModel : QPlayerSettingModel
+  @Link mQPlayerSettingModel : QPlayerSettingModel | null
   @Link mCurrentModel : QMediaModel | null
   @State mShootSaveButtonOptions : SaveButtonOptions = {text : SaveDescription.SAVE_IMAGE,buttonType: ButtonType.Capsule}
   private mShootImageCallBack : (value : string)=>void = (value : string)=>{};
@@ -57,15 +63,42 @@ export struct QPlayerView{
   @State mVideoDataSaveTimes : number = 0
   private mAudioDataSaveFileName : string = "/videoOrAudioDataFile/audio"
   @State mAudioDataSaveTimes : number = 0
+  private currentTimeNumber : number = 0;
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
-
+      if (state != QPlayerState.PLAYING && state != QPlayerState.SEEKING && state != QPlayerState.PAUSED_RENDER){
+        this.mSubtitleText = ""
+      }
       if (state == QPlayerState.PLAYING) {
         this.mIsPlaying = true
       }
       else {
         this.mIsPlaying = false
       }
+      if (state == QPlayerState.END) {
+        this.stopMaskTimer()
+      }
+    }
+  }
+  private mSubtitleListener : QIPlayerSubtitleListener = {
+
+    onSubtitleTextChange:(context : QIPlayerContext , text: string ) => {
+      this.mSubtitleText = text
+    },
+
+    onSubtitleNameChange:(context : QIPlayerContext , name: string ) => {
+    },
+
+    onSubtitleEnable:(context : QIPlayerContext , enable: boolean ) => {
+      if (enable == false) {
+        this.mSubtitleText = ""
+      }
+    },
+
+    onSubtitleLoaded:(context : QIPlayerContext , name: string , result: boolean ) => {
+    },
+
+    onSubtitleDecoded:(context : QIPlayerContext , name: string , result: boolean ) => {
     }
   }
   private mFirstFrameListener : QIPlayerRenderListener = {
@@ -187,6 +220,8 @@ export struct QPlayerView{
       this.mBufferringVisible = Visibility.Hidden
     }
   }
+  private mRotateX : number = 0;
+  private mRotateY : number = 0;
   build(){
     Row() {
       Stack() {
@@ -204,6 +239,30 @@ export struct QPlayerView{
             .onAction((event : GestureEvent)=>{
               this.onDoubleClick()
             })
+        )
+        .gesture(
+          PanGesture()
+            .onActionEnd((event : GestureEvent)=>{
+              if (this.mCurrentModel?.streamElements[0].videoRenderType == QVideoRenderType.PANORAMA_EQUIRECT_ANGULAR) {
+                this.mPlayerContext?.get_render_handler().setPanoramaViewRotate(this.mRotateY - event.offsetY,this.mRotateX - event.offsetX)
+                this.mRotateX -= event.offsetX
+                this.mRotateY -= event.offsetY
+              }
+            })
+            .onActionUpdate((event : GestureEvent)=>{
+              if (this.mCurrentModel?.streamElements[0].videoRenderType == QVideoRenderType.PANORAMA_EQUIRECT_ANGULAR) {
+                if ((new Date()).valueOf()-this.currentTimeNumber>1000.0/this.vrFrameRate) {
+                  this.mPlayerContext?.get_render_handler().setPanoramaViewRotate(this.mRotateY - event.offsetY,this.mRotateX - event.offsetX)
+                  this.currentTimeNumber = (new Date()).valueOf()
+                }
+              }
+            })
+            .onActionStart((event : GestureEvent)=>{
+              if (this.mCurrentModel?.streamElements[0].videoRenderType == QVideoRenderType.PANORAMA_EQUIRECT_ANGULAR) {
+                this.currentTimeNumber = (new Date()).valueOf()
+              }
+            })
+
         )
         .gesture(
           TapGesture({count : 1})
@@ -227,6 +286,27 @@ export struct QPlayerView{
           .backgroundColor($r("app.color.hyaline_background_color"))
           .fontSize(30)
 
+        RelativeContainer(){
+
+          Text(this.mSubtitleText)
+            .width('100%')
+            .height('10%')
+            .textAlign(TextAlign.Center)
+            .alignRules({
+              left:{anchor: "__container__" , align : HorizontalAlign.Start},
+              bottom : { anchor : "__container__" , align : VerticalAlign.Bottom},
+            })
+            .id("subtitle_text")
+            .enabled(false)
+            .fontColor($r("app.color.white"))
+            .backgroundColor($r("app.color.hyaline_background_color"))
+            .fontSize(15)
+            .margin({bottom: 60})
+        }
+        .width('100%')
+        .height('100%')
+        .enabled(false)
+        .id("subtitle_relative_container")
 
         QMaskView({
           mDeviceOrientation: this.mDeviceOrientation,
@@ -235,7 +315,8 @@ export struct QPlayerView{
           mSettingViewVisible : this.mSettingViewVisible,
           mIsLive : this.mIsLive,
           mPlaySpeedViewVisible : this.mPlaySpeedViewVisible,
-          mSwitchQualityViewVisible : this.mSwitchQualityViewVisible
+          mSwitchQualityViewVisible : this.mSwitchQualityViewVisible,
+          mSubtitleViewVisible : this.mSubtitleViewVisible
         })
           .width('100%')
           .height('100%')
@@ -250,6 +331,30 @@ export struct QPlayerView{
             TapGesture({count : 1})
               .onAction((event : GestureEvent)=>{
                 this.maskVisibleTimerChange()
+              })
+          )
+
+          .gesture(
+            PanGesture()
+              .onActionEnd((event : GestureEvent)=>{
+                if (this.mCurrentModel?.streamElements[0].videoRenderType == QVideoRenderType.PANORAMA_EQUIRECT_ANGULAR) {
+                  this.mPlayerContext?.get_render_handler().setPanoramaViewRotate(this.mRotateY - event.offsetY,this.mRotateX - event.offsetX)
+                  this.mRotateX -= event.offsetX
+                  this.mRotateY -= event.offsetY
+                }
+              })
+              .onActionUpdate((event : GestureEvent)=>{
+                if (this.mCurrentModel?.streamElements[0].videoRenderType == QVideoRenderType.PANORAMA_EQUIRECT_ANGULAR) {
+                  if ((new Date()).valueOf()-this.currentTimeNumber>1000.0/this.vrFrameRate) {
+                    this.mPlayerContext?.get_render_handler().setPanoramaViewRotate(this.mRotateY - event.offsetY,this.mRotateX - event.offsetX)
+                    this.currentTimeNumber = (new Date()).valueOf()
+                  }
+                }
+              })
+              .onActionStart((event : GestureEvent)=>{
+                if (this.mCurrentModel?.streamElements[0].videoRenderType == QVideoRenderType.PANORAMA_EQUIRECT_ANGULAR) {
+                  this.currentTimeNumber = (new Date()).valueOf()
+                }
               })
           )
           .visibility(this.mMaskVisible)
@@ -383,6 +488,29 @@ export struct QPlayerView{
         .width("100%")
         .id("switch_quality_view_relativeContainer")
 
+        RelativeContainer() {
+          QMaskSubtitleSettingView({mCurrentModel : this.mCurrentModel, mPlayerContext : this.mPlayerContext})
+            .alignRules({
+              top : {anchor : "__container__" , align : VerticalAlign.Top},
+              right : {anchor : "__container__", align : HorizontalAlign.End}
+            })
+            .visibility(this.mSubtitleViewVisible)
+            .height("100%")
+            .width(100)
+            .id("subtitle_view")
+            .backgroundColor($r("app.color.setting_view_background_color"))
+            .margin({
+              right: 50
+            })
+        }
+        .visibility(this.mSubtitleViewVisible)
+        .onClick(()=>{
+          this.mSubtitleViewVisible = Visibility.Hidden
+          this.stopMaskTimer()
+        })
+        .height("100%")
+        .width("100%")
+        .id("subtitle_view_relativeContainer")
       }
     }
     .height("100%")
@@ -390,49 +518,56 @@ export struct QPlayerView{
   }
   aboutToAppear(): void {
     this.maskVisibleTimerChange()
-    this.mPlayerContext.get_control_handler().setSeekMode(this.mQPlayerSettingModel.mSeekMode)
-    if (this.mQPlayerSettingModel.mBackgroundPlay == 0) {
-      this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(false)
+    this.mPlayerContext?.get_control_handler().setSeekMode(this.mQPlayerSettingModel!.mSeekMode)
+    if (this.mQPlayerSettingModel?.mBackgroundPlay == 0) {
+      this.mPlayerContext?.get_control_handler().setBackgroundPlayEnable(false)
     }else {
-      this.mPlayerContext.get_control_handler().setBackgroundPlayEnable(true)
+      this.mPlayerContext?.get_control_handler().setBackgroundPlayEnable(true)
     }
-    this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateCallBack)
+    this.mPlayerContext?.get_control_handler().addPlayerStateListener(this.mStateCallBack)
 
-    this.mPlayerContext.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingCallBack)
-    this.mPlayerContext.get_control_handler().addPlayerShootVideoListener(this.mShootVideoListener)
-    this.mPlayerContext.get_control_handler().setDecoderType(this.mQPlayerSettingModel.mDecoderType)
-    this.mPlayerContext.get_control_handler().setSEIEnable(this.mQPlayerSettingModel.mSEIEnable == 0 ? false : true)
-    this.mPlayerContext.get_render_handler().setRenderRatio(this.mQPlayerSettingModel.mRenderRatio)
-    this.mPlayerContext.get_render_handler().setBlindType(this.mQPlayerSettingModel.mBlinderType)
-    this.mPlayerContext.get_control_handler().setStartAction(this.mQPlayerSettingModel.mStartAction)
-    this.mPlayerContext.get_control_handler().addPlayerVideoDataListener(this.mVideoDataListener)
-    this.mPlayerContext.get_control_handler().addPlayerAudioDataListener(this.mAudioDataListener)
-    this.mPlayerContext.get_render_handler().addPlayerRenderListener(this.mFirstFrameListener)
-
+    this.mPlayerContext?.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingCallBack)
+    this.mPlayerContext?.get_control_handler().addPlayerShootVideoListener(this.mShootVideoListener)
+    this.mPlayerContext?.get_control_handler().setDecoderType(this.mQPlayerSettingModel!.mDecoderType)
+    this.mPlayerContext?.get_control_handler().setSEIEnable(this.mQPlayerSettingModel!.mSEIEnable == 0 ? false : true)
+    this.mPlayerContext?.get_render_handler().setRenderRatio(this.mQPlayerSettingModel!.mRenderRatio)
+    this.mPlayerContext?.get_render_handler().setBlindType(this.mQPlayerSettingModel!.mBlinderType)
+    this.mPlayerContext?.get_control_handler().setStartAction(this.mQPlayerSettingModel!.mStartAction)
+    this.mPlayerContext?.get_render_handler().setMirrorType(this.mQPlayerSettingModel!.mMirrorType)
+    if (this.mQPlayerSettingModel?.mForceNetworkAuth != 0) {
+      this.mPlayerContext?.get_control_handler().forceAuthenticationFromNetwork()
+    }
+    this.mPlayerContext?.get_render_handler().setRotation(this.mQPlayerSettingModel!.mRotation)
+    this.mPlayerContext?.get_render_handler().setScale(this.mQPlayerSettingModel!.mScale)
+    this.mPlayerContext?.get_control_handler().addPlayerVideoDataListener(this.mVideoDataListener)
+    this.mPlayerContext?.get_control_handler().addPlayerAudioDataListener(this.mAudioDataListener)
+    this.mPlayerContext?.get_render_handler().addPlayerRenderListener(this.mFirstFrameListener)
+    this.mPlayerContext?.get_control_handler().addPlayerSubtitleListener(this.mSubtitleListener)
+    this.mPlayerContext?.get_control_handler().setSubtitleEnable(this.mQPlayerSettingModel?.mSubtitleEnable == 0 ? false : true)
     //此处开启音视频回调，会将音视频数据存储到沙河目录的 videoOrAudioDataFile 下的 video.yuv / video.rgba 和 audio.raw
     //每次切集会删除保存的音视频回调数据，并重新保存当前视频的前一百帧数据
     //具体的实现方式见 mAudioDataListener 和 mVideoDataListener 以及 mFirstFrameListener 的 文件操作
-    // this.mPlayerContext.get_control_handler().setVideoDataEnable(true)
-    // this.mPlayerContext.get_control_handler().setAudioDataEnable(true)
-    // this.mPlayerContext.get_control_handler().setVideoDataType(QVideoType.RGBA)
+    // this.mPlayerContext?.get_control_handler().setVideoDataEnable(true)
+    // this.mPlayerContext?.get_control_handler().setAudioDataEnable(true)
+    // this.mPlayerContext?.get_control_handler().setVideoDataType(QVideoType.RGBA)
     if (!fileIo.accessSync((AppStorage.get("context") as Context).filesDir + "/videoOrAudioDataFile")){
       fileIo.mkdirSync((AppStorage.get("context") as Context).filesDir + "/videoOrAudioDataFile")
     }
     this.mVideoDataSaveTimes = 0
-    this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[0].mMediaModel, this.mQPlayerSettingModel.mPosition)
+    this.mPlayerContext?.get_control_handler().playMediaModel(this.mMediaModel!.mMediaModels![0].mMediaModel, this.mQPlayerSettingModel!.mPosition)
 
-    if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_0_5) {
-      this.mPlayerContext.get_control_handler().setSpeed(0.5)
-    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_0_75){
-      this.mPlayerContext.get_control_handler().setSpeed(0.75)
-    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_1_0){
-      this.mPlayerContext.get_control_handler().setSpeed(1.0)
-    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_1_25){
-      this.mPlayerContext.get_control_handler().setSpeed(1.25)
-    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_1_5){
-      this.mPlayerContext.get_control_handler().setSpeed(1.5)
-    }else if (this.mQPlayerSettingModel.mPlaySpeed == PlaySpeed.SPEED_2_0){
-      this.mPlayerContext.get_control_handler().setSpeed(2.0)
+    if (this.mQPlayerSettingModel?.mPlaySpeed == PlaySpeed.SPEED_0_5) {
+      this.mPlayerContext?.get_control_handler().setSpeed(0.5)
+    }else if (this.mQPlayerSettingModel?.mPlaySpeed == PlaySpeed.SPEED_0_75){
+      this.mPlayerContext?.get_control_handler().setSpeed(0.75)
+    }else if (this.mQPlayerSettingModel?.mPlaySpeed == PlaySpeed.SPEED_1_0){
+      this.mPlayerContext?.get_control_handler().setSpeed(1.0)
+    }else if (this.mQPlayerSettingModel?.mPlaySpeed == PlaySpeed.SPEED_1_25){
+      this.mPlayerContext?.get_control_handler().setSpeed(1.25)
+    }else if (this.mQPlayerSettingModel?.mPlaySpeed == PlaySpeed.SPEED_1_5){
+      this.mPlayerContext?.get_control_handler().setSpeed(1.5)
+    }else if (this.mQPlayerSettingModel?.mPlaySpeed == PlaySpeed.SPEED_2_0){
+      this.mPlayerContext?.get_control_handler().setSpeed(2.0)
     }
   }
   deviceOrientationChange(){
@@ -464,7 +599,11 @@ export struct QPlayerView{
       this.mMaskVisible = Visibility.Hidden
     }
   }
-
+  playSubtitleVisibleChange(){
+    if (this.mSubtitleViewVisible == Visibility.Visible) {
+      this.mMaskVisible = Visibility.Hidden
+    }
+  }
   stopMaskTimer(){
     clearInterval(this.mQPlayerMaskTimerId.valueOf())
     this.mQPlayerMaskTimerCount = 0
@@ -488,9 +627,9 @@ export struct QPlayerView{
   onDoubleClick(){
     this.mQPlayerMaskTimerCount = 0;
     if (this.mIsPlaying == true) {
-      this.mPlayerContext.get_control_handler().pauseRender()
+      this.mPlayerContext?.get_control_handler().pauseRender()
     }else {
-      this.mPlayerContext.get_control_handler().resumeRender()
+      this.mPlayerContext?.get_control_handler().resumeRender()
     }
   }
 }

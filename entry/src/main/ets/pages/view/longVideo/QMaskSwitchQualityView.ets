@@ -8,9 +8,9 @@ import { Immediately, QPlayerSettingModel } from '../../model/longVideo/QPlayerS
 export struct QMaskSwitchQualityView{
   @Link mCurrentModel : QMediaModel | null
   private mCurrentElement : QStreamElement | null = null
-  @Link mPlayerContext : QIPlayerContext
+  @Link mPlayerContext : QIPlayerContext | null
 
-  @Link mQPlayerSetting : QPlayerSettingModel
+  @Link mQPlayerSetting : QPlayerSettingModel | null
   @State mediaModelButtonBackgroundColorArray : Array<ResourceColor> = [
   ]
   private mQualityListener: QIPlayerQualityListener = {
@@ -37,7 +37,7 @@ export struct QMaskSwitchQualityView{
   }
   build() {
     Column(){
-      ForEach(this.mCurrentModel!.streamElements,(streamElement:QStreamElement, index : number)=>{
+      ForEach(this.mCurrentModel?.streamElements,(streamElement:QStreamElement, index : number)=>{
         Button(streamElement.quality + "p")
           .backgroundColor($r('app.color.hyaline_background_color'))
           .margin({top: 10})
@@ -52,18 +52,18 @@ export struct QMaskSwitchQualityView{
                 this.mediaModelButtonBackgroundColorArray[indexOfColor] = $r('app.color.not_selected_play_speed_button_background_color')
               }
             })
-            switch (this.mQPlayerSetting.mImmediately){
+            switch (this.mQPlayerSetting?.mImmediately){
               case Immediately.IMMEDIATELY_TRUE :
-                this.mPlayerContext.get_control_handler().switchQuality(streamElement.userType,streamElement.urlType,streamElement.quality,true)
+                this.mPlayerContext?.get_control_handler().switchQuality(streamElement.userType,streamElement.urlType,streamElement.quality,true)
                 break
               case Immediately.IMMEDIATELY_FALSE :
-                this.mPlayerContext.get_control_handler().switchQuality(streamElement.userType,streamElement.urlType,streamElement.quality,false)
+                this.mPlayerContext?.get_control_handler().switchQuality(streamElement.userType,streamElement.urlType,streamElement.quality,false)
                 break
               default :
                 if (this.mCurrentModel?.isLive == false) {
-                  this.mPlayerContext.get_control_handler().switchQuality(streamElement.userType,streamElement.urlType,streamElement.quality,false)
+                  this.mPlayerContext?.get_control_handler().switchQuality(streamElement.userType,streamElement.urlType,streamElement.quality,false)
                 }else {
-                  this.mPlayerContext.get_control_handler().switchQuality(streamElement.userType,streamElement.urlType,streamElement.quality,true)
+                  this.mPlayerContext?.get_control_handler().switchQuality(streamElement.userType,streamElement.urlType,streamElement.quality,true)
                 }
                 break
             }
@@ -79,7 +79,7 @@ export struct QMaskSwitchQualityView{
 
   aboutToAppear(): void {
     let colorList : List<ResourceColor> = new List()
-    this.mPlayerContext.get_control_handler().addPlayerQualityListener(this.mQualityListener)
+    this.mPlayerContext?.get_control_handler().addPlayerQualityListener(this.mQualityListener)
     this.mCurrentModel!.streamElements.forEach((streamElement : QStreamElement, value: number)=>{
       if (streamElement.isSelected) {
         colorList.add($r('app.color.selected_play_speed_button_background_color'))

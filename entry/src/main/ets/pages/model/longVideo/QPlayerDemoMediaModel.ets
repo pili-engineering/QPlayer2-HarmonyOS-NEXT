@@ -1,13 +1,18 @@
 import { QMediaModel, QPlayerUrlType, QStreamElement } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QUrlJsonReadWriteHelper } from '../../common/helper/QUrlJsonReadWriteHelper'
+import { ArrayList } from '@kit.ArkTS'
 
 @Observed
 export class QPlayerDemoMediaModels{
-  public mMediaModels : Array<QPlayerDemoMediaModel> = new Array()
+  public mMediaModels : ArrayList<QPlayerDemoMediaModel> | null = new ArrayList()
   constructor(context :Context) {
     QUrlJsonReadWriteHelper.readLongVideoUrl(context,(url_models)=>{
       this.mMediaModels = url_models
     })
+  }
+  release(){
+    this.mMediaModels?.clear()
+    this.mMediaModels = null;
   }
 }
 

@@ -1,5 +1,7 @@
 
-import { QBlindType, QPlayerDecoderPriority, QPlayerSeek,
+import { QBlindType, QPlayerDecoderPriority,
+  QPlayerMirror,
+  QPlayerSeek,
   QPlayerStart,
   QRenderRatio } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QSettingPersistentStorageHelper } from '../../common/helper/QSettingPersistentStorageHelper'
@@ -30,6 +32,11 @@ export class QPlayerSettingModel{
   public mSEIEnable : number = 0
   public mStartAction : QPlayerStart = QPlayerStart.PLAYING
   public mImmediately : Immediately = Immediately.IMMEDIATELY_TRUE
+  public mSubtitleEnable : number = 0
+  public mForceNetworkAuth : number = 0
+  public mMirrorType : QPlayerMirror = QPlayerMirror.MIRROR_NONE
+  public mRotation : number = 0
+  public mScale : number = 0
   constructor() {
   }
 }

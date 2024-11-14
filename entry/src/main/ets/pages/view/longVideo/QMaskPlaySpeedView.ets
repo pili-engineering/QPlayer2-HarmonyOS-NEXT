@@ -5,7 +5,7 @@ import { PlaySpeed, QPlayerSettingModel } from '../../model/longVideo/QPlayerSet
 @Component
 export struct QMaskPlaySpeedView{
   private playSpeedTitleArray : Array<string> = ["0.5","0.75","1.0","1.25","1.5","2.0"]
-  @Link mQPlayerSettingModel : QPlayerSettingModel
+  @Link mQPlayerSettingModel : QPlayerSettingModel | null
   @State playSpeedButtonBackgroundColorArray : Array<ResourceColor> = [
     $r('app.color.not_selected_play_speed_button_background_color'),
     $r('app.color.not_selected_play_speed_button_background_color'),
@@ -14,7 +14,7 @@ export struct QMaskPlaySpeedView{
     $r('app.color.not_selected_play_speed_button_background_color'),
     $r('app.color.not_selected_play_speed_button_background_color'),
   ]
-  @Link mPlayerContext : QIPlayerContext
+  @Link mPlayerContext : QIPlayerContext | null
   build() {
     Column(){
       ForEach(this.playSpeedTitleArray,(title:string, index : number)=>{
@@ -32,9 +32,9 @@ export struct QMaskPlaySpeedView{
                 this.playSpeedButtonBackgroundColorArray[indexOfColor] = $r('app.color.not_selected_play_speed_button_background_color')
               }
             })
-            this.mPlayerContext.get_control_handler().setSpeed(Number(title).valueOf())
-            this.mQPlayerSettingModel.mPlaySpeed = index as PlaySpeed
-            QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context, this.mQPlayerSettingModel)
+            this.mPlayerContext?.get_control_handler().setSpeed(Number(title).valueOf())
+            this.mQPlayerSettingModel!.mPlaySpeed = index as PlaySpeed
+            QSettingPersistentStorageHelper.save(AppStorage.get("context") as Context, this.mQPlayerSettingModel!)
           })
           .type(ButtonType.Normal)
       })
@@ -44,7 +44,7 @@ export struct QMaskPlaySpeedView{
   }
   aboutToAppear(): void {
     this.playSpeedButtonBackgroundColorArray.forEach((resource : ResourceColor, indexOfColor :number)=>{
-      if (indexOfColor == this.mQPlayerSettingModel.mPlaySpeed.valueOf()) {
+      if (indexOfColor == this.mQPlayerSettingModel?.mPlaySpeed.valueOf()) {
         this.playSpeedButtonBackgroundColorArray[indexOfColor] = $r('app.color.selected_play_speed_button_background_color')
       }else {
         this.playSpeedButtonBackgroundColorArray[indexOfColor] = $r('app.color.not_selected_play_speed_button_background_color')

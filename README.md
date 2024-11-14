@@ -4,8 +4,6 @@
 
 Qplayer2是一款跨平台的播放器SDK,除了基础的播放器能力外，更致力于各种应用场景的对接。
 
-注：beta 版本为测试版
-
 播放器 SDK 合规使用说明请参考[七牛 SDK 合规使用说明](https://developer.qiniu.com/pili/12616/sdk-compliance-instructions)；隐私政策说明请参考[七牛 SDK 隐私策略](https://developer.qiniu.com/pili/8027/sdk-privacy-policy)
 
 ### 支持的平台
@@ -15,7 +13,7 @@ Qplayer2是一款跨平台的播放器SDK,除了基础的播放器能力外，�
  Android | https://github.com/pili-engineering/QPlayer2-Android 
  IOS |https://github.com/pili-engineering/QPlayer2-IOS
  Windows | https://github.com/pili-engineering/QPlayer2-Windows 
- HarmonyOS NEXT | Last Version: 1.5.0-beta1 
+ HarmonyOS NEXT | Last Version: 1.5.0 
  Mac | 敬请期待 
  Linux | 敬请期待 
 ### qplayer2-core 功能列表
@@ -33,10 +31,12 @@ Qplayer2是一款跨平台的播放器SDK,除了基础的播放器能力外，�
 | 起播方式              | 起播播放/起播暂停 设置起播暂停时，起播后首帧渲染出来就停止画面 |                                  |
 | SEI数据回调           | 所有解码方式都支持                                           |                                  |
 | 纯音频播放/纯视频播放 | 播放只有单音频流或者只有单视频流的视频                       |                                  |
+| VR视频                | 支持Equirect-Angular类型的vr视频播放                         |                                  |
 | 后台播放              | 支持设置是否开启后台播放                                     |                                  |
 | 预加载                | 提前加载点播视频，获得更好的首帧体验                         |                                  |
 | 截图                  | 自动转换成jpeg格式，可以展示在UI上，也可存放到相册           |                                  |
-| 静音播放              | 针对视频的静音，不影响系统声音                               |                                  |
+| 缩放/旋转/镜像        | 方便用户对视频画面进行一些自定义操作                         |                                  |
+| 字幕                  | 支持srt字幕文件加载并根据时间回调当前时间的文案给上层        |                                  |
 | DRM                   | 支持HLS 私有加密/通用加密 2种方式，支持 MP4 CENC-AES-CTR 加密，支持七牛私有 MP4 加密方式 |                                  |
 | 音视频数据上抛        | 适用于业务层需要获取当前播放的音视频数据的场景（比如推流等） |                                  |
 
@@ -44,10 +44,10 @@ Qplayer2是一款跨平台的播放器SDK,除了基础的播放器能力外，�
 
 ## 环境要求
 
-| 类别     | 说明                                                 |
-| -------- | ---------------------------------------------------- |
-| 系统版本 | 版本为 NEXT.0.0.68 的 harmony-next 手机              |
-| IDE 版本 | DevEco Studio NEXT Developer Beta6 version 5.0.3.706 |
+| 类别     | 说明                                         |
+| -------- | -------------------------------------------- |
+| 系统版本 | 版本为 5.0.0.102 的 harmony-next 手机        |
+| IDE 版本 | DevEco Studio NEXT Release version 5.0.3.900 |
 
 
 
@@ -76,7 +76,7 @@ Qplayer2是一款跨平台的播放器SDK,除了基础的播放器能力外，�
 ```awk
 {
   "dependencies": {
-    "@qiniu/qplayer2-core": "^1.5.0-beta1",  //依赖 open harmony 中心仓
+    "@qiniu/qplayer2-core": "^1.5.0",  //依赖 open harmony 中心仓
   }
 }
 ```
@@ -86,8 +86,10 @@ Qplayer2是一款跨平台的播放器SDK,除了基础的播放器能力外，�
 | 权限  | 说明         | 鉴权失败结果                                                 |
 | ----- | ------------ | ------------------------------------------------------------ |
 | Base  | 基础播放能力 | 播放器进入error状态                                          |
+| VR    | 播放VR视频   | 播放vr视频，起播后播放器进入error状态                        |
 | SEI   | SEI数据回调  | 开启sei 回调，且视频有sei数据。能正常播放视频，SEI数据不回调，同时抛出鉴权失败错误码 |
 | BLIND | 色盲滤镜     | 开启色盲滤镜，视频正常播放，滤镜不生效。                     |
+| APM   | 性能埋点上报 | 关闭埋点上报，不影响播放器核心功能使用                       |
 
 如需使用该套sdk到其他工程中，可通过 400-808-9176 联系七牛商务开通帐号和权限 或者 通过 [工单](https://support.qiniu.com/?ref=developer.qiniu.com) 联系七牛的技术支持。
 
@@ -105,12 +107,12 @@ https://developer.qiniu.io/pili/12702/qplayer2-harmony
 
 1. demo 工程内的 长视频播放页 是基于 qplayer2-core 来实现的
 
-1. demo 下载：https://sdk-release.qnsdk.com/qplayer2-demo-v1.5.0-beta1.hap
+1. demo 下载：https://sdk-release.qnsdk.com/qplayer2-demo-v1.5.0.hap
 
 1.  电脑连接 harmony next 手机，执行下方命令安装 hap 包
 
    ```awk
-   hdc install qplayer2-demo-v1.5.0-beta1.hap
+   hdc install qplayer2-demo-v1.5.0.hap
    ```
 
    

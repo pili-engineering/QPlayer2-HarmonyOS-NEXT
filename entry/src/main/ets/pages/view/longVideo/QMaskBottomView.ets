@@ -16,7 +16,7 @@ export struct QMaskBottomView{
   @State mProgress : number = 0
   @State mDuration : number = 0
   @Link mDeviceOrientation : window.Orientation
-  @Link mPlayerContext : QIPlayerContext
+  @Link mPlayerContext : QIPlayerContext | null
   @Link mIsLive : Boolean
   @State mButtonMarginValue : number = 4
   private mIsSeeking : boolean = false
@@ -62,14 +62,14 @@ export struct QMaskBottomView{
         .onClick(() => {
           if (this.mIsPlaying) {
             this.mIsPlaying = false
-            this.mPlayerContext.get_control_handler().pauseRender()
+            this.mPlayerContext?.get_control_handler().pauseRender()
           }
-          else if(this.mPlayerContext.get_control_handler().currentPlayerState == QPlayerState.COMPLETED) {
-            this.mPlayerContext.get_control_handler().seek(0)
+          else if(this.mPlayerContext?.get_control_handler().currentPlayerState == QPlayerState.COMPLETED) {
+            this.mPlayerContext?.get_control_handler().seek(0)
           }
           else {
               this.mIsPlaying = true
-              this.mPlayerContext.get_control_handler().resumeRender()
+              this.mPlayerContext?.get_control_handler().resumeRender()
           }
         })
         .horizontalMaskButtonStyle()
@@ -86,7 +86,7 @@ export struct QMaskBottomView{
           bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
         })
         .onClick(()=>{
-          this.mPlayerContext.get_control_handler().stop()
+          this.mPlayerContext?.get_control_handler().stop()
         })
         .horizontalMaskButtonStyle()
         .id("stop_button")
@@ -119,14 +119,14 @@ export struct QMaskBottomView{
               this.mIsSeeking = true
             }
             else if (mode == SliderChangeMode.End || mode == SliderChangeMode.Click){
-              this.mPlayerContext.get_control_handler().seek(value * 1000)
+              this.mPlayerContext?.get_control_handler().seek(value * 1000)
             }
           })
           .id('progress_slider')
 
         Text(this.mDurationTextString.valueOf())
           .alignRules({
-            right: { anchor: "mute_button", align: HorizontalAlign.Start },
+            right: { anchor: "full_screen_button", align: HorizontalAlign.Start },
             top: { anchor: "__container__", align: VerticalAlign.Top },
             bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
           })
@@ -136,31 +136,31 @@ export struct QMaskBottomView{
           .fontColor($r('app.color.long_video_mask_font_color'))
           .id('duration_text')
 
-        Button() {
-          Image(this.mMuteControlButtonImage)
-            .maskNormalImageStyle()
-        }
-        .margin({right : this.mButtonMarginValue/2, left: this.mButtonMarginValue/2 })
-        .horizontalMaskButtonStyle()
-        .onClick(() => {
-          if (!this.mIsMute) {
-            this.mIsMute = true
-            this.mMuteControlButtonImage = $r('app.media.qn_mute')
-            this.mPlayerContext.get_control_handler().setMute(true)
-          }
-          else {
-            this.mIsMute = false
-            this.mMuteControlButtonImage = $r('app.media.qn_not_mute')
-            this.mPlayerContext.get_control_handler().setMute(false)
-          }
-        })
-        .alignRules({
-          // left: { anchor: "progress_text", align: HorizontalAlign.End },
-          right: { anchor: "full_screen_button", align: HorizontalAlign.Start },
-          top: { anchor: "__container__", align: VerticalAlign.Top },
-          bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
-        })
-        .id("mute_button")
+        // Button() {
+        //   Image(this.mMuteControlButtonImage)
+        //     .maskNormalImageStyle()
+        // }
+        // .margin({right : this.mButtonMarginValue/2, left: this.mButtonMarginValue/2 })
+        // .horizontalMaskButtonStyle()
+        // .onClick(() => {
+        //   if (!this.mIsMute) {
+        //     this.mIsMute = true
+        //     this.mMuteControlButtonImage = $r('app.media.qn_mute')
+        //     this.mPlayerContext?.get_control_handler().setMute(true)
+        //   }
+        //   else {
+        //     this.mIsMute = false
+        //     this.mMuteControlButtonImage = $r('app.media.qn_not_mute')
+        //     this.mPlayerContext?.get_control_handler().setMute(false)
+        //   }
+        // })
+        // .alignRules({
+        //   // left: { anchor: "progress_text", align: HorizontalAlign.End },
+        //   right: { anchor: "full_screen_button", align: HorizontalAlign.Start },
+        //   top: { anchor: "__container__", align: VerticalAlign.Top },
+        //   bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
+        // })
+        // .id("mute_button")
 
         Button() {
           Image($r('app.media.qn_full_screen'))
@@ -186,8 +186,8 @@ export struct QMaskBottomView{
     .justifyContent(FlexAlign.Start)
   }
   aboutToAppear(): void {
-    this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mQPlayerStateChangeListenrCallBack)
-    this.mPlayerContext.get_control_handler().addPlayerProgressChangeListener(this.mProgressListener)
+    this.mPlayerContext?.get_control_handler().addPlayerStateListener(this.mQPlayerStateChangeListenrCallBack)
+    this.mPlayerContext?.get_control_handler().addPlayerProgressChangeListener(this.mProgressListener)
     // window.on('windowSizeChange', (size) => {
     //   let viewWidth = px2vp(size.width);
     //   let viewHeight = px2vp(size.height);
@@ -207,10 +207,10 @@ export struct QMaskBottomView{
     if (this.mIsPlaying) {
       this.mPlayControlButtonImage = $r('app.media.qn_pause')
     }
-    else if(this.mPlayerContext.get_control_handler().currentPlayerState == QPlayerState.COMPLETED){
+    else if(this.mPlayerContext?.get_control_handler().currentPlayerState == QPlayerState.COMPLETED){
       this.mPlayControlButtonImage = $r('app.media.qn_replay')
     }
-    else if (this.mPlayerContext.get_control_handler().currentPlayerState == QPlayerState.SEEKING){
+    else if (this.mPlayerContext?.get_control_handler().currentPlayerState == QPlayerState.SEEKING){
 
     }
     else {

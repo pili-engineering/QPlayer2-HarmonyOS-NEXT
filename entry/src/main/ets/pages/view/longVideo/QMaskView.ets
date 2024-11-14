@@ -9,7 +9,7 @@ import { QMaskBottomView } from './QMaskBottomView'
 export struct QMaskView{
   @Link @Watch("orientationChange") mDeviceOrientation : window.Orientation
   @State mPortraitShow : Visibility = Visibility.Hidden
-  @Link mPlayerContext : QIPlayerContext
+  @Link mPlayerContext : QIPlayerContext | null
   @Link mIsPlaying : Boolean
   @State mIsBack : Boolean = false
   @State mBackMargin : Margin = {top : 0 , left : 0}
@@ -17,13 +17,15 @@ export struct QMaskView{
   @Link mSettingViewVisible : Visibility
   @Link mPlaySpeedViewVisible : Visibility
   @Link mSwitchQualityViewVisible : Visibility
+  @Link mSubtitleViewVisible : Visibility
   @State mBottomMarginValue : number = 0
   private  mSpeedButtonTitle : string = "倍速"
   private  mSwitchQualityButtonTitle : string = "清晰度"
+  private  mSubtitleButtonTitle : string = "字幕设置"
   private mStateCallBack : QIPlayerStateChangeListener = {
     onStateChange :(context: QIPlayerContext , state : QPlayerState)=>{
       if (state == QPlayerState.END) {
-        router.back()
+        // router.back()
       }
     }
   }
@@ -44,7 +46,7 @@ export struct QMaskView{
         })
         .onClick(()=>{
           if (this.mDeviceOrientation == window.Orientation.PORTRAIT) {
-            this.mPlayerContext.get_control_handler().release()
+            this.mPlayerContext?.get_control_handler().release()
           }else {
             window.getLastWindow(getContext(this) as common.UIAbilityContext).then(res => {
               res.setPreferredOrientation(window.Orientation.PORTRAIT, (err) => {
@@ -95,11 +97,10 @@ export struct QMaskView{
         .margin({right : 30,top : 100})
         .visibility(this.mPortraitShow)
         .onClick(()=>{
-          this.mPlayerContext.get_control_handler().shootVideo()
+          this.mPlayerContext?.get_control_handler().shootVideo()
         })
         .backgroundColor('#00000000')
         .id('shoot_view_button')
-
 
         Button(this.mSpeedButtonTitle)
         .type(ButtonType.Normal)
@@ -136,8 +137,27 @@ export struct QMaskView{
           .fontSize(15)
           .id('switch_quality_button')
 
+
+        Button(this.mSubtitleButtonTitle)
+          .type(ButtonType.Normal)
+          .width(100)
+          .height(40)
+          .alignRules({
+            right:{anchor: "switch_quality_button" , align : HorizontalAlign.Start},
+            top : { anchor : "__container__" , align : VerticalAlign.Top}
+          })
+          .margin({right : 20,top : 0})
+          .visibility(this.mPortraitShow)
+          .onClick(()=>{
+            this.mSubtitleViewVisible = Visibility.Visible
+          })
+          .backgroundColor($r('app.color.hyaline_background_color'))
+          .fontColor("#ffffffff")
+          .fontSize(15)
+          .id('setting_play_subtitle_button')
+
         QMaskBottomView({mDeviceOrientation : this.mDeviceOrientation,
-                     mPlayerContext : this.mPlayerContext ,
+                     mPlayerContext : this.mPlayerContext,
                      mIsPlaying : this.mIsPlaying,
                     mIsLive : this.mIsLive})
           .height($r('app.float.long_video_bottom_view_height'))
@@ -157,7 +177,7 @@ export struct QMaskView{
   }
   aboutToAppear(): void {
     // this.settingDefault()
-    this.mPlayerContext.get_control_handler().addPlayerStateListener(this.mStateCallBack)
+    this.mPlayerContext?.get_control_handler().addPlayerStateListener(this.mStateCallBack)
   }
 
   orientationChange(){

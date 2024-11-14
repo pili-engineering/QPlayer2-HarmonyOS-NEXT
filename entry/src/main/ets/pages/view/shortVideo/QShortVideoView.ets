@@ -47,17 +47,17 @@ struct QShortVideoView {
       QLogLevel.LOG_INFO,
       (AppStorage.get("context") as Context).filesDir,
       bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).versionName,
-      ""),
+      "", AppStorage.get("context") as common.UIAbilityContext),
     QPlayerContextFactory.createPlayerContext(
     QLogLevel.LOG_INFO,
     (AppStorage.get("context") as Context).filesDir,
     bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).versionName,
-    ""),
+    "", AppStorage.get("context") as common.UIAbilityContext),
     QPlayerContextFactory.createPlayerContext(
     QLogLevel.LOG_INFO,
     (AppStorage.get("context") as Context).filesDir,
     bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).versionName,
-    "")
+    "", AppStorage.get("context") as common.UIAbilityContext)
   ])
   private mPlayerContext : QIPlayerContext | null = this.mQShortVideoDataSource.getData(0)
     private mMediaItemCommandNotAllowListener : QIMediaItemCommandNotAllowListener = {
@@ -82,10 +82,15 @@ struct QShortVideoView {
       }
     }
   }
+  private releaseCount = 0;
   private mQPlayerStateListener : QIPlayerStateChangeListener ={
     onStateChange:(context : QIPlayerContext ,state: QPlayerState)=>{
-      if (state == QPlayerState.RELEASE) {
-        router.back()
+      if (state == QPlayerState.END) {
+        this.releaseCount ++;
+        if (this.releaseCount == 3) {
+          router.back()
+        }
+        console.log("this.releasecount :" + this.releaseCount.toString());
       }
     }
   }
@@ -171,7 +176,7 @@ struct QShortVideoView {
             this.mShortVideoPlayerViewCache.playMediaItemContextById(0,this.mQShortVideoDataSource.getData(0))
             this.mShortVideoPlayerViewCache.changePosition(0,this.mQShortVideoDataSource.getData(1),null)
             this.mQShortVideoDataSource.getData(0)?.get_render_handler().addPlayerRenderListener(this.mQPlayerRenderListener)
-            this.mQShortVideoDataSource.getData(0)?.get_control_handler().addPlayerStateListener(this.mQPlayerStateListener)
+            // this.mQShortVideoDataSource.getData(0)?.get_control_handler().addPlayerStateListener(this.mQPlayerStateListener)
           })
           .onChange((value : number)=>{
             console.log(`Swiper value : ${value} currentNumber : ${this.mCurrentNumber} loop : ${this.mCurrentNumber != 0 && this.mPlayItemManager.count()-this.mCurrentNumber > 3}`)
@@ -256,6 +261,8 @@ struct QShortVideoView {
   onBackPress(): boolean | void {
     this.mShortVideoPlayerViewCache.stop()
     for (let index = 0; index < this.mQShortVideoDataSource.totalCount(); index++) {
+      console.log("index releasecount : " + index.toString());
+      this.mQShortVideoDataSource.getData(index)?.get_control_handler().addPlayerStateListener(this.mQPlayerStateListener)
       this.mQShortVideoDataSource.getData(index)?.get_control_handler().release();
     }
     this.mPlayerContext?.get_control_handler().release()

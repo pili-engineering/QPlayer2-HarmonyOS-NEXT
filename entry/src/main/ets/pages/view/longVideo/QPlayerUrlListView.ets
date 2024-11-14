@@ -23,11 +23,11 @@ class InnerUrlClass{
 
 @Component
 export struct QPlayerUrlListView{
-  @ObjectLink mMediaModel : QPlayerDemoMediaModels
-  @Link mPlayerContext : QIPlayerContext
+  @ObjectLink mMediaModel : QPlayerDemoMediaModels | null
+  @Link mPlayerContext : QIPlayerContext | null
   @Link mIsPlaying : Boolean
   @Link mIsLive : Boolean
-  @Link mQPlayerSettingModel : QPlayerSettingModel
+  @Link mQPlayerSettingModel : QPlayerSettingModel | null
   @Link mCurrentModel : QMediaModel | null
   @State @Watch('currentMediaModelIdChange') mCurrentPlayerMediaModelId : Number  = 0
   build() {
@@ -43,7 +43,7 @@ export struct QPlayerUrlListView{
           .id("title_view")
 
         List(){
-          ForEach(this.mMediaModel.mMediaModels,(item:QPlayerDemoMediaModel,index : Number)=> {
+          ForEach(this.mMediaModel?.mMediaModels!.convertToArray(),(item:QPlayerDemoMediaModel,index : Number)=> {
             ListItem() {
               UrlListItem({mName : item.mName,
                 mUrl : item.mMediaModel.streamElements[0].url,mId: index ,
@@ -76,9 +76,12 @@ export struct QPlayerUrlListView{
     if (this.mCurrentPlayerMediaModelId == -1) {
       return
     }
-    this.mPlayerContext.get_control_handler().playMediaModel(this.mMediaModel.mMediaModels[this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel, this.mQPlayerSettingModel.mPosition)
-    this.mCurrentModel = this.mMediaModel.mMediaModels[this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel
-    this.mIsLive = this.mMediaModel.mMediaModels[this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel.isLive
+    this.mPlayerContext?.get_control_handler().playMediaModel(this.mMediaModel!.mMediaModels![this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel, this.mQPlayerSettingModel!.mPosition)
+    if (this.mQPlayerSettingModel?.mForceNetworkAuth != 0) {
+      this.mPlayerContext?.get_control_handler().forceAuthenticationFromNetwork()
+    }
+    this.mCurrentModel = this.mMediaModel!.mMediaModels![this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel
+    this.mIsLive = this.mMediaModel!.mMediaModels![this.mCurrentPlayerMediaModelId.valueOf()].mMediaModel.isLive
   }
 }
 @Component

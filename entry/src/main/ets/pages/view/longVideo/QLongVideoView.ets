@@ -1,6 +1,6 @@
 import { QTitleView } from "../../common/component/QTitleView"
 import { QPlayerView } from './QPlayerView'
-import { mediaquery, window } from '@kit.ArkUI'
+import { mediaquery, router, window } from '@kit.ArkUI'
 import  { QPlayerStatusView } from  "./QPlayerStatusView"
 import { QPlayerUrlListView } from './QPlayerUrlListView'
 import { QPlayerToastView } from '../../common/component/QPlayerToastView'
@@ -27,9 +27,12 @@ import { QPlayerContextFactory, QIPlayerContext, QLogLevel,
   QIPlayerShootVideoListener,
   QPlayerShootVideoType,
   QIPlayerVideoFrameSizeChangeListener,
-  QIPlayerAudioListener} from '@qiniu/qplayer2-core/qplayer2-core'
+  QIPlayerAudioListener,
+  QIPlayerSubtitleListener,
+  QIPlayerStateChangeListener} from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerState } from '@qiniu/qplayer2-core/qplayer2-core'
 import { QPlayerDecoderType } from '@qiniu/qplayer2-core/qplayer2-core'
+
 import { util } from '@kit.ArkTS'
 import utils from '@arkts.utils'
 import { QDecimalToHexHelper } from '../../common/Helper/QDecimalToHexHelper'
@@ -39,8 +42,8 @@ import { image } from '@kit.ImageKit'
 @Entry
 @Component
 struct QLongVideoView {
-  @State mQPlayerSetting : QPlayerSettingModel = QSettingPersistentStorageHelper.read(AppStorage.get('context') as Context)
-  @State mMediaModel : QPlayerDemoMediaModels = new QPlayerDemoMediaModels(AppStorage.get('context') as Context)
+  @State mQPlayerSetting : QPlayerSettingModel | null = QSettingPersistentStorageHelper.read(AppStorage.get('context') as Context)
+  @State mMediaModel : QPlayerDemoMediaModels | null = new QPlayerDemoMediaModels(AppStorage.get('context') as Context)
   @State mQPlayerViewWidth : Length = '100%'
   @State mQPlayerViewHeight : Length = '30%'
   @State mQPlayerViewFrameBottom : String = "qplayer_status_view"
@@ -54,13 +57,21 @@ struct QLongVideoView {
   @State mIsLive : Boolean = false
   @State mToastMarginValue : number = 0
   @State mToastViewWidth : Length = '70%'
-  @State mCurrentModel : QMediaModel | null = this.mMediaModel.mMediaModels[0].mMediaModel
-  @State mPlayerContext : QIPlayerContext = QPlayerContextFactory.createPlayerContext(
+  @State mCurrentModel : QMediaModel | null = this.mMediaModel!.mMediaModels![0].mMediaModel
+  @State mPlayerContext : QIPlayerContext | null = QPlayerContextFactory.createPlayerContext(
     QLogLevel.LOG_INFO,
     (AppStorage.get("context") as Context).filesDir,
     bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT).versionName,
-    "")
+    "", AppStorage.get("context") as common.UIAbilityContext)
 
+  private mStateChange : QIPlayerStateChangeListener = {
+    onStateChange:(context : QIPlayerContext , state : QPlayerState)=>{
+      if (state == QPlayerState.END) {
+        this.removeAllQPlayerListeners()
+        router.back()
+      }
+   }
+  }
   private mQualityListener: QIPlayerQualityListener = {
     onQualitySwitchStart:(context : QIPlayerContext , usertype: string , urlType: QPlayerUrlType , oldQuality: number , newQuality: number ) => {
 
@@ -149,6 +160,32 @@ struct QLongVideoView {
   private mPlaySpeed : QIPlayerSpeedListener = {
     onSpeedChanged:(context : QIPlayerContext, speed:number)=>{
       this.addToastView(`播放速度 : ${speed}`)
+    }
+  }
+  private mSubtitleCallBack : QIPlayerSubtitleListener = {
+
+    onSubtitleTextChange:(context : QIPlayerContext , text: string ) => {
+    },
+
+    onSubtitleNameChange:(context : QIPlayerContext , name: string ) => {
+      this.addToastView(`字幕名称 : ${name}`)
+
+    },
+
+    onSubtitleEnable:(context : QIPlayerContext , enable: boolean ) => {
+      if (enable) {
+        this.addToastView(`字幕开启`)
+      }else {
+        this.addToastView(`字幕关闭`)
+      }
+    },
+
+    onSubtitleLoaded:(context : QIPlayerContext , name: string , result: boolean ) => {
+      this.addToastView(`字幕加载 : ${name} result : ${result}`)
+    },
+
+    onSubtitleDecoded:(context : QIPlayerContext , name: string , result: boolean ) => {
+      this.addToastView(`字幕解码 : ${name} result : ${result}`)
     }
   }
   private mSEIListener: QIPlayerSEIDataListener = {
@@ -328,12 +365,13 @@ struct QLongVideoView {
 
   aboutToAppear(): void {
     let mContext : Context = AppStorage.get('context') as Context
-    this.mPlayerContext.init(mContext, getContext(this) as common.UIAbilityContext)
     this.listener.on('change', (mediaQueryResult:mediaquery.MediaQueryResult) => { this.onPortrait(mediaQueryResult) });
     this.addAllQPlayerListeners()
+
   }
   aboutToDisappear(): void {
     let windowStage : window.WindowStage = AppStorage.get("windowStage") as window.WindowStage
+    this.listener.off('change');
 
     try {
       windowStage.getMainWindowSync().setWindowBackgroundColor("#ffffffff")
@@ -387,20 +425,48 @@ struct QLongVideoView {
   }
 
   addAllQPlayerListeners(){
-    this.mPlayerContext.get_control_handler().addPlayerMediaNetworkListener(this.mMediaNetworkListener)
-    this.mPlayerContext.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingListener)
-    this.mPlayerContext.get_control_handler().addPlayerBiteRateChangeListener(this.mBiteRateListener)
-    this.mPlayerContext.get_control_handler().addPlayerCommandNotAllowListener(this.mCommandNotAllowListener)
-    this.mPlayerContext.get_control_handler().addPlayerAuthenticationListener(this.mAuthenticationListener)
-    this.mPlayerContext.get_control_handler().addPlayerFormatListener(this.mFormatListener)
-    this.mPlayerContext.get_control_handler().addPlayerSeekListener(this.mSeekListener)
-    this.mPlayerContext.get_control_handler().addPlayerVideoDecodeTypeListener(this.mDecoderTypeListener)
-    this.mPlayerContext.get_control_handler().addPlayerSpeedChangeListener(this.mPlaySpeed)
-    this.mPlayerContext.get_control_handler().addPlayerQualityListener(this.mQualityListener)
-    this.mPlayerContext.get_control_handler().addPlayerAudioListener(this.mAudioMuteListener)
-    this.mPlayerContext.get_control_handler().addPlayerSEIDataListener(this.mSEIListener)
-    this.mPlayerContext.get_control_handler().addPlayerShootVideoListener(this.mShootVideoListener)
-    this.mPlayerContext.get_control_handler().addPlayerVideoFrameSizeChangeListener(this.mVideoFrameSizeChangedListener)
+    this.mPlayerContext?.get_control_handler().addPlayerMediaNetworkListener(this.mMediaNetworkListener)
+    this.mPlayerContext?.get_control_handler().addPlayerBufferingChangeListener(this.mBufferingListener)
+    this.mPlayerContext?.get_control_handler().addPlayerBiteRateChangeListener(this.mBiteRateListener)
+    this.mPlayerContext?.get_control_handler().addPlayerCommandNotAllowListener(this.mCommandNotAllowListener)
+    this.mPlayerContext?.get_control_handler().addPlayerAuthenticationListener(this.mAuthenticationListener)
+    this.mPlayerContext?.get_control_handler().addPlayerFormatListener(this.mFormatListener)
+    this.mPlayerContext?.get_control_handler().addPlayerSeekListener(this.mSeekListener)
+    this.mPlayerContext?.get_control_handler().addPlayerVideoDecodeTypeListener(this.mDecoderTypeListener)
+    this.mPlayerContext?.get_control_handler().addPlayerSpeedChangeListener(this.mPlaySpeed)
+    this.mPlayerContext?.get_control_handler().addPlayerQualityListener(this.mQualityListener)
+    this.mPlayerContext?.get_control_handler().addPlayerAudioListener(this.mAudioMuteListener)
+    this.mPlayerContext?.get_control_handler().addPlayerSEIDataListener(this.mSEIListener)
+    this.mPlayerContext?.get_control_handler().addPlayerShootVideoListener(this.mShootVideoListener)
+    this.mPlayerContext?.get_control_handler().addPlayerSubtitleListener(this.mSubtitleCallBack)
+    this.mPlayerContext?.get_control_handler().addPlayerVideoFrameSizeChangeListener(this.mVideoFrameSizeChangedListener)
+    this.mPlayerContext?.get_control_handler().addPlayerStateListener(this.mStateChange)
+  }
+
+  removeAllQPlayerListeners(){
+
+    this.mPlayerContext?.get_control_handler().removeAllPlayerMediaNetworkListener()
+    this.mPlayerContext?.get_control_handler().removeAllPlayerBufferingChangeListener()
+    this.mPlayerContext?.get_control_handler().removeAllPlayerBiteRateChangeListener()
+    this.mPlayerContext?.get_control_handler().removeAllPlayerCommandNotAllowListener()
+    this.mPlayerContext?.get_control_handler().removeAllPlayerAuthenticationListener()
+    this.mPlayerContext?.get_control_handler().removeAllPlayerFormatListener()
+    this.mPlayerContext?.get_control_handler().removeAllPlayerSeekListener()
+    this.mPlayerContext?.get_control_handler().removeAllPlayerVideoDecodeTypeListener()
+    this.mPlayerContext?.get_control_handler().removeAllPlayerSpeedChangeListener()
+    this.mPlayerContext?.get_control_handler().removeAllPlayerQualityListener()
+    this.mPlayerContext?.get_control_handler().removeAllPlayerAudioDataListener()
+    this.mPlayerContext?.get_control_handler().removeAllPlayerSEIDataListener()
+    this.mPlayerContext?.get_control_handler().removeAllPlayerShootVideoListener()
+    this.mPlayerContext?.get_control_handler().removeAllPlayerSubtitleListener()
+    this.mPlayerContext?.get_control_handler().removeAllPlayerVideoFrameSizeChangeListener()
+    this.mPlayerContext?.get_control_handler().removeAllPlayerStateListener()
+    // for (let index = 0; index < this.mMediaModel.mMediaModels.length; index++) {
+    this.mMediaModel?.release()
+    this.mMediaModel = null
+    this.mPlayerContext = null
+    this.mCurrentModel = null
+    // }
   }
   //弹出toast，文本为text
   addToastView(text:String){
@@ -408,7 +474,7 @@ struct QLongVideoView {
     this.mToastText = ""
   }
   onBackPress(): boolean | void {
-    this.mPlayerContext.get_control_handler().release()
+    this.mPlayerContext?.get_control_handler().release()
     return true
   }
 }
